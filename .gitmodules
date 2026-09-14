@@ -1,3 +1,6 @@
 [submodule "MDSR-PySR"]
 	path = MDSR-PySR
 	url = https://github.com/daniel2478178/MDSR-PySR.git
+[submodule "Multi-stage-Selection-Symbolic-Regression"]
+	path = Multi-stage-Selection-Symbolic-Regression
+	url = https://github.com/daniel2478178/Multi-stage-Selection-Symbolic-Regression.git

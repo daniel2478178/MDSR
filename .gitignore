@@ -1,2 +1,14 @@
 .DS_Store
-.DS_Store
+
+# Local environments and secrets
+.env
+.env.*
+!.env.example
+.venv/
+
+# Python caches and local tooling
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/

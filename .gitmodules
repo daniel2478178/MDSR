@@ -1,0 +1,3 @@
+[submodule "MDSR-PySR"]
+	path = MDSR-PySR
+	url = https://github.com/daniel2478178/MDSR-PySR.git

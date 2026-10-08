@@ -1,0 +1,23 @@
+{
+  "sample_order": 1787,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    p4 = params[4]\n    \n    # Time-modulated Rabi frequency\n    rabi = p0 * np.sqrt(prob) * np.sin(p1 * omega * t + p2)\n    \n    # Detuning factor that creates resonance structure\n    detune = 1.0 / (1.0 + p3 * (omega - p4)**2)\n    \n    # Exponential decay envelope\n    decay = np.exp(-p1 * t**2 * omega)\n    \n    return rabi * detune * decay + p3 * prob * t * omega\n\n",
+  "score": -1.8217269004342818,
+  "mean_nmse": 0.844000580040579,
+  "min_nmse": 0.3587688603622805,
+  "max_nmse": 1.8792805141935898,
+  "median_nmse": 0.5986245935225782,
+  "std_nmse": 0.5737247031415715,
+  "worst2_mean_nmse": 1.8217269004342818,
+  "nmse_per_test": {
+    "dataset_0": 1.8792805141935898,
+    "dataset_1": 0.585694231113195,
+    "dataset_2": 0.6764823602566208,
+    "dataset_3": 0.3587688603622805,
+    "dataset_4": 0.4587691484393035,
+    "dataset_5": 1.7641732866749735,
+    "dataset_6": 0.6115549559319615,
+    "dataset_7": 0.41728128335270703
+  },
+  "sample_time": 1.5343948602676392,
+  "evaluate_time": 3.422896385192871
+}

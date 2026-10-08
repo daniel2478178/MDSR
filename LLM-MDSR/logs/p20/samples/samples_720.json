@@ -1,0 +1,23 @@
+{
+  "sample_order": 720,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Based on Rabi oscillation physics: target often relates to\n    # transition probability and detuning/rotation effects.\n    # Use a compact form: amplitude * prob * sin(omega*t) + \n    # an exponentially damped oscillation in time.\n    eps = 1e-12\n    angle = omega * t\n    # params: [0]=overall amplitude, [1]=damping rate, [2]=phase offset, [3]=bias\n    y = params[0] * prob * np.sin(angle) * np.exp(-params[1] * np.abs(t))\n    y += params[2] * np.cos(angle) * prob + params[3]\n    return y\n\n",
+  "score": -0.8934344427662686,
+  "mean_nmse": 0.8509803417547908,
+  "min_nmse": 0.8250319338258216,
+  "max_nmse": 0.8967433418021015,
+  "median_nmse": 0.8379660098309529,
+  "std_nmse": 0.025527315405437057,
+  "worst2_mean_nmse": 0.8934344427662686,
+  "nmse_per_test": {
+    "dataset_0": 0.8967433418021015,
+    "dataset_1": 0.8515629509255896,
+    "dataset_2": 0.8379315311052543,
+    "dataset_3": 0.836729357384729,
+    "dataset_4": 0.8317175867077428,
+    "dataset_5": 0.8901255437304358,
+    "dataset_6": 0.8250319338258216,
+    "dataset_7": 0.8380004885566515
+  },
+  "sample_time": 1.8934593200683594,
+  "evaluate_time": 2.0860416889190674
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 636,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    arcsin_prob = np.arcsin(np.clip(prob, -1.0 + eps, 1.0 - eps))\n    # Landau-Zener-Rabi type: transition probability depends on sin^2(angle/2)\n    # Physical target likely related to coupling strength or energy gap\n    # So invert: sin^2(x) = prob => x = arcsin(sqrt(prob))\n    x = np.arcsin(np.sqrt(np.clip(prob, eps, 1.0 - eps)))\n    # For Rabi oscillations: prob = sin^2(sqrt(Omega^2 + delta^2)/2 * t)\n    # So target quantity (e.g., detuning or coupling) can be extracted\n    # Assume prob = sin^2(params[0] * sqrt( (params[1] - omega)^2 + params[2]^2 ) * t / 2)\n    # Inverse: sqrt((params[1]-omega)^2 + params[2]^2) = 2*arcsin(sqrt(prob)) / (params[0]*t)\n    y = params[0] * np.sqrt(np.abs(2.0 * x / (t + eps)))\n    y = y + params[1] * prob * np.cos(angle)  # small correction\n    y = y * (1.0 + params[2] * np.sin(angle))\n    y = y + params[3] * omega * t + params[4]\n    return y\n\n",
+  "score": -0.9288018839155896,
+  "mean_nmse": 0.9118821297306212,
+  "min_nmse": 0.8923897369991579,
+  "max_nmse": 0.9303380699819715,
+  "median_nmse": 0.9118586377219715,
+  "std_nmse": 0.012853726072407992,
+  "worst2_mean_nmse": 0.9288018839155896,
+  "nmse_per_test": {
+    "dataset_0": 0.9303380699819715,
+    "dataset_1": 0.9193487238353553,
+    "dataset_2": 0.9097952031237924,
+    "dataset_3": 0.8923897369991579,
+    "dataset_4": 0.906627047607319,
+    "dataset_5": 0.9272656978492075,
+    "dataset_6": 0.8953704861280164,
+    "dataset_7": 0.9139220723201505
+  },
+  "sample_time": 3.4011396169662476,
+  "evaluate_time": 2.2064032554626465
+}

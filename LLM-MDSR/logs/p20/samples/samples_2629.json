@@ -1,0 +1,23 @@
+{
+  "sample_order": 2629,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared physical law: probability of transition in a driven two-level system\n    follows a generalized Rabi formula:\n\n    target = A * prob * sin^2( sqrt( (omega - omega_res)^2 + (Omega_R)^2 ) * t / 2 )\n    \"\"\"\n    # Define parameters: \n    # params[0] = amplitude scaling factor\n    # params[1] = resonance frequency offset parameter\n    # params[2] = Rabi frequency parameter (coupling strength)\n    # params[3] = phase offset (optional for generality)\n    \n    # Generalized Rabi frequency\n    delta = omega - params[1]  # detuning from resonance\n    omega_rabi = np.sqrt(params[2]**2 + delta**2)\n    \n    # Rabi oscillation formula\n    y = params[0] * prob * np.sin(omega_rabi * t / 2 + params[3])**2\n    return y\n\n",
+  "score": -0.7934043483134802,
+  "mean_nmse": 0.7174952291847307,
+  "min_nmse": 0.5185319609927705,
+  "max_nmse": 0.8307649798851885,
+  "median_nmse": 0.7306237206935036,
+  "std_nmse": 0.08269989162035302,
+  "worst2_mean_nmse": 0.7934043483134802,
+  "nmse_per_test": {
+    "dataset_0": 0.8307649798851885,
+    "dataset_1": 0.7326466466561866,
+    "dataset_2": 0.7388918402023649,
+    "dataset_3": 0.5185319609927705,
+    "dataset_4": 0.7165594537063205,
+    "dataset_5": 0.7560437167417718,
+    "dataset_6": 0.717922440562423,
+    "dataset_7": 0.7286007947308204
+  },
+  "sample_time": 1.4798678755760193,
+  "evaluate_time": 2.077962875366211
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 1084,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    # Common Rabi-like or driven transition formula:\n    # target scales with sin^2(omega*t/2) times prob, plus a linear prob term\n    half_angle = angle / 2.0\n    sin_half = np.sin(half_angle)\n    sin_sq = sin_half * sin_half\n    \n    # Avoid log issues for small prob\n    prob_safe = np.maximum(prob, eps)\n    \n    # Structure:  params[0]*sin^2(angle/2) * prob + params[1]*t*prob + params[2]*omega*prob + params[3]\n    y = params[0] * sin_sq * prob + params[1] * t * prob + params[2] * omega * prob + params[3]\n    return y\n\n",
+  "score": -0.5727207186243088,
+  "mean_nmse": 0.5238441909659494,
+  "min_nmse": 0.4591695287806779,
+  "max_nmse": 0.5856985017355487,
+  "median_nmse": 0.5365392376279068,
+  "std_nmse": 0.04303466943324953,
+  "worst2_mean_nmse": 0.5727207186243088,
+  "nmse_per_test": {
+    "dataset_0": 0.5561321930306791,
+    "dataset_1": 0.47444325566855144,
+    "dataset_2": 0.4591695287806779,
+    "dataset_3": 0.5856985017355487,
+    "dataset_4": 0.48248863774325534,
+    "dataset_5": 0.537721808718513,
+    "dataset_6": 0.5353566665373006,
+    "dataset_7": 0.5597429355130689
+  },
+  "sample_time": 2.0380382537841797,
+  "evaluate_time": 1.99379301071167
+}

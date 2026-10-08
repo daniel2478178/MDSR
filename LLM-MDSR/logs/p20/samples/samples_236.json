@@ -1,0 +1,23 @@
+{
+  "sample_order": 236,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical Rabi-like model: target relates to inversion and detuning oscillations\n    angle = omega * t\n    # effective Rabi frequency and detuning from prob\n    rabi = np.sqrt(np.abs(params[0] * prob / (1.0 + params[1] * omega**2))) if omega.size else np.zeros_like(prob)\n    # Use standard Rabi population formula: prob = (Omega_R^2 / (Omega_R^2 + Delta^2)) * sin^2(Omega_eff * t/2)\n    # To extract a physical target, use the time derivative or inversion.\n    # For a target related to energy or interaction strength, we combine:\n    # target = A * sqrt(prob) * (1 - prob) * f(t, omega) + B * (2*prob - 1)\n    y = params[2] * np.sqrt(np.maximum(prob, 0.0)) * (1.0 - prob) * np.sin(angle + params[3])\n    y += params[4] * (2.0 * prob - 1.0) * np.cos(angle)\n    y += params[5] * prob * np.exp(-params[6] * np.abs(t)) \n    return y\n\n",
+  "score": -2.057361301310239,
+  "mean_nmse": 1.100958038067879,
+  "min_nmse": 0.5883794023981134,
+  "max_nmse": 2.9789974957793515,
+  "median_nmse": 0.8174681341386745,
+  "std_nmse": 0.7322842537091371,
+  "worst2_mean_nmse": 2.057361301310239,
+  "nmse_per_test": {
+    "dataset_0": 1.1357251068411265,
+    "dataset_1": 0.9084413372392204,
+    "dataset_2": 2.9789974957793515,
+    "dataset_3": 0.5883794023981134,
+    "dataset_4": 0.7264949310381287,
+    "dataset_5": 1.0683887796186693,
+    "dataset_6": 0.7058468701627285,
+    "dataset_7": 0.6953903814656925
+  },
+  "sample_time": 3.3873462080955505,
+  "evaluate_time": 2.3029277324676514
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 667,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Target likely represents Rabi-type transition: P = sin^2(Omega*t/2)\n    # Inverting for Omega_eff, physical quantity may be sqrt(-ln(1-prob)) relating to decay or phase\n    # Candidate: target = params[0] * (prob/(1-prob+eps)) * sin(params[1]*omega*t) * exp(-params[2]*t)\n    # But simpler: assume target = params[0] * arcsin(sqrt(prob)) / t (i.e., effective coupling)\n    eps = 1e-10\n    # Use probability to define angular amplitude\n    # Physical quantity could be the generalized Rabi frequency: sqrt(omega^2 + params[0]*prob)\n    # Or a phase-related term\n    # Let's propose: target = params[0] * sqrt(prob) * sin(omega*t) + params[1] * prob^2 + params[2]\n    # But need t and omega in non trivial combination. Try: target = params[0] * (arcsin(sqrt(prob))/(t+eps)) / omega\n    # Simpler expressible with sin:\n    angle = omega * t\n    # Prob often: (Omega_eff/Omega)^2 sin^2(Omega_eff t/2), so target could be Omega_eff_ratio\n    # Let's define target as: params[0] * (1 - prob) * sin(angle) + params[1] * prob * cos(angle) + params[2] * t\n    \n    # More physical: target = params[0] * arccos(1 - 2*prob) / (t * omega) \n    # Requires arccos (scipy) but avoid scipy, use np.arccos which is fine\n    # Let's use: y = params[0] * np.arccos(1 - 2*prob) / (np.abs(t) + eps) / (np.abs(omega) + eps) + params[1]\n    # This decodes characteristic frequency from probability\n    \n    # But to be safe and general, include sin and cos terms:\n    arg = 1 - 2 * prob\n    arg = np.clip(arg, -1 + eps, 1 - eps)\n    # y = params[0] * np.arccos(arg) / (np.abs(omega) + eps) - params[1] * t / (np.abs(t) + eps)\n    # Might be too complex; let's use simpler known Rabi: target = params[0]*sqrt(prob)*sin(params[1]*omega*t+params[2])+params[3]\n    # But better: target = params[0] * (prob/(t+eps)) * np.sin(omega*t) + params[1]\n    # Let's adopt a compact form:\n    y = params[0] * np.sin(omega * t) * np.sqrt(np.maximum(prob, eps)) + params[1] * np.cos(omega * t) * np.sqrt(np.maximum(1 - prob, eps)) + params[2] * prob + params[3]\n    return y\n\n",
+  "score": -0.7248147296178511,
+  "mean_nmse": 0.6708962092704265,
+  "min_nmse": 0.5712851134059991,
+  "max_nmse": 0.738327862361943,
+  "median_nmse": 0.6809742706577961,
+  "std_nmse": 0.0483536514783907,
+  "worst2_mean_nmse": 0.7248147296178511,
+  "nmse_per_test": {
+    "dataset_0": 0.738327862361943,
+    "dataset_1": 0.6974887773121657,
+    "dataset_2": 0.6896706231649878,
+    "dataset_3": 0.5712851134059991,
+    "dataset_4": 0.6722779181506043,
+    "dataset_5": 0.7113015968737593,
+    "dataset_6": 0.6472788779575404,
+    "dataset_7": 0.6395389049364115
+  },
+  "sample_time": 3.773898124694824,
+  "evaluate_time": 2.0092999935150146
+}

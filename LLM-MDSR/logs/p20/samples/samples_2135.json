@@ -1,0 +1,23 @@
+{
+  "sample_order": 2135,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared equation for Landau-Zener-like transitions with Rabi oscillations.\n    target = a0 + a1 * prob * cos(a2 * t + a3) + a4 * prob * exp(-a5 * t) + a6 * sin(omega * t + a7)\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Terms based on physical Rabi oscillation and exponential decay\n    term1 = params[0] * prob * np.cos(params[1] * t + params[2])\n    term2 = params[3] * prob * np.exp(-params[4] * np.abs(t))\n    term3 = params[5] * np.sin(omega_safe * t + params[6])\n    term4 = params[7] * t\n    \n    return term1 + term2 + term3 + term4 + params[8]\n\n",
+  "score": -0.4827816888449729,
+  "mean_nmse": 0.3306940655878977,
+  "min_nmse": 0.20545557245776164,
+  "max_nmse": 0.49599121353485615,
+  "median_nmse": 0.2908649500163814,
+  "std_nmse": 0.10412082986007347,
+  "worst2_mean_nmse": 0.4827816888449729,
+  "nmse_per_test": {
+    "dataset_0": 0.49599121353485615,
+    "dataset_1": 0.3990304728272382,
+    "dataset_2": 0.3255770391058046,
+    "dataset_3": 0.20545557245776164,
+    "dataset_4": 0.2561528609269582,
+    "dataset_5": 0.4695721641550897,
+    "dataset_6": 0.23868897483747498,
+    "dataset_7": 0.2550842268579981
+  },
+  "sample_time": 2.123471200466156,
+  "evaluate_time": 2.933457136154175
+}

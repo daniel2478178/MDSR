@@ -1,0 +1,23 @@
+{
+  "sample_order": 245,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Landau-Zener-like transition probability with time-dependent phase\n    # target = A * prob * sin^2(omega*t/2) / (omega*t) + B * prob + C\n    angle = omega * t\n    # Use sinc-like behavior to avoid singularities\n    sinc_term = np.sin(angle) / np.maximum(angle, 1e-10)\n    \n    # Main physical term: prob ~ sin^2(angle/2), target proportional to prob*sin(angle)/angle\n    y = params[0] * prob * np.sin(angle) + params[1] * prob * np.cos(angle) + params[2] * prob * sinc_term + params[3] * np.exp(-params[4] * np.abs(t))\n    \n    return y\n\n",
+  "score": -0.6631491928033715,
+  "mean_nmse": 0.5280236335430957,
+  "min_nmse": 0.3796770600383437,
+  "max_nmse": 0.6681747874602828,
+  "median_nmse": 0.5187944574330182,
+  "std_nmse": 0.09912773566478757,
+  "worst2_mean_nmse": 0.6631491928033715,
+  "nmse_per_test": {
+    "dataset_0": 0.6681747874602828,
+    "dataset_1": 0.5920212372145929,
+    "dataset_2": 0.5445358537153925,
+    "dataset_3": 0.3796770600383437,
+    "dataset_4": 0.493053061150644,
+    "dataset_5": 0.65812359814646,
+    "dataset_6": 0.45888616378092284,
+    "dataset_7": 0.4297173068381273
+  },
+  "sample_time": 2.527090013027191,
+  "evaluate_time": 2.101198673248291
+}

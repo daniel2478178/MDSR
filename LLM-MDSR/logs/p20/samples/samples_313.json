@@ -1,0 +1,23 @@
+{
+  "sample_order": 313,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Use physically motivated Rabi oscillation with detuning and decay\n    eps = 1e-12\n    t_safe = np.abs(t) + eps\n    omega_safe = np.abs(omega) + eps\n    \n    # Parameters: params[0]-amplitude, params[1]-Rabi frequency factor, params[2]-damping, params[3]-offset\n    # plus possibly additional phase/detuning params if needed\n    \n    # Assume a form: A * (prob) * sin^2(sqrt(omega^2 + delta^2) * t/2) / (omega^2+delta^2) + C\n    # But keep simpler for shared structure\n    delta = params[1] * (1 - prob)  # detuning depends on probability\n    \n    # Rabi frequency combined from omega\n    rabi = omega * params[0]\n    # Generalized Rabi frequency\n    Omega = np.sqrt(rabi**2 + delta**2 + eps)\n    \n    # Main term: transition probability scaled with time dynamics\n    term = params[2] * (rabi**2) / (Omega**2 + eps) * np.sin(Omega * t_safe)**2 * np.exp(-params[3] * t_safe)\n    \n    # Add a small linear or base term from prob\n    y = term + params[4] * prob + params[5] * np.sin(omega * t)\n    \n    # Ensure dimension matches - add a constant if needed\n    y = y + params[6]\n    \n    # If params have more elements, we could use them, but we'll keep minimal\n    # For safety, ensure output is finite\n    return np.where(np.isfinite(y), y, 0.0)\n\n",
+  "score": -0.6915972555636587,
+  "mean_nmse": 0.5975849674558309,
+  "min_nmse": 0.28734184206745333,
+  "max_nmse": 0.7042913895529892,
+  "median_nmse": 0.6233594048395992,
+  "std_nmse": 0.12335120296151512,
+  "worst2_mean_nmse": 0.6915972555636587,
+  "nmse_per_test": {
+    "dataset_0": 0.6338722727797199,
+    "dataset_1": 0.6789031215743281,
+    "dataset_2": 0.6739075024275246,
+    "dataset_3": 0.28734184206745333,
+    "dataset_4": 0.5882907775408328,
+    "dataset_5": 0.7042913895529892,
+    "dataset_6": 0.6012262968043202,
+    "dataset_7": 0.6128465368994784
+  },
+  "sample_time": 2.845383405685425,
+  "evaluate_time": 2.5074350833892822
+}

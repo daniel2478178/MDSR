@@ -1,0 +1,14 @@
+{
+  "sample_order": 5665,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t    \n    # Physical relation: Rabi-like oscillation with amplitude dependent on prob and decay\n    A = params[0] * np.sqrt(prob * (1 - prob))    \n    # Resonance detuning / frequency correction term\n    delta = params[1] * (prob - params[2])    \n    # Effective Rabi frequency\n    Omega_eff = np.sqrt(delta**2 + (params[3] * omega)**2)    \n    # Time-dependent solution of two-level system\n    y = A * (Omega_eff**2) / (delta**2 + (params[3] * omega)**2 + 1e-12) * np.sin(Omega_eff * t / 2)**2 * np.exp(-params[4] * t)    \n    # Add small linear correction for non-resonant contributions\n    y = y + params[5] * (1 - 2*prob) * np.sin(x) * np.exp(-params[4]*t)    \n    # Normalize amplitude with dataset-specific scaling\n    return params[6] * y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 1.8214075565338135,
+  "evaluate_time": 2.0093038082122803
+}

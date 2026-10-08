@@ -1,0 +1,23 @@
+{
+  "sample_order": 1771,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: driven two-level system transition probability relation\n    # target = amplitude * prob * (1 - cos(detuning * t)) / detuning^2 + background\n    \n    # params[0]: amplitude scale\n    # params[1]: detuning offset (in frequency units)\n    # params[2]: background level\n    # params[3]: phase offset\n    # params[4]: decay factor\n    \n    eps = 1e-10\n    \n    # Detuning with possible offset\n    delta = omega + params[1]\n    \n    # Rabi-like oscillation term from transition probability\n    # target proportional to prob * sin^2(delta*t/2) / delta^2\n    # plus a linear prob term for short-time behavior\n    \n    envelope = np.sin(delta * t / 2) / (delta + eps)\n    oscillation = envelope ** 2\n    \n    # Decay envelope for finite interaction time\n    decay = np.exp(-params[4] * np.abs(t))\n    \n    # Physical expression: probability-weighted oscillation with frequency scaling\n    term1 = params[0] * prob * oscillation * decay\n    \n    # Additional direct probability term\n    term2 = params[2] * prob * np.cos(omega * t + params[3])\n    \n    return term1 + term2\n\n",
+  "score": -1.0178129387201131,
+  "mean_nmse": 0.6407364237512156,
+  "min_nmse": 0.22410135650235247,
+  "max_nmse": 1.05992286851797,
+  "median_nmse": 0.6488383026014148,
+  "std_nmse": 0.28675158711527743,
+  "worst2_mean_nmse": 1.0178129387201131,
+  "nmse_per_test": {
+    "dataset_0": 1.05992286851797,
+    "dataset_1": 0.8309643412101791,
+    "dataset_2": 0.7243825517367761,
+    "dataset_3": 0.22410135650235247,
+    "dataset_4": 0.5732940534660537,
+    "dataset_5": 0.9757030089222561,
+    "dataset_6": 0.3865759376964704,
+    "dataset_7": 0.3509472719576671
+  },
+  "sample_time": 1.5587576627731323,
+  "evaluate_time": 2.29093861579895
+}

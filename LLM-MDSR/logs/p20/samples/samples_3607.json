@@ -1,0 +1,14 @@
+{
+  "sample_order": 3607,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-Stückelberg type transition probability with interference terms\n    # Based on physical quantum two-level system under periodic driving\n    # Use fewer params: amplitude, coupling, detuning scaling, time decay\n    x = omega * t\n    # Rabi-type oscillations damped by decoherence\n    rabi_rate = params[0] * np.sqrt(1 - prob)\n    # Interference phase from accumulated phase difference\n    phase = params[1] * x + params[2]\n    # Time-dependent decay envelope\n    decay = np.exp(-params[3] * t)\n    # Main oscillation term\n    osc_term = rabi_rate * np.sin(phase) * decay\n    # Slowly varying background related to prob (Lambert-type behavior in some parameter range)\n    background = params[4] * prob * np.cos(params[5] * np.sqrt(prob) + params[6] * t)\n    # Additional weak correction for small prob\n    correction = params[7] * (1 - prob) * np.sin(params[8] * omega + params[9] * t)\n    return osc_term + background + correction\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.806355893611908,
+  "evaluate_time": 1.9004991054534912
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 658,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # This form represents a decayed Rabi-like oscillation\n    # The physical quantity often depends on sin^2 of the pulse area times probability\n    # In rotating wave approximation, transition probability = sin^2(Omega_eff * t / 2)\n    # Here we model target as related to prob through an effective Rabi frequency\n    eps = 1e-12\n    angle = omega * t\n    # params[0] scales overall amplitude\n    # params[1] represents effective Rabi frequency factor\n    # params[2] is background\n    # Use prob correction with asymptotic form\n    oscillation = np.sin(params[1] * angle)\n    # Combine prob and oscillation: prob often ~ sin^2(Omega_R*t/2)\n    # So relation could be target ~ A * (1 - 2*prob) * oscillation + B\n    \n    # Here we use a simple physical model:\n    # target = A * prob / (1 + (B * omega * t)^2) + C * sin(omega * t)\n    # But let's try a more standard form: target varies linearly with prob times a damped cos\n    \n    # Actually for driven two-level systems, physical observables often look like:\n    # <sigma_z> = (delta^2 + Omega^2 * cos(Omega_R * t)) / (Omega_R^2)\n    # where prob = (Omega * sin(Omega_R * t/2)/Omega_R)^2\n    \n    # A simpler known relation: target ~ Omega * t * prob * exp(-t/T2)\n    # After extensive exploration, here's a compact shared form:\n    \n    term1 = params[0] * prob * np.cos(angle) * np.exp(-np.abs(t) * params[1])\n    term2 = params[2] * np.sin(angle) * np.sqrt(np.maximum(prob, eps)) * np.exp(-np.abs(t) * params[1])\n    term3 = params[3] * (1 - 2 * prob) * np.cos(angle)\n    \n    return term1 + term2 + term3 + params[4]\n\n",
+  "score": -0.8129955052436539,
+  "mean_nmse": 0.7567371562301796,
+  "min_nmse": 0.72288585883727,
+  "max_nmse": 0.8481369088019614,
+  "median_nmse": 0.7420336947867097,
+  "std_nmse": 0.039354712532757644,
+  "worst2_mean_nmse": 0.8129955052436539,
+  "nmse_per_test": {
+    "dataset_0": 0.7685883110499412,
+    "dataset_1": 0.7419209460686483,
+    "dataset_2": 0.72288585883727,
+    "dataset_3": 0.8481369088019614,
+    "dataset_4": 0.7246749830897092,
+    "dataset_5": 0.7778541016853464,
+    "dataset_6": 0.7276896968037894,
+    "dataset_7": 0.742146443504771
+  },
+  "sample_time": 3.16206294298172,
+  "evaluate_time": 3.1943750381469727
+}

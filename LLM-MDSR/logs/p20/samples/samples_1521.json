@@ -1,0 +1,23 @@
+{
+  "sample_order": 1521,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    \n    # Landau-Zener-Stückelberg-Majorana type formula:\n    # Probability depends on detuning, t, and omega via Rabi oscillations\n    # Shared form: logit(prob) = A + B * sin(2*pi*nu*omega*t + phase)\n    # where detuning and coupling are encoded via omega and params\n    \n    p_safe = np.clip(prob, eps, 1 - eps)\n    logit_p = np.log(p_safe / (1 - p_safe))\n    \n    # First-order Fourier expansion in driving phase\n    phase = omega * t\n    fourier_term = params[0] * np.sin(phase) + params[1] * np.cos(phase)\n    \n    # Time-dependence via exponential decay of coherence\n    time_factor = t * params[2]\n    \n    # Probability-to-target mapping: linear in logit plus sin^2 \n    # for avoided-crossing oscillations\n    sin_sq = np.sin(params[3] * omega * t)**2\n    \n    # Response model: target = a * exponential transform of prob * oscillatory envelope\n    response = params[4] * logit_p + params[5] * sin_sq + params[6] * np.sin(phase) * time_factor\n    \n    # Amplitude envelope from driving frequency (resonance curve)\n    resonance = np.exp(-((omega - params[7])**2) * params[8])\n    \n    y = (response + params[9]) * resonance\n    \n    return y\n\n",
+  "score": -0.9944623718165061,
+  "mean_nmse": 0.9670667054189902,
+  "min_nmse": 0.9030731842466048,
+  "max_nmse": 0.9949983502395016,
+  "median_nmse": 0.9823396400417457,
+  "std_nmse": 0.031356747663930665,
+  "worst2_mean_nmse": 0.9944623718165061,
+  "nmse_per_test": {
+    "dataset_0": 0.9030731842466048,
+    "dataset_1": 0.9594304970078874,
+    "dataset_2": 0.9845231921611362,
+    "dataset_3": 0.9949983502395016,
+    "dataset_4": 0.9801560879223552,
+    "dataset_5": 0.9315698663837604,
+    "dataset_6": 0.9888560719971655,
+    "dataset_7": 0.9939263933935106
+  },
+  "sample_time": 4.993262410163879,
+  "evaluate_time": 3.4051735401153564
+}

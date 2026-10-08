@@ -1,0 +1,23 @@
+{
+  "sample_order": 1078,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical form: rotation-angle-driven transition with damping\n    # Shared structure across datasets; params vary per dataset\n    eps = 1e-10\n    angle = omega * t\n    # Landau-Zener-like transition probability modulation\n    # f = A * prob * sin(angle) + B * (1 - prob) * exp(-C*|t|) + D\n    # Simplify to key terms: amplitude modulated by prob and oscillatory terms\n    y = params[0] * np.sin(angle) * prob ** params[1] + params[2] * np.cos(angle) * prob + params[3] * np.exp(-np.abs(t) * params[4]) * (1 - prob)\n    return y\n\n",
+  "score": -4.5600895185202965,
+  "mean_nmse": 2.6579976458178685,
+  "min_nmse": 0.8918247407465757,
+  "max_nmse": 5.243573470412849,
+  "median_nmse": 2.232673644360305,
+  "std_nmse": 1.4195971656666848,
+  "worst2_mean_nmse": 4.5600895185202965,
+  "nmse_per_test": {
+    "dataset_0": 5.243573470412849,
+    "dataset_1": 3.8543873243573206,
+    "dataset_2": 1.9865224418189453,
+    "dataset_3": 0.8918247407465757,
+    "dataset_4": 2.478824846901664,
+    "dataset_5": 3.876605566627745,
+    "dataset_6": 1.6623437478188083,
+    "dataset_7": 1.269899027859039
+  },
+  "sample_time": 1.584108293056488,
+  "evaluate_time": 2.514451503753662
+}

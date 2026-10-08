@@ -1,0 +1,23 @@
+{
+  "sample_order": 3157,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Target: physical quantity likely related to population transfer at resonance\n    # The common Rabi formula solution for a two-level system has\n    # target = sqrt(prob) * sin(Omega_R * t) where Omega_R is the Rabi frequency.\n    # Here Omega_R depends on detuning and drive strength, encoded by params.\n    # Use expression: params[0] * sqrt(prob) * sin(params[1] * t * sqrt(1 + (omega/params[2])^2)) \n    # but to ensure positiveness and variability, a general form:\n    # target = params[0] * (prob**0.5) * sin(params[1] * t * sqrt(1 + (omega*params[2])**2)) \n    # + params[3] * cos(params[4] * omega * t) * prob\n    # Simpler and physically plausible:\n    p_sqrt = np.sqrt(np.clip(prob, 0, 1))\n    rabi_freq = params[0] * np.sqrt(np.abs(1 + (params[1] * omega)**2))\n    return params[2] * p_sqrt * np.sin(rabi_freq * t + params[3]) + params[4] * (1 - prob) * np.cos(omega * t)\n\n",
+  "score": -5.285434116068777,
+  "mean_nmse": 2.373835005745943,
+  "min_nmse": 0.9217414206524365,
+  "max_nmse": 6.094284173799084,
+  "median_nmse": 0.9579792325969272,
+  "std_nmse": 1.9427635035098327,
+  "worst2_mean_nmse": 5.285434116068777,
+  "nmse_per_test": {
+    "dataset_0": 0.9652602783076873,
+    "dataset_1": 0.9462657966941315,
+    "dataset_2": 0.945122721504028,
+    "dataset_3": 6.094284173799084,
+    "dataset_4": 0.950698186886167,
+    "dataset_5": 4.476584058338471,
+    "dataset_6": 0.9217414206524365,
+    "dataset_7": 3.6907234097855417
+  },
+  "sample_time": 2.575067698955536,
+  "evaluate_time": 5.527818202972412
+}

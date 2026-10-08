@@ -1,0 +1,23 @@
+{
+  "sample_order": 1717,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    p4 = params[4]\n    p5 = params[5]\n    \n    theta = p0 * omega * t + p1\n    cos_term = np.cos(theta) ** 2\n    \n    # Rabi-like oscillation with decay\n    osc = prob * (cos_term + p2 * (1 - prob) ** 2)\n    \n    # Frequencies and detuning effects\n    detuning_term = p3 * np.sin(omega * t) / (1 + omega**2)\n    \n    # Exponential time envelope for decoherence\n    envelope = np.exp(-p4 * np.abs(t) * (1 + p5 * omega))\n    \n    return osc * envelope + detuning_term\n\n",
+  "score": -1.360412220132428,
+  "mean_nmse": 0.8198925872923353,
+  "min_nmse": 0.32280373925525224,
+  "max_nmse": 1.5449473169399404,
+  "median_nmse": 0.788354596559168,
+  "std_nmse": 0.3797327194920773,
+  "worst2_mean_nmse": 1.360412220132428,
+  "nmse_per_test": {
+    "dataset_0": 1.1758771233249157,
+    "dataset_1": 0.9542838105397226,
+    "dataset_2": 0.8862151006703,
+    "dataset_3": 0.32280373925525224,
+    "dataset_4": 0.690494092448036,
+    "dataset_5": 1.5449473169399404,
+    "dataset_6": 0.50116601819586,
+    "dataset_7": 0.48335349696465535
+  },
+  "sample_time": 2.026355504989624,
+  "evaluate_time": 3.5294322967529297
+}

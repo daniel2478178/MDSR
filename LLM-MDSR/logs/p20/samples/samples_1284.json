@@ -1,0 +1,23 @@
+{
+  "sample_order": 1284,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Physical model: target = A * prob * sin(omega*t) + B * prob * cos(omega*t) + C*prob + D\n    # with possible phase shift parameter\n    angle = omega * t\n    phase = params[0]\n    A = params[1]\n    B = params[2]\n    C = params[3]\n    D = params[4]\n    # sin(angle + phase) = sin(angle)cos(phase) + cos(angle)sin(phase)\n    # using A and B as combined amplitude coefficients\n    y = prob * (A * np.sin(angle + phase) + B * np.cos(angle)) + C * prob + D\n    return y\n\n",
+  "score": -0.7066153244066249,
+  "mean_nmse": 0.6601858692758356,
+  "min_nmse": 0.5501924078747699,
+  "max_nmse": 0.7215394344649002,
+  "median_nmse": 0.6786924628197535,
+  "std_nmse": 0.049514713819098735,
+  "worst2_mean_nmse": 0.7066153244066249,
+  "nmse_per_test": {
+    "dataset_0": 0.7215394344649002,
+    "dataset_1": 0.6916912143483496,
+    "dataset_2": 0.6859100480038534,
+    "dataset_3": 0.5501924078747699,
+    "dataset_4": 0.6714748776356537,
+    "dataset_5": 0.6880697791520339,
+    "dataset_6": 0.6413508273025523,
+    "dataset_7": 0.6312583654245711
+  },
+  "sample_time": 4.003638446331024,
+  "evaluate_time": 2.077319383621216
+}

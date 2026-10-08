@@ -1,0 +1,23 @@
+{
+  "sample_order": 2575,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Generalized Rabi-Bloch formula: prob-driven coherent oscillation with detuning \n    # and decay, valid for any two-level system under sinusoidal driving\n    detuning = params[0] * (omega - params[1]) * t\n    rabi_freq = np.sqrt(params[2]**2 + (omega - params[1])**2)\n    theta = params[3] * prob * np.sin(rabi_freq * t) * np.exp(-params[4] * t * (1 - prob))\n    # Physical combination: amplitude depends on prob, phase depends on detuning-time product\n    return params[5] * prob * np.sin(x + theta) * np.exp(-params[6] * t) + params[7] * np.cos(x) + params[8] * prob\n\n",
+  "score": -116.10969825695975,
+  "mean_nmse": 39.61544697286273,
+  "min_nmse": 1.620010477844717,
+  "max_nmse": 132.22313026652964,
+  "median_nmse": 15.9133950838932,
+  "std_nmse": 47.11477640375508,
+  "worst2_mean_nmse": 116.10969825695975,
+  "nmse_per_test": {
+    "dataset_0": 9.12259665172937,
+    "dataset_1": 22.70419351605703,
+    "dataset_2": 1.7582892430672024,
+    "dataset_3": 132.22313026652964,
+    "dataset_4": 1.620010477844717,
+    "dataset_5": 2.3689861409040036,
+    "dataset_6": 47.13010323938003,
+    "dataset_7": 99.99626624738984
+  },
+  "sample_time": 2.5404258966445923,
+  "evaluate_time": 2.630080223083496
+}

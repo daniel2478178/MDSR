@@ -1,0 +1,14 @@
+{
+  "sample_order": 1396,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Rabi-like oscillation probability times a resonant envelope\n    # target = A * (1 - p) * sin^2(omega * t / 2) + B * p * cos^2(omega * t) + C\n    # Simplified as: amplitude * (1 - p) * sinc-like factor plus offset\n    # Use params: [amplitude, offset, exponent, timescale, freq_scale]\n\n    amp = params[0]\n    offset = params[1]\n    exponent = params[2] if len(params) > 2 else 1.0\n    tsp = params[3] if len(params) > 3 else 1.0\n    fscale = params[4] if len(params) > 4 else 1.0\n\n    # Core: (1 - p)^exponent * sin^2(fscale * omega * t / 2)\n    term = np.power(1 - p, exponent) * np.sin(fscale * omega * t * 0.5) ** 2\n\n    # Add direct p contribution with a small phase to avoid singularity\n    y = amp * term + offset + params[5] * p * np.cos(omega * t * tsp) if len(params) > 5 else amp * term + offset\n\n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 5.162347793579102,
+  "evaluate_time": 1.9397141933441162
+}

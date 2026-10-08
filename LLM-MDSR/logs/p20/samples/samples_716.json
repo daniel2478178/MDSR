@@ -1,0 +1,23 @@
+{
+  "sample_order": 716,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-12\n    # Using Rabi-like formula where target = amplitude * (prob * (1 - prob))^(1/2) coupling to omega*t\n    # And a detuning term proportional to (2*prob - 1)\n    angle = omega * t\n    factor = np.sin(params[0] * angle / 2.0)\n    amplitude_sq = np.square(factor) * prob * (1.0 - prob)\n    detune_term = params[1] * (2.0 * prob - 1.0) * np.cos(angle)\n    y = params[2] * np.sqrt(np.maximum(amplitude_sq, 0.0)) + detune_term + params[3]\n    return y\n\n",
+  "score": -0.915762813034935,
+  "mean_nmse": 0.9056721216128429,
+  "min_nmse": 0.896354256436362,
+  "max_nmse": 0.9169563208630189,
+  "median_nmse": 0.9042574381773278,
+  "std_nmse": 0.007975247788589483,
+  "worst2_mean_nmse": 0.915762813034935,
+  "nmse_per_test": {
+    "dataset_0": 0.8992380148143515,
+    "dataset_1": 0.9092768615403043,
+    "dataset_2": 0.9169563208630189,
+    "dataset_3": 0.897288884955799,
+    "dataset_4": 0.9145693052068511,
+    "dataset_5": 0.8991091015307449,
+    "dataset_6": 0.896354256436362,
+    "dataset_7": 0.9125842275553122
+  },
+  "sample_time": 2.5782569646835327,
+  "evaluate_time": 2.3005259037017822
+}

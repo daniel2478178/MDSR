@@ -1,0 +1,23 @@
+{
+  "sample_order": 2339,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Separate variables: sin(omega*t) and cos(omega*t) describe oscillatory Rabi-type dynamics\n    # prob appears as amplitude for a term proportional to sin^2(omega*t/2) (Rabi formula)\n    # and additionally as a multiplicative factor in a decaying exponential term\n    \n    half_x = omega_safe * t / 2.0\n    sin_term = np.sin(half_x) ** 2\n    \n    # Core structure: target = a0 * prob * sin^2 + a1 * (1 - prob) * sin^2 + \n    #                  a2 * prob * exp(-decay*t) + a3 * t * prob\n    \n    # Let params[0] = overall amplitude, params[1] = offset coefficient,\n    # params[2] = decay rate, params[3] = linear time coefficient\n    \n    # Rabi-like oscillation with amplitude proportional to prob and (1-prob)\n    rabi_part = params[0] * prob * sin_term + params[1] * (1.0 - prob) * sin_term\n    \n    # Exponential decay modulated by prob\n    decay_part = params[2] * prob * np.exp(-params[3] * np.abs(t))\n    \n    # Small linear drift in t weighted by prob\n    drift_part = params[4] * t * prob\n    \n    return rabi_part + decay_part + drift_part + params[5]\n\n",
+  "score": -0.5533587122932613,
+  "mean_nmse": 0.5009538009802105,
+  "min_nmse": 0.4550270868261666,
+  "max_nmse": 0.5631338511709217,
+  "median_nmse": 0.4955212675045316,
+  "std_nmse": 0.03470921550216956,
+  "worst2_mean_nmse": 0.5533587122932613,
+  "nmse_per_test": {
+    "dataset_0": 0.5631338511709217,
+    "dataset_1": 0.47131088581955477,
+    "dataset_2": 0.4550270868261666,
+    "dataset_3": 0.491759053616094,
+    "dataset_4": 0.47292400447449806,
+    "dataset_5": 0.5435835734156009,
+    "dataset_6": 0.49928348139296924,
+    "dataset_7": 0.5106084711258784
+  },
+  "sample_time": 2.9119808673858643,
+  "evaluate_time": 2.225886106491089
+}

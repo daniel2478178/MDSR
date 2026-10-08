@@ -1,0 +1,23 @@
+{
+  "sample_order": 4374,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition with time-dependent oscillation\n    # target ∝ amplitude × Rabi-like coupling × decay envelope\n    x = omega * t  # accumulated phase\n    # Combine transition probability and field interaction in a minimal way\n    # P_out ~ sqrt(prob) * sin^2(omega*t) type behavior with damping\n    \n    # Physical model: Rabi oscillation fraction for a driven two-level system\n    # target = A * (Omega_R/R) * (1 - 2*prob) * exp(-gamma*t) * sin(Omega_R*t)\n    # But here we need to use all inputs with a shared structure\n    \n    # Try: target = p0 * (2*prob - 1) * sin(p1 * omega * t) * exp(-p2 * t) + p3 * prob\n    \n    # Simpler: Landau-Zener formula with generalized time dependence\n    # target = A * sqrt(prob) * sin(omega*t + phi) + B * (1 - prob) * cos(omega*t)\n    \n    # Reuse previous structure with key simplification: remove overly complex terms\n    a1 = params[0]\n    a2 = params[1]  \n    a3 = params[2]\n    a4 = params[3]\n    \n    x = omega * t\n    \n    # Shared core: sinusoidal coupling modulated by probability and exponential decay\n    term1 = a1 * (1 - prob) * np.sin(a2 * x + a3) * np.exp(-a4 * t)\n    term2 = a1 * a2 * prob * np.cos(a3 * x) * np.exp(-a4 * t/2)\n    \n    return term1 + term2\n\n",
+  "score": -1.416012143507508,
+  "mean_nmse": 1.2691349237480753,
+  "min_nmse": 1.0360521326317749,
+  "max_nmse": 1.4355784406584153,
+  "median_nmse": 1.2369800218445262,
+  "std_nmse": 0.12364188021538795,
+  "worst2_mean_nmse": 1.416012143507508,
+  "nmse_per_test": {
+    "dataset_0": 1.3898163464169475,
+    "dataset_1": 1.3964458463566005,
+    "dataset_2": 1.4355784406584153,
+    "dataset_3": 1.0360521326317749,
+    "dataset_4": 1.227193324274447,
+    "dataset_5": 1.2407332879222281,
+    "dataset_6": 1.194033255957365,
+    "dataset_7": 1.233226755766824
+  },
+  "sample_time": 3.0097240209579468,
+  "evaluate_time": 2.069291830062866
+}

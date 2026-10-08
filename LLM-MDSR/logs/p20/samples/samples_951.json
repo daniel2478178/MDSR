@@ -1,0 +1,23 @@
+{
+  "sample_order": 951,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Ensure omega and t are positive to avoid division by zero\n    omega_abs = np.abs(omega) + 1e-10\n    t_abs = np.abs(t) + 1e-10\n    \n    # Physical form: Landau-Zener-like transition probability scaling\n    # with time and frequency, incorporating nonlinear coupling\n    angle = omega * t\n    \n    # Main term: exponential dependence on transition probability and time\n    # scaled by frequency, representing coherent dynamics\n    term1 = params[0] * np.exp(-prob * np.abs(omega) * t_abs) * np.sin(angle)\n    \n    # Additional term for phase-dependent contribution\n    term2 = params[1] * (1.0 - prob) * np.cos(params[2] * angle) / np.sqrt(omega_abs)\n    \n    # Nonlinear interaction term: prob times square root of scaled time\n    term3 = params[3] * prob * np.sqrt(t_abs * omega_abs)\n    \n    # Constant offset\n    offset = params[4]\n    \n    y = term1 + term2 + term3 + offset\n    return y\n\n",
+  "score": -0.7929148961840067,
+  "mean_nmse": 0.6908829475307241,
+  "min_nmse": 0.5542556383722359,
+  "max_nmse": 0.80169660428898,
+  "median_nmse": 0.6919993327853535,
+  "std_nmse": 0.07541661174659735,
+  "worst2_mean_nmse": 0.7929148961840067,
+  "nmse_per_test": {
+    "dataset_0": 0.80169660428898,
+    "dataset_1": 0.7189236658578346,
+    "dataset_2": 0.7035657674236263,
+    "dataset_3": 0.5542556383722359,
+    "dataset_4": 0.6804328981470807,
+    "dataset_5": 0.7841331880790334,
+    "dataset_6": 0.6458396156997539,
+    "dataset_7": 0.6382162023772481
+  },
+  "sample_time": 3.376092314720154,
+  "evaluate_time": 2.231858491897583
+}

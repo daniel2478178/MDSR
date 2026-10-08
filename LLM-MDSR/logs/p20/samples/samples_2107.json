@@ -1,0 +1,23 @@
+{
+  "sample_order": 2107,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Use only a few physically relevant parameters\n    p0 = params[0]  # amplitude scaling for Rabi-like term\n    p1 = params[1]  # frequency detuning parameter\n    p2 = params[2]  # damping/decay rate\n    p3 = params[3]  # offset/composite amplitude\n    \n    # Effective Rabi frequency influenced by probability and driving\n    # Target often resembles transition rate or energy splitting\n    # Derived from prob ~ sin^2(theta) type relation\n    # Here: assume target = p0 * sqrt(prob) * sin(p1 * t * omega + p2) * exp(-p3 * t)\n    # But for general physical law, we try a form:\n    # target = p0 * prob * (omega / (omega + p1)) * sin(p2 * t) * exp(-p3 * t) with p1 small?\n    # Given prob may be dimensionless, we model:\n    \n    eps = 1e-10\n    # Avoid division issues\n    denominator = omega + p1\n    denominator_safe = np.where(np.abs(denominator) < eps, eps, denominator)\n    \n    # Physical model: target = amplitude * (prob/ (prob + const)) * sin(omega*t) * exp(-decay*t)\n    # But better: perhaps relating to transition probability's time derivative?\n    # Since prob typically follows Rabi oscillations: P(t) = A sin^2(Ω t/2)\n    # Then inverse: Ω = something with prob. We can propose:\n    # target = p0 * sqrt(max(prob, 0)) * sin(p1 * t * omega + p2) * exp(-p3 * t)\n    # Simplify to avoid square root issues for prob in [0,1] positive.\n    \n    sqrt_prob = np.sqrt(np.maximum(prob, 0))\n    return p0 * sqrt_prob * np.sin(p1 * t * omega + p2) * np.exp(-p3 * t)\n\n",
+  "score": -0.8031560394088679,
+  "mean_nmse": 0.596366869801249,
+  "min_nmse": 0.39672094651402395,
+  "max_nmse": 0.8259580211744556,
+  "median_nmse": 0.5665673772472861,
+  "std_nmse": 0.14639370372589297,
+  "worst2_mean_nmse": 0.8031560394088679,
+  "nmse_per_test": {
+    "dataset_0": 0.8259580211744556,
+    "dataset_1": 0.6882547120785271,
+    "dataset_2": 0.6137894637420237,
+    "dataset_3": 0.39672094651402395,
+    "dataset_4": 0.5193452907525485,
+    "dataset_5": 0.7803540576432804,
+    "dataset_6": 0.469051978230801,
+    "dataset_7": 0.4774604882743313
+  },
+  "sample_time": 4.5902018547058105,
+  "evaluate_time": 4.421767711639404
+}

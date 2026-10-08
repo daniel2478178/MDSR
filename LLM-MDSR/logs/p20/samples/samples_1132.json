@@ -1,0 +1,23 @@
+{
+  "sample_order": 1132,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Novel physical form: target = A * (prob * sin^2(omega*t/2) * something) / t\n    # Using prob and rotation angle, with power-law dependence\n    eps = 1e-10\n    angle = omega * t\n    half_angle = angle / 2.0\n    \n    # Common Rabi-like oscillation pattern with prob\n    sin_half = np.sin(half_angle)\n    cos_half = np.cos(half_angle)\n    \n    # Target proportional to prob * |sin(angle/2)| / (t^p) with offset\n    # Params: [amp, exponent_t, phase_shift, freq_scale, offset]\n    amp = params[0]\n    exp_t = params[1]\n    phase = params[2]\n    freq_scale = params[3]\n    offset = params[4]\n    \n    # Ensure positive t for power law\n    t_pos = np.abs(t) + eps\n    omega_pos = np.abs(omega) + eps\n    \n    # Physical Rabi formula: P(t) = (Omega_R^2/Omega^2) * sin^2(Omega*t/2)\n    # Invert for Omega_R (Rabi frequency) as target\n    # Simplify to prob * something / t / omega relationship\n    \n    y = (amp * prob * np.abs(sin_half) / (t_pos ** exp_t) * \n         np.cos(phase + freq_scale * omega_pos) + offset)\n    \n    return y\n\n",
+  "score": -0.6078167559750544,
+  "mean_nmse": 0.526639018074946,
+  "min_nmse": 0.4692078247850972,
+  "max_nmse": 0.6107948928124315,
+  "median_nmse": 0.5092611913113447,
+  "std_nmse": 0.05136953898805781,
+  "worst2_mean_nmse": 0.6078167559750544,
+  "nmse_per_test": {
+    "dataset_0": 0.6048386191376772,
+    "dataset_1": 0.541837766641602,
+    "dataset_2": 0.5018916894890683,
+    "dataset_3": 0.48024641492118886,
+    "dataset_4": 0.4692078247850972,
+    "dataset_5": 0.6107948928124315,
+    "dataset_6": 0.48766424367888145,
+    "dataset_7": 0.5166306931336213
+  },
+  "sample_time": 5.079916954040527,
+  "evaluate_time": 5.957688570022583
+}

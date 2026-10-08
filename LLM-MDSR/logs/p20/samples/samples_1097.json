@@ -1,0 +1,23 @@
+{
+  "sample_order": 1097,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Transition probability often follows Rabi-like oscillations:\n    # P = (Omega_R^2 / Omega_eff^2) * sin^2(Omega_eff * t / 2)\n    # so target may relate to sqrt(prob) or angular frequency shifts.\n    # Here we express target as combination of prob and a resonance detuning amplitude.\n    eps = 1e-12\n    # Use parameters to define effective coupling and detuning-like behavior\n    a = params[0]\n    b = params[1]\n    c = params[2]\n    d = params[3]\n    \n    # Physical model: target = a * (prob^b) * sin(omega*t) + c * prob * cos(omega*t) + d\n    # But to avoid overfitting, use simple two-term plus offset\n    angle = omega * t\n    # prob is between 0 and 1 typically, sqrt prob can show Rabi envelope\n    p_sqrt = np.sqrt(np.maximum(prob, eps))\n    y = a * p_sqrt * np.sin(angle) + b * prob * np.cos(angle) + c * t * np.exp(-d * np.abs(t))\n    \n    return y\n\n",
+  "score": -0.8451819351974673,
+  "mean_nmse": 0.8125094009332736,
+  "min_nmse": 0.7781453265317883,
+  "max_nmse": 0.8461320760206551,
+  "median_nmse": 0.8090254495225949,
+  "std_nmse": 0.02564872176746341,
+  "worst2_mean_nmse": 0.8451819351974673,
+  "nmse_per_test": {
+    "dataset_0": 0.8355090992962714,
+    "dataset_1": 0.7979731421721914,
+    "dataset_2": 0.7936128401476366,
+    "dataset_3": 0.8442317943742795,
+    "dataset_4": 0.7781453265317883,
+    "dataset_5": 0.8461320760206551,
+    "dataset_6": 0.7843931720503682,
+    "dataset_7": 0.8200777568729984
+  },
+  "sample_time": 2.029509961605072,
+  "evaluate_time": 2.0453433990478516
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 433,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Rabi-like transition probability with time-dependent phase\n    # target = params0 * (prob / (1 + (omega*t - params1)^2)) * sin(omega*t)\n    # Simplified damped harmonic form\n    theta = omega * t\n    resonance_factor = params[0] * prob / (1.0 + (theta - params[1]) ** 2)\n    oscillatory_part = np.sin(theta + params[2])\n    decay = np.exp(-params[3] * np.abs(t))\n    y = resonance_factor * oscillatory_part * decay + params[4] * prob * np.cos(theta)\n    return y\n\n",
+  "score": -3.1711171861283134,
+  "mean_nmse": 2.5970667192868095,
+  "min_nmse": 2.129701565044877,
+  "max_nmse": 3.212622522024367,
+  "median_nmse": 2.3899208014274134,
+  "std_nmse": 0.41880049092973354,
+  "worst2_mean_nmse": 3.1711171861283134,
+  "nmse_per_test": {
+    "dataset_0": 3.1296118502322603,
+    "dataset_1": 2.3702854600507517,
+    "dataset_2": 2.233938351635647,
+    "dataset_3": 3.032113762682736,
+    "dataset_4": 2.129701565044877,
+    "dataset_5": 3.212622522024367,
+    "dataset_6": 2.258704099819764,
+    "dataset_7": 2.4095561428040746
+  },
+  "sample_time": 1.9991459846496582,
+  "evaluate_time": 2.0803024768829346
+}

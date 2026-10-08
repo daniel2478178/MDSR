@@ -1,0 +1,23 @@
+{
+  "sample_order": 1105,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target = amplitude * (sin^2 or cos^2) of accumulated phase * probability-dependent factor\n    # Use resonant-like structure: sin^2(omega*t/2) (Rabi oscillation) times prob, plus offset\n    eps = 1e-10\n    half_angle = omega * t * 0.5\n    # Prob can contain values possibly near 0 or 1; clip for numerical stability\n    p_safe = np.clip(prob, eps, 1 - eps)\n    \n    # Shared structure: transition probability scaling with sin^2 term and additional linear frequency dependence\n    y = params[0] * np.sin(half_angle)**2 * p_safe + params[1] * p_safe * np.cos(half_angle) + params[2] * np.sin(half_angle) * np.sqrt(np.abs(t) + eps)\n    # Add small nonlinear correction: coupling to omega via inverse sqrt times prob oscillation\n    y += params[3] * np.sin(omega*t) * p_safe / (np.abs(omega) + eps)\n    y += params[4]\n    \n    return y\n\n",
+  "score": -0.9981793990022201,
+  "mean_nmse": 0.9893936063802806,
+  "min_nmse": 0.9695935875810295,
+  "max_nmse": 0.9986515495895032,
+  "median_nmse": 0.995148759384215,
+  "std_nmse": 0.011101247826689815,
+  "worst2_mean_nmse": 0.9981793990022201,
+  "nmse_per_test": {
+    "dataset_0": 0.9695935875810295,
+    "dataset_1": 0.9899286664801887,
+    "dataset_2": 0.9972059203319971,
+    "dataset_3": 0.997707248414937,
+    "dataset_4": 0.9957328324058634,
+    "dataset_5": 0.9717643598761594,
+    "dataset_6": 0.9945646863625665,
+    "dataset_7": 0.9986515495895032
+  },
+  "sample_time": 3.123782157897949,
+  "evaluate_time": 2.0394012928009033
+}

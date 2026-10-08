@@ -1,0 +1,23 @@
+{
+  "sample_order": 834,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    safe_angle = np.minimum(np.abs(angle), 10.0) * np.sign(angle + eps)\n    y = params[0] * prob * np.sin(safe_angle) + params[1] * prob * np.cos(safe_angle) + params[2] * np.sin(2 * safe_angle) * prob + params[3] * np.exp(-np.abs(t) * params[4]) * np.cos(safe_angle)\n    return y\n\n",
+  "score": -4.519490745036902,
+  "mean_nmse": 3.2353726127932845,
+  "min_nmse": 2.2002018278099986,
+  "max_nmse": 5.098589918187939,
+  "median_nmse": 3.054399643921103,
+  "std_nmse": 0.9258434713618016,
+  "worst2_mean_nmse": 4.519490745036902,
+  "nmse_per_test": {
+    "dataset_0": 3.740535835486273,
+    "dataset_1": 2.4838686068999665,
+    "dataset_2": 2.2002018278099986,
+    "dataset_3": 5.098589918187939,
+    "dataset_4": 2.31059385423403,
+    "dataset_5": 3.940391571885865,
+    "dataset_6": 2.858678262643193,
+    "dataset_7": 3.250121025199014
+  },
+  "sample_time": 2.38141131401062,
+  "evaluate_time": 2.4140243530273438
+}

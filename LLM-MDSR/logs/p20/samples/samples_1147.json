@@ -1,0 +1,23 @@
+{
+  "sample_order": 1147,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition probability relation\n    # target = A * sqrt(prob * (1-prob)) * sin^2(theta) + B * prob\n    # where theta = omega*t/2 (Rabi oscillation phase)\n    theta = omega * t\n    p_safe = np.clip(prob, 1e-10, 1-1e-10)\n    \n    # Rabi formula: P = sin^2(sqrt(Omega^2 + delta^2) * t / 2)\n    # Using prob itself to infer the effective Rabi frequency\n    rabi_arg = np.arcsin(np.sqrt(np.clip(p_safe, 0, 1)))\n    # target likely related to amplitude or coupling strength\n    c1 = params[0] * rabi_arg / (1 + params[1] * np.abs(t))\n    c2 = params[2] * np.cos(theta) * p_safe\n    c3 = params[3] * np.sin(2 * theta) * rabi_arg\n    \n    y = c1 + c2 + c3 + params[4] * prob * np.exp(-np.abs(omega) * np.abs(t) / (1 + params[5] * np.abs(t)))\n    \n    return y\n\n",
+  "score": -0.8750495025717383,
+  "mean_nmse": 0.6228128552773962,
+  "min_nmse": 0.34260344536517146,
+  "max_nmse": 0.9200582456154207,
+  "median_nmse": 0.6108216644714195,
+  "std_nmse": 0.18404981323406738,
+  "worst2_mean_nmse": 0.8750495025717383,
+  "nmse_per_test": {
+    "dataset_0": 0.9200582456154207,
+    "dataset_1": 0.7297840298498165,
+    "dataset_2": 0.6365115964830776,
+    "dataset_3": 0.34260344536517146,
+    "dataset_4": 0.5851317324597614,
+    "dataset_5": 0.8300407595280559,
+    "dataset_6": 0.4907117523104485,
+    "dataset_7": 0.4476612806074177
+  },
+  "sample_time": 3.2269784212112427,
+  "evaluate_time": 2.1874496936798096
+}

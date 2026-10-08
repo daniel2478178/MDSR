@@ -1,0 +1,23 @@
+{
+  "sample_order": 1554,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.abs(t) + eps\n    omega_safe = np.abs(omega) + eps\n    \n    # Rabi oscillation / Landau-Zener type frequency response\n    # prob is typically sin^2(Omega t/2), so relate target to prob and t directly\n    # Shared structure: target = A * sqrt(prob*(1-prob)) / omega * (sin(omega*t)/omega) + B*t*prob\n    \n    # The transition probability has angular dependence; the target often is related to\n    # the generalized Rabi frequency: Omega = sqrt(omega0^2 + delta^2)\n    # Here we use a minimal physical form: V = (p0 * sin(omega*t)) / (t) * sqrt(prob)\n    \n    # Let prob be sin^2(x), then sqrt(prob*(1-prob)) = 0.5*sin(2x) gives phase info.\n    # Use arcsin-based extraction:\n    angle = np.arcsin(np.clip(np.sqrt(prob), 0, 1))\n    \n    # Physical law: target = C * (omega * t) * sin^2(angle) + D*(1-cos(omega*t))\n    # But simplified: target = params[0] * t * prob * np.sin(params[1] * omega * t) \n    #                          + params[2] * prob * np.cos(params[3]*omega*t) \n    #                          + params[4]*prob\n    \n    # Alternative inspired from two-level system: target = amplitude * (probtime) * \n    # sin(detuning*t)/(detuning) where detuning = omega - param\n    \n    delta = omega - params[0]\n    # Avoid division by zero\n    delta_safe = delta + eps*np.sign(delta+eps)\n    \n    # Rabi-like term: A * sin(delta*t)/delta * cos(params[1]*t) * prob plus small correction\n    rabi_term = params[2] * np.sin(delta_safe * t) / delta_safe\n    # Rotating-wave approximation term\n    osc_envelope = 1 + params[3] * np.cos(params[4] * omega * t)\n    \n    y = (prob * params[5] * np.sin(params[6]*omega*t)) / (t_safe) + \\\n        rabi_term * np.sqrt(prob) + params[7] * prob * np.exp(-params[8]*t_safe)\n    \n    return y\n\n",
+  "score": -0.735258296542721,
+  "mean_nmse": 0.516724432796702,
+  "min_nmse": 0.22855899657553821,
+  "max_nmse": 0.7423501388388557,
+  "median_nmse": 0.48616966115530214,
+  "std_nmse": 0.15581755999026392,
+  "worst2_mean_nmse": 0.735258296542721,
+  "nmse_per_test": {
+    "dataset_0": 0.7423501388388557,
+    "dataset_1": 0.5713036960075322,
+    "dataset_2": 0.5034063582286532,
+    "dataset_3": 0.22855899657553821,
+    "dataset_4": 0.468932964081951,
+    "dataset_5": 0.7281664542465864,
+    "dataset_6": 0.44417766178253515,
+    "dataset_7": 0.4468991926119635
+  },
+  "sample_time": 2.634436070919037,
+  "evaluate_time": 2.519270420074463
+}

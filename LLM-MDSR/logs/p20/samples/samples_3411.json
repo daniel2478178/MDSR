@@ -1,0 +1,23 @@
+{
+  "sample_order": 3411,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"Simplified shared equation with fewer parameters and physically meaningful form.\"\"\"\n    # Basic Rabi oscillation-like form where probability drives amplitude\n    # and frequency depends on omega, with possible detuning and decay\n    amp = params[0] * prob + params[1] * (1 - prob)\n    freq = omega * params[2]\n    phase = params[3] * t\n    # Combine resonant and off-resonant contributions\n    return amp * np.sin(freq * t + phase) * np.exp(-params[4] * t) + params[5] * (prob - 0.5)\n\n",
+  "score": -2.626499420483902,
+  "mean_nmse": 1.5351305510689097,
+  "min_nmse": 0.36573610204416634,
+  "max_nmse": 2.893691425989969,
+  "median_nmse": 1.7135635536673497,
+  "std_nmse": 0.9073389059336684,
+  "worst2_mean_nmse": 2.626499420483902,
+  "nmse_per_test": {
+    "dataset_0": 2.893691425989969,
+    "dataset_1": 2.2249490678538617,
+    "dataset_2": 0.36573610204416634,
+    "dataset_3": 0.4354967004427636,
+    "dataset_4": 1.819853641349832,
+    "dataset_5": 2.359307414977834,
+    "dataset_6": 1.6072734659848673,
+    "dataset_7": 0.5747365899079819
+  },
+  "sample_time": 1.84841650724411,
+  "evaluate_time": 3.2834877967834473
+}

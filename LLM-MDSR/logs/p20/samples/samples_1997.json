@@ -1,0 +1,23 @@
+{
+  "sample_order": 1997,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Target likely relates to Rabi oscillations: target = prob_function(omega, t)\n    # Physical form: target = A * sin^2(0.5 * sqrt(omega^2 + delta^2) * t) \n    # but prob is given, so invert relation: prob = sin^2(0.5*Omega*t) => target = f(prob, omega, t)\n    # Use: target = params[0] * (2*prob - 1) * sin(params[1]*omega*t + params[2]) + params[3]*t + params[4]\n    # Simplify to Hamiltonian-like: target = params[0]*arcsin(sqrt(prob)) * cos(params[1]*omega*t) + params[2]*t\n    # Let's try: target = params[0] * (prob**params[1]) * np.sin(params[2]*omega*t) + params[3] * np.cos(params[4]*t) + params[5]\n    \n    # More physical: transition probability in driven system: P = (omega_R^2 / Omega^2) * sin^2(Omega*t/2)\n    # So target likely = Omega (generalized Rabi frequency) or something derived from prob\n    # Since prob = sin^2(0.5 * sqrt(omega^2 + delta^2) * t), inverse gives:\n    # sqrt(omega^2 + delta^2) * t = 2*arcsin(sqrt(prob)) => target maybe delta or Omega\n    \n    # Try: target = params[0] * (np.arcsin(np.sqrt(prob)) / t)**2 - omega**2) * np.cos(params[1]*omega*t) + params[2]\n    \n    # Simpler physically meaningful: target = params[0] * (1 - 2*prob) * np.cos(params[1]*omega*t + params[2]) + params[3]\n    \n    # Use Rabi formula: prob = (omega_R^2 / (omega_R^2 + delta^2)) * sin^2(0.5*sqrt(omega_R^2+delta^2)*t)\n    # Assume omega is driving amplitude, prob is given. Then target could be detuning delta.\n    # delta = sqrt( (2*arcsin(sqrt(prob))/t)^2 - omega^2 )\n    \n    # Let's try: target = params[0] * np.sqrt( np.maximum((np.arcsin(np.sqrt(np.clip(prob,0,1)))*2/t)**2 - omega**2, 0) ) \n    # but t could be zero.\n    \n    # Instead: target = params[0] * np.sin(params[1]*omega*t + params[2]*np.arcsin(np.sqrt(prob))) * np.exp(-params[3]*t) + params[4]\n    \n    eps = 1e-10\n    # Simple harmonic with prob-dependent amplitude and phase\n    # target = A * prob * sin(B*omega*t + C) + D*cos(E*t)\n    \n    # Given probable datasets, try: target = params[0] * (prob - 0.5) * np.sin(params[1]*omega*t) + params[2] * np.cos(params[3]*t) + params[4]\n    \n    # Let's use a form: target = a0 * sin(a1*omega*t + a2*prob) + a3 * t + a4\n    return params[0] * np.sin(params[1] * omega * t + params[2] * prob) + params[3] * t + params[4]\n\n",
+  "score": -0.9473715233450655,
+  "mean_nmse": 0.8018663363925245,
+  "min_nmse": 0.570395454859707,
+  "max_nmse": 0.9985846810895216,
+  "median_nmse": 0.8179755566990617,
+  "std_nmse": 0.13225263196376183,
+  "worst2_mean_nmse": 0.9473715233450655,
+  "nmse_per_test": {
+    "dataset_0": 0.8961583656006095,
+    "dataset_1": 0.8241559780596932,
+    "dataset_2": 0.6233239053924728,
+    "dataset_3": 0.9985846810895216,
+    "dataset_4": 0.8097647620551541,
+    "dataset_5": 0.8807524087446073,
+    "dataset_6": 0.570395454859707,
+    "dataset_7": 0.8117951353384303
+  },
+  "sample_time": 2.8488828539848328,
+  "evaluate_time": 1.9985804557800293
+}

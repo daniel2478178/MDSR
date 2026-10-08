@@ -1,0 +1,23 @@
+{
+  "sample_order": 3424,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Rabi-like transition: amplitude scales with prob, phase driven by omega*t\n    # damping term depending on t\n    term1 = params[0] * prob * np.sin(x + params[1]) * np.exp(-params[2] * t)\n    # correction term depending on (1-prob) with oscillation at half frequency\n    term2 = params[3] * (1 - prob) * np.sin(0.5 * x + params[4]) * np.exp(-params[5] * t)\n    # small linear-in-omega component at small prob\n    term3 = params[6] * (1 - prob) * omega * t\n    return term1 + term2 + term3\n\n",
+  "score": -2.25800248125165,
+  "mean_nmse": 1.3039484474464438,
+  "min_nmse": 0.5884635182413462,
+  "max_nmse": 2.4815983689147556,
+  "median_nmse": 1.0907508245232056,
+  "std_nmse": 0.6059820242496742,
+  "worst2_mean_nmse": 2.25800248125165,
+  "nmse_per_test": {
+    "dataset_0": 2.4815983689147556,
+    "dataset_1": 1.414071732105404,
+    "dataset_2": 1.054577679111812,
+    "dataset_3": 0.5884635182413462,
+    "dataset_4": 1.1269239699345994,
+    "dataset_5": 2.0344065935885443,
+    "dataset_6": 0.9544303698640455,
+    "dataset_7": 0.7771153478110439
+  },
+  "sample_time": 1.9290379285812378,
+  "evaluate_time": 2.8771145343780518
+}

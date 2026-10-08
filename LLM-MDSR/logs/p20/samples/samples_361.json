@@ -1,0 +1,23 @@
+{
+  "sample_order": 361,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Based on Rabi oscillations: target is often related to sin^2(Omega*t)\n    # The generalized Rabi frequency Omega = sqrt((omega-omega0)^2 + Omega_R^2)\n    # Here we parameterize the detuning and Rabi coupling via params.\n    # Try target = A * (1 - cos(sqrt(delta^2 + Omega_R^2) * t)) / (delta^2 + Omega_R^2) * prob\n    # But we don't have omega0, so incorporate into params:\n    # Let p = prob\n    # Assume transition probability itself may carry the dependence, so\n    # We can use target = params[0] * prob * (1 - np.cos(omega*t + params[1])) + params[2] * omega * t * prob\n    \n    # A simpler physically motivated ansatz: target ~ prob * sin(omega*t) * exp(-t/tau)\n    # with detuning phase adjustment.\n    \n    delta = params[0]  # detuning\n    Omega_R = params[1]  # Rabi frequency\n    omega_eff = np.sqrt((omega - delta)**2 + Omega_R**2)\n    \n    # Time evolution for probability amplitude |c|^2 = sin^2(omega_eff * t/2)\n    # But we have prob already, which could be the probability. \n    # Target might be related to energy or population difference.\n    # A common form: target = A * (1 - 2*prob) * cos(omega*t) + B * sin(omega*t)\n    # Let's combine.\n    \n    # Using prob as the transition probability, target could be related to\n    # the negative derivative or some quadrature.\n    # Let's assume target = params[2] * (2*prob - 1) * np.cos(omega*t + params[3]) \n    #                 + params[4] * np.sin(omega*t)\n    \n    cos_phase = np.cos(omega*t + params[3])\n    sin_phase = np.sin(omega*t)\n    \n    # Physical interpretation: target is the in-phase and quadrature magnetization\n    # scaled by population difference (2*prob - 1)\n    y = params[2] * (2*prob - 1) * cos_phase + params[4] * sin_phase + params[5]\n    \n    # Add a nonlinear dependence on omega as often seen in dispersion/absorption:\n    # Additional term with Lorentzian shape\n    lorentz = 1.0 / (1.0 + ((omega - delta)/Omega_R)**2)\n    \n    y = y + params[6] * lorentz * prob * np.cos(t * omega_eff)\n    \n    return y\n\n",
+  "score": -0.5517782842972072,
+  "mean_nmse": 0.44022846053895437,
+  "min_nmse": 0.3578131688431295,
+  "max_nmse": 0.5944130124217368,
+  "median_nmse": 0.39955557537100106,
+  "std_nmse": 0.07978068959789342,
+  "worst2_mean_nmse": 0.5517782842972072,
+  "nmse_per_test": {
+    "dataset_0": 0.4036260737363327,
+    "dataset_1": 0.3578131688431295,
+    "dataset_2": 0.5091435561726777,
+    "dataset_3": 0.5944130124217368,
+    "dataset_4": 0.5062001418149058,
+    "dataset_5": 0.3954850770056695,
+    "dataset_6": 0.37209968974538277,
+    "dataset_7": 0.3830469645718
+  },
+  "sample_time": 3.369009494781494,
+  "evaluate_time": 2.349266290664673
+}

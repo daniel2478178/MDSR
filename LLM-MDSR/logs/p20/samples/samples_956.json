@@ -1,0 +1,23 @@
+{
+  "sample_order": 956,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-12\n    # Common physical structure: Rabi-like oscillation signal\n    # target = A * sqrt(prob) * sin(Omega_eff * t) type behavior\n    # but expressed directly in terms of prob, t, omega with dataset params\n    omega_safe = np.abs(omega) + eps\n    angle_term = omega * t\n    prob_safe = np.clip(prob, 0, 1)\n    \n    # Key dependence: amplitude-like factor involving sqrt(prob*(1-prob))\n    # which appears in two-level transition probabilities\n    rabi_factor = np.sqrt(np.abs(prob_safe * (1 - prob_safe)) + eps)\n    \n    # Oscillation frequency detuned from omega via param[0]\n    detuned_angle = omega_safe * t * params[0]\n    \n    # Decay envelope in time with param[1]\n    decay = np.exp(-np.abs(t) * params[1])\n    \n    # Phase shift and amplitude: params[2] amplitude, param[3] phase\n    oscillation = np.sin(detuned_angle + params[3])\n    \n    # For small probabilities (near zero), linear behavior; near 1, also linear\n    # Use sqrt(prob) enrichment with param[4]\n    prob_term = np.sqrt(prob_safe + eps) * params[4]\n    \n    # Combine: main shared physical law\n    y = params[2] * rabi_factor * decay * oscillation + prob_term * np.cos(angle_term * params[5] + params[6]) * np.exp(-omega_safe * t * params[7])\n    \n    return y\n\n",
+  "score": -1.0194079892487329,
+  "mean_nmse": 1.0108351173404064,
+  "min_nmse": 0.9997454594939682,
+  "max_nmse": 1.0220120024148835,
+  "median_nmse": 1.0115468189653978,
+  "std_nmse": 0.0067886566004254295,
+  "worst2_mean_nmse": 1.0194079892487329,
+  "nmse_per_test": {
+    "dataset_0": 1.0078477356326354,
+    "dataset_1": 1.0132673537882064,
+    "dataset_2": 1.0098262841425893,
+    "dataset_3": 1.0031480692483086,
+    "dataset_4": 1.0140300579200783,
+    "dataset_5": 0.9997454594939682,
+    "dataset_6": 1.0220120024148835,
+    "dataset_7": 1.0168039760825824
+  },
+  "sample_time": 2.6637898087501526,
+  "evaluate_time": 3.9473018646240234
+}

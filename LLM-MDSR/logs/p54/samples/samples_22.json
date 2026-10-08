@@ -1,0 +1,23 @@
+{
+  "sample_order": 22,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # params: [amplitude, damping, frequency, phase, offset, harmonic_ratio, modulation]\n    envelope = np.exp(-params[1] * t)\n    base_phase = params[2] * t + params[3]\n    \n    # Primary oscillation\n    primary = np.sin(base_phase)\n    \n    # Second harmonic with reduced amplitude\n    harmonic = params[5] * np.sin(2 * base_phase)\n    \n    # Slow amplitude modulation\n    modulation = 1.0 + params[6] * np.cos(params[2] * 0.5 * t)\n    \n    y = params[0] * envelope * modulation * (primary + harmonic) + params[4]\n    return y\n\n",
+  "score": -0.005894218853868952,
+  "mean_nmse": 0.001483133786521153,
+  "min_nmse": 1.0194464505183351e-08,
+  "max_nmse": 0.01165140915158899,
+  "median_nmse": 3.897001634398781e-06,
+  "std_nmse": 0.003843520837977663,
+  "worst2_mean_nmse": 0.005894218853868952,
+  "nmse_per_test": {
+    "dataset_0": 6.74721155586673e-05,
+    "dataset_1": 6.107063415340582e-06,
+    "dataset_2": 1.1753144086806593e-06,
+    "dataset_3": 1.8095673067175287e-07,
+    "dataset_4": 0.00013702855614891452,
+    "dataset_5": 0.01165140915158899,
+    "dataset_6": 1.0194464505183351e-08,
+    "dataset_7": 1.68693985345698e-06
+  },
+  "sample_time": 1.7236531376838684,
+  "evaluate_time": 4.507400274276733
+}

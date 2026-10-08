@@ -1,0 +1,23 @@
+{
+  "sample_order": 1152,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition with driving field corrections\n    eps = 1e-12\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical model: transition probability governed by time-energy uncertainty\n    # with driving frequency coupling\n    angle = omega * t\n    \n    # Probability-driven base with saturation\n    prob_eff = np.clip(prob, 0.0, 1.0)\n    \n    # Rabi-like oscillation with offset\n    rabi_term = np.sin(angle) * np.sqrt(prob_eff * (1.0 - prob_eff))\n    \n    # Landau-Zener tunneling rate correction\n    lz_correction = np.exp(-params[0] * (omega_safe**2) / (np.abs(params[1]) + eps))\n    \n    # Time-dependent decay/accumulation\n    time_factor = np.exp(-params[2] * t_safe) * np.cos(params[3] * omega_safe * t_safe)\n    \n    # Combine: dominant term from prob with saturation + corrections\n    y = (params[4] * prob_eff * lz_correction \n         + params[5] * rabi_term * time_factor\n         + params[6] * (1.0 - prob_eff) * np.sin(params[7] * omega_safe * t_safe))\n    \n    # Ensure non-negative target if physical quantity is positive\n    y = np.abs(y) + params[8] * prob_eff\n    \n    return y\n\n",
+  "score": -0.9952057163164496,
+  "mean_nmse": 0.984209816988906,
+  "min_nmse": 0.956830087684085,
+  "max_nmse": 0.9964822717837454,
+  "median_nmse": 0.9921507797414981,
+  "std_nmse": 0.015194740032407247,
+  "worst2_mean_nmse": 0.9952057163164496,
+  "nmse_per_test": {
+    "dataset_0": 0.956830087684085,
+    "dataset_1": 0.9916095351114477,
+    "dataset_2": 0.9939291608491537,
+    "dataset_3": 0.9964822717837454,
+    "dataset_4": 0.9889819115199087,
+    "dataset_5": 0.9594550123177523,
+    "dataset_6": 0.993698532273606,
+    "dataset_7": 0.9926920243715487
+  },
+  "sample_time": 4.09596848487854,
+  "evaluate_time": 3.6956803798675537
+}

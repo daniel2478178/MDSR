@@ -1,0 +1,23 @@
+{
+  "sample_order": 3652,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition with time-dependent driving\n    # target = params[0] * (1 - prob) * omega * np.sin(params[1] * omega * t + params[2])\n    #         + params[3] * prob * t * np.cos(params[4] * t + params[5])\n    # Simplified without sine/cosine to test basic power-law behavior\n    x = omega * t\n    return params[0] * (1 - prob) * t * np.power(omega, params[1]) * np.exp(-params[2] * t) + params[3] * prob * np.power(t, params[4]) * np.cos(params[5] * omega * t)\n\n",
+  "score": -0.5171829764465553,
+  "mean_nmse": 0.39240384223836566,
+  "min_nmse": 0.3167347670351886,
+  "max_nmse": 0.5191771997052553,
+  "median_nmse": 0.3557413173856434,
+  "std_nmse": 0.0800914015728104,
+  "worst2_mean_nmse": 0.5171829764465553,
+  "nmse_per_test": {
+    "dataset_0": 0.5191771997052553,
+    "dataset_1": 0.43339330861692954,
+    "dataset_2": 0.36070596695001056,
+    "dataset_3": 0.35077666782127626,
+    "dataset_4": 0.32352543755604435,
+    "dataset_5": 0.5151887531878553,
+    "dataset_6": 0.31972863703436555,
+    "dataset_7": 0.3167347670351886
+  },
+  "sample_time": 1.4658703207969666,
+  "evaluate_time": 2.4275166988372803
+}

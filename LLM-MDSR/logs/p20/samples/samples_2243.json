@@ -1,0 +1,23 @@
+{
+  "sample_order": 2243,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target = A * prob * cos(omega*t) + B * sqrt(prob*(1-prob)) * sin(omega*t) + C\n    # This represents a Rabi oscillation amplitude with mixing between the populations\n    cos_term = params[0] * prob * np.cos(omega * t)\n    sin_term = params[1] * np.sqrt(np.maximum(prob * (1 - prob), 0)) * np.sin(omega * t)\n    \n    # Damping and phase shift\n    damping = np.exp(-params[2] * np.abs(t))\n    phase = params[3] * t\n    \n    # Final expression combining Rabi-like oscillation with damping\n    return (cos_term + sin_term) * damping + params[4] * prob + params[5] * np.sin(phase + params[6])\n\n",
+  "score": -0.4198797582456718,
+  "mean_nmse": 0.3740003669844578,
+  "min_nmse": 0.33399032135832235,
+  "max_nmse": 0.43008880886284745,
+  "median_nmse": 0.371803731681378,
+  "std_nmse": 0.03496860235857562,
+  "worst2_mean_nmse": 0.4198797582456718,
+  "nmse_per_test": {
+    "dataset_0": 0.40254084440103644,
+    "dataset_1": 0.33399032135832235,
+    "dataset_2": 0.3352194061419697,
+    "dataset_3": 0.43008880886284745,
+    "dataset_4": 0.33688538412023467,
+    "dataset_5": 0.4096707076284961,
+    "dataset_6": 0.36643526817070293,
+    "dataset_7": 0.37717219519205303
+  },
+  "sample_time": 2.137835741043091,
+  "evaluate_time": 2.4229660034179688
+}

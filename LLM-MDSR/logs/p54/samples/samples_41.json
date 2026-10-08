@@ -1,0 +1,14 @@
+{
+  "sample_order": 41,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Extract parameters: amplitude, phase, offset, and anharmonic coupling\n    A = params[0]\n    phi = params[1]\n    x0 = params[2]\n    alpha = params[3]  # nonlinear distortion strength\n    \n    # Use provided frequency or default to 1.0\n    w = omega[0] if omega.size > 0 else 1.0\n    \n    # Fundamental phase\n    theta = w * t + phi\n    \n    # Create base sine wave\n    sin_theta = np.sin(theta)\n    \n    # Add a periodic nonlinear correction using cos(2θ) that preserves periodicity\n    # This accounts for waveform asymmetry without breaking shared structure\n    y = x0 + A * (sin_theta + alpha * np.cos(2 * theta))\n    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.3376630942026773,
+  "evaluate_time": 2.7839910984039307
+}

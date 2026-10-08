@@ -1,0 +1,23 @@
+{
+  "sample_order": 2223,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Improved physical model: Landau-Zener-type transition with Rabi oscillations\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Compute effective detuning and generalized Rabi frequency\n    delta = params[0] * (prob - 0.5) * 2  # detuning parameter influenced by prob\n    rabi = params[1]  # Rabi frequency constant\n    \n    # Generalized Rabi frequency: omega_eff = sqrt(rabi^2 + delta^2)\n    omega_eff = np.sqrt(rabi**2 + delta**2)\n    \n    # Time-dependent Rabi oscillation\n    angle = omega_eff * t\n    \n    # Physical relationship based on Rabi formula:\n    # P = (rabi^2 / omega_eff^2) * sin^2(omega_eff * t / 2)\n    # Target is related to transition probability and frequency scaling\n    \n    # Main expression: target = params[2] * P * (1 + params[3]*cos(params[4]*t + params[5])) * exp(-params[6]*t)\n    P_rabi = (rabi**2 / (omega_eff**2 + eps)) * np.sin(angle / 2)**2\n    \n    # Combine with prob and time-dependent modulation\n    osc_part = 1 + params[3] * np.cos(params[4] * t + params[5])\n    \n    # Exponential decay term\n    decay = np.exp(-params[6] * t)\n    \n    # Final output: target = params[2] * P_rabi * osc_part * decay + params[7] * prob * np.sin(omega_safe * t)\n    main_term = params[2] * P_rabi * osc_part * decay\n    correction_term = params[7] * prob * np.sin(omega_safe * t)\n    \n    return main_term + correction_term + params[8]\n\n",
+  "score": -0.6870868634961362,
+  "mean_nmse": 0.5499233281846123,
+  "min_nmse": 0.4119945605407616,
+  "max_nmse": 0.7270875538642498,
+  "median_nmse": 0.5355062479235206,
+  "std_nmse": 0.1072134881603028,
+  "worst2_mean_nmse": 0.6870868634961362,
+  "nmse_per_test": {
+    "dataset_0": 0.6470861731280226,
+    "dataset_1": 0.5549516761006354,
+    "dataset_2": 0.5160608197464057,
+    "dataset_3": 0.7270875538642498,
+    "dataset_4": 0.4648260053029483,
+    "dataset_5": 0.6469485046454355,
+    "dataset_6": 0.43043133214843937,
+    "dataset_7": 0.4119945605407616
+  },
+  "sample_time": 2.59138286113739,
+  "evaluate_time": 9.908256769180298
+}

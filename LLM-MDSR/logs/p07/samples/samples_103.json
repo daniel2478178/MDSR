@@ -1,0 +1,24 @@
+{
+  "sample_order": 103,
+  "function": "def equation(E_n: np.ndarray, theta: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        B = f(E_n, theta, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        E_n:\n            Independent variable.\n\n        theta:\n            Independent variable.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity B.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"Improved version of `equation_v1`. Rewrite the mathematical expression in the function body. Return a complete valid implementation with an explicit return statement.\"\"\"\n    \"\"\"Improved version of `equation_v0`. Rewrite the mathematical expression in the function body. Return a complete valid implementation with an explicit return statement.\"\"\"\n    y = params[0] * np.exp(-params[1] * E_n) * np.cos(theta) + params[2] * E_n * np.sin(theta) + params[3] / (1.0 + params[4] * np.cos(theta)**2)\n    return y\n\n",
+  "score": 3.7825070462963573,
+  "complexity": 15,
+  "mean_nmse": 0.012092533720720354,
+  "min_nmse": 0.011479903330013941,
+  "max_nmse": 0.012606852059650786,
+  "median_nmse": 0.012144568043756004,
+  "std_nmse": 0.00033161958787023866,
+  "worst2_mean_nmse": 0.01249399629695888,
+  "nmse_per_test": {
+    "dataset_0": 0.012102453548497377,
+    "dataset_1": 0.012606852059650786,
+    "dataset_2": 0.011973819849610693,
+    "dataset_3": 0.012381140534266973,
+    "dataset_4": 0.012247770056020275,
+    "dataset_5": 0.012186682539014629,
+    "dataset_6": 0.011479903330013941,
+    "dataset_7": 0.011761647848688158
+  },
+  "sample_time": 1.0154457688331604,
+  "evaluate_time": 3.555596351623535
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 4635,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    p1 = params[0]\n    p2 = params[1]\n    p3 = params[2]\n    p4 = params[3]\n    p5 = params[4]\n    p6 = params[5]\n    \n    # Physical model: damped oscillatory response driven by transition probability\n    # term1: probability-weighted damped sine oscillation\n    # term2: probability-modulated amplitude term\n    # term3: base damping factor\n    return p1 * (1 - prob) * np.sin(p2 * x) * np.exp(-p3 * t) + p4 * prob * np.cos(p5 * x) + p6 * np.sqrt(prob)\n\n",
+  "score": -0.8548678918151853,
+  "mean_nmse": 0.7828301937286419,
+  "min_nmse": 0.6323918012274221,
+  "max_nmse": 0.8717121791332055,
+  "median_nmse": 0.7879823332257425,
+  "std_nmse": 0.0686620911608249,
+  "worst2_mean_nmse": 0.8548678918151853,
+  "nmse_per_test": {
+    "dataset_0": 0.8380236044971651,
+    "dataset_1": 0.8310083612656163,
+    "dataset_2": 0.8717121791332055,
+    "dataset_3": 0.6323918012274221,
+    "dataset_4": 0.7428062713444289,
+    "dataset_5": 0.770734665909813,
+    "dataset_6": 0.7907564253564106,
+    "dataset_7": 0.7852082410950745
+  },
+  "sample_time": 1.6256428360939026,
+  "evaluate_time": 2.984532356262207
+}

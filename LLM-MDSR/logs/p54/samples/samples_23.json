@@ -1,0 +1,14 @@
+{
+  "sample_order": 23,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Damped oscillator with nonlinear frequency modulation via omega\n    # and time-dependent envelope characterized by hyperbolic secant shaping\n    base_freq = params[1] * omega + params[2]\n    phase = base_freq * t + params[3] + params[5] * np.sin(params[1] * t)\n    envelope = np.exp(-params[0] * t) * (1.0 / np.cosh(params[6] * (t - params[7])))\n    y = params[4] + params[8] * envelope * np.sin(phase) * np.cos(params[9] * omega * t)\n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 1.7236531376838684,
+  "evaluate_time": 2.698246479034424
+}

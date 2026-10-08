@@ -1,0 +1,23 @@
+{
+  "sample_order": 2306,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Rabi-type transition probability relation: target scales with prob,\n    # with an oscillatory time dependence and inverse-square frequency factor.\n    # Physical model: |c(t)|^2 = prob = (Omega_R^2 / Omega^2) * sin^2(Omega*t/2)\n    # Solving for Omega_R^2 / Omega^2 and taking inverse gives target relation.\n    # Here target = A * prob * omega^2 / sin^2(omega*t) + B, avoiding singularities.\n    \n    sin_term = np.sin(omega_safe * t)\n    sin_term_safe = np.where(np.abs(sin_term) < eps, eps, sin_term)\n    \n    # Core physics: target = p0 * prob * (omega^2 / sin^2(omega*t)) \n    # This comes from inverting the Rabi formula: Omega_R^2 = prob * omega^2 / sin^2(omega*t)\n    # when the Rabi frequency equals the driving frequency.\n    base = params[0] * prob * (omega_safe**2) / (sin_term_safe**2)\n    \n    # Add a small damping/offset to regularize and capture any additional physics\n    # Avoid singularities and improve fit flexibility.\n    return base + params[1] * np.exp(-params[2] * np.abs(t) * omega_safe) * np.cos(params[3] * t) + params[4]\n\n",
+  "score": -184300675.9674996,
+  "mean_nmse": 46075169.741813906,
+  "min_nmse": 0.9995802775568949,
+  "max_nmse": 368601346.34623355,
+  "median_nmse": 0.9999964629812657,
+  "std_nmse": 121903436.37197043,
+  "worst2_mean_nmse": 184300675.9674996,
+  "nmse_per_test": {
+    "dataset_0": 0.9995802775568949,
+    "dataset_1": 0.9999739519098124,
+    "dataset_2": 5.588765654017698,
+    "dataset_3": 368601346.34623355,
+    "dataset_4": 0.9999145460416279,
+    "dataset_5": 0.9999988442456774,
+    "dataset_6": 1.0000503379111125,
+    "dataset_7": 0.9999940817168539
+  },
+  "sample_time": 2.6896289587020874,
+  "evaluate_time": 2.1682097911834717
+}

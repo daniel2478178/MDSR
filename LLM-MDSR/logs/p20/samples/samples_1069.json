@@ -1,0 +1,23 @@
+{
+  "sample_order": 1069,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Guard against edge cases\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical form: oscillatory Rabi-like behavior with prob as amplitude\n    angle = omega * t\n    rabi = params[0] * np.sqrt(np.maximum(prob, 0.0)) * np.sin(angle + params[1])\n    # Envelope decay / detuning factor\n    decay = np.exp(-params[2] * np.abs(t) / omega_safe)\n    # Include t-dependent scaling and an offset\n    y = rabi * decay + params[3] * prob * (1 - np.cos(angle)) / np.maximum(1e-6, omega_safe)\n    \n    return y\n\n",
+  "score": -1.5375026380589223,
+  "mean_nmse": 1.21015482654002,
+  "min_nmse": 0.8574003537695671,
+  "max_nmse": 1.5634814005303188,
+  "median_nmse": 1.1542260298149882,
+  "std_nmse": 0.21936027446767692,
+  "worst2_mean_nmse": 1.5375026380589223,
+  "nmse_per_test": {
+    "dataset_0": 1.5634814005303188,
+    "dataset_1": 1.2715929227794682,
+    "dataset_2": 1.1940307531445176,
+    "dataset_3": 0.8574003537695671,
+    "dataset_4": 1.114421306485459,
+    "dataset_5": 1.5115238755875258,
+    "dataset_6": 1.0811040765649007,
+    "dataset_7": 1.087683923458402
+  },
+  "sample_time": 2.6083149909973145,
+  "evaluate_time": 2.167041540145874
+}

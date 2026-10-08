@@ -1,0 +1,23 @@
+{
+  "sample_order": 1462,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Rabi-like transition: probability oscillates with sqrt(omega^2 + coupling^2)\n    # Target likely related to detuning / energy or time-dependent phase factor\n    # Model: target ~ prob * exp(-t/tau) * cos(omega*t + phi) / (1 + (omega/Omega)^2)\n    \n    # Use params: p0=amplitude, p1=decay rate, p2=phase, p3=frequency scale, p4=offset\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    p4 = params[4]\n    \n    # Physical form: damped oscillatory response scaled by probability\n    # Typical in driven quantum systems: P(t) ~ prob * sin^2(omega_R t/2)\n    # Here omega_R = sqrt(omega^2 + coupling^2), coupling as parameter\n    \n    omega_R = np.sqrt(omega**2 + p3**2)\n    # Time-dependent factor: decaying oscillation\n    time_factor = np.exp(-np.abs(t) * p1) * np.cos(omega_R * t + p2)\n    \n    # Probability drives amplitude, sometimes as (prob - 0.5) or prob^(power)\n    # Simple physical: target proportional to prob * time_factor\n    y = p0 * prob * time_factor + p4\n    \n    # Prevent division by zero and keep finite\n    y = np.where(np.isfinite(y), y, 0.0)\n    return y\n\n",
+  "score": -0.8954714082677316,
+  "mean_nmse": 0.8570823669011395,
+  "min_nmse": 0.8121432165719699,
+  "max_nmse": 0.897752879346402,
+  "median_nmse": 0.8588316866749415,
+  "std_nmse": 0.0307711586002617,
+  "worst2_mean_nmse": 0.8954714082677316,
+  "nmse_per_test": {
+    "dataset_0": 0.8931899371890613,
+    "dataset_1": 0.8334899728944787,
+    "dataset_2": 0.8121432165719699,
+    "dataset_3": 0.8786148866999177,
+    "dataset_4": 0.8238046691574034,
+    "dataset_5": 0.897752879346402,
+    "dataset_6": 0.8436040260611322,
+    "dataset_7": 0.8740593472887507
+  },
+  "sample_time": 2.7022144198417664,
+  "evaluate_time": 2.1162281036376953
+}

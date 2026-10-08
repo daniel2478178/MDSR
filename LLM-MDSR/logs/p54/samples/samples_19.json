@@ -1,0 +1,23 @@
+{
+  "sample_order": 19,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Amplitude-modulated damped oscillator with nonlinear phase correction term\n    # params: [amplitude, damping, frequency, phase, offset, anharmonicity, decay_rate2]\n    # Structure includes secular-like quadratic phase correction for improved accuracy\n    phase = params[2] * t + params[3] + params[5] * np.square(t) * np.exp(-params[6] * t)\n    envelope = np.exp(-params[1] * t) * (1 + params[5] * np.cos(params[2] * t))\n    y = params[0] * envelope * np.sin(phase) + params[4]\n    return y\n\n",
+  "score": -0.00012094648994726794,
+  "mean_nmse": 3.096721090976696e-05,
+  "min_nmse": 1.666093299460787e-09,
+  "max_nmse": 0.0002031041582645757,
+  "median_nmse": 1.3082939662520352e-06,
+  "std_nmse": 6.623546447701393e-05,
+  "worst2_mean_nmse": 0.00012094648994726794,
+  "nmse_per_test": {
+    "dataset_0": 2.7234547744747856e-06,
+    "dataset_1": 2.438949660977103e-07,
+    "dataset_2": 3.082024714989772e-07,
+    "dataset_3": 1.666093299460787e-09,
+    "dataset_4": 0.0002031041582645757,
+    "dataset_5": 3.8788821629960196e-05,
+    "dataset_6": 2.5910361722379804e-07,
+    "dataset_7": 2.3083854610050935e-06
+  },
+  "sample_time": 1.5502987504005432,
+  "evaluate_time": 3.5577940940856934
+}

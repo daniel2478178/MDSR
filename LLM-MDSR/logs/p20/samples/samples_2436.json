@@ -1,0 +1,23 @@
+{
+  "sample_order": 2436,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Shared physical law: transition probability follows a Rabi-like oscillatory  \n    # response with detuning and driving amplitude dependencies.  \n    # Structure: target = detuning envelope * prob * sin^2(omega_eff * t/2)  \n    # but simplified to use prob as a scaling factor for the oscillation amplitude.  \n    # Physically, this relates to population transfer in two-level systems.  \n    \n    # omega_eff (effective Rabi frequency) depends on omega and prob  \n    # Since prob can vary, we incorporate:  \n    # Amplitude term: A * prob * omega  \n    # Oscillation: sin^2(pi * omega_eff * t) where omega_eff ≈ prob * omega  \n    # Detuning/decay via exp(-gamma * t)  \n    \n    # Parameter set:  \n    # params[0]: overall amplitude scaling (coupling strength)  \n    # params[1]: frequency scaling (related to detuning)  \n    # params[2]: decay rate  \n    # params[3]: phase offset  \n    \n    x = omega * t  \n    # Common structure across datasets:  \n    # target = p0 * prob * omega * sin^2( p1 * prob * x + p2 ) * exp(-p3 * t)  \n    # plus small baseline term from p4*prob  \n    \n    # Using prob directly multiplies with t and omega to preserve physical sense  \n    return (params[0] * prob * omega *  \n            np.sin(params[1] * prob * x + params[2])**2 *  \n            np.exp(-params[3] * t) +  \n            params[4] * prob * np.cos(params[5] * omega * t))\n\n",
+  "score": -3.729708114733704,
+  "mean_nmse": 2.6549876455565316,
+  "min_nmse": 1.6160992691844682,
+  "max_nmse": 3.8560784608285865,
+  "median_nmse": 2.6237129080549497,
+  "std_nmse": 0.7584560276883058,
+  "worst2_mean_nmse": 3.729708114733704,
+  "nmse_per_test": {
+    "dataset_0": 2.9364246441740827,
+    "dataset_1": 2.3421783087756505,
+    "dataset_2": 2.15964332721559,
+    "dataset_3": 3.8560784608285865,
+    "dataset_4": 1.820891878300803,
+    "dataset_5": 2.9052475073342494,
+    "dataset_6": 1.6160992691844682,
+    "dataset_7": 3.6033377686388217
+  },
+  "sample_time": 2.3277149200439453,
+  "evaluate_time": 2.323646306991577
+}

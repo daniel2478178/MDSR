@@ -1,0 +1,23 @@
+{
+  "sample_order": 3153,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landscape-informed ansatz: Rabi-like oscillation with damping\n    # and possible offset / saturation.\n    theta = params[0] * omega * t  # generalized Rabi frequency\n    # Avoid division by zero in case t=0; use a small regularizer\n    eps = 1e-12\n    # Time-dependent modulation of the probability amplitude\n    # Include a monotonically increasing term in t, which might model\n    # cumulative effect (e.g., amount of transferred population).\n    damp = np.exp(-params[1] * t)\n    # Combine probability with oscillation phase that depends on omega and t\n    # Make it robust for small t (initial behavior)\n    sin_term = np.sin(theta + params[2])\n    cos_term = np.cos(theta + params[3])\n    # Possible amplitude factor: use prob to tune slope.\n    # The term prob*sin(omega t) captures Bloch-type oscillation.\n    # Adding a linear-in-t saturation term for long time.\n    linear = params[4] * prob * t\n    # Possibly a term proportional to (1-prob) that decays.\n    background = params[5] * (1 - prob) * damp\n    # Final result: use a weighted linear combination\n    # but here we try a physically structured form:\n    # target = A * prob * [ some function of (omega t) ] + B * t + C*(1-prob)*exp(-gamma t)\n    # To keep dimensionality flexible, we will allow a normalized mixing.\n    # Simpler guess: target is related to population transfer-like quantity:\n    # often probabilities transform under sin^2(w t) type.\n    # To avoid going too high-order, we try:\n    front = params[0] * prob * np.sin(theta + params[2])**2\n    # Add a possible phase shift in sin^2 term\n    # But since params[2] already in theta, we can incorporate offset.\n    # Instead let's attempt: target = p1 * prob * sin^2(w t) + p2 * t + p3 * (1-prob) * exp(-p4 t)\n    # Fewer parameters: use 4 parameters.\n    result = params[0] * prob * np.sin(params[1] * omega * t + params[2])**2 + params[3] * t\n    # If needed, add a slowly varying background via (1-prob) term but\n    # we can keep simple as above.\n    # To be safe against negative values maybe use absolute? No, keep linear.\n    # Ensure shape matches prob: since all arrays same length, ok.\n    return result\n\n",
+  "score": -0.7042744948870451,
+  "mean_nmse": 0.5314355523384755,
+  "min_nmse": 0.3850442957201577,
+  "max_nmse": 0.7080921715361678,
+  "median_nmse": 0.49655562667063413,
+  "std_nmse": 0.11487425727899285,
+  "worst2_mean_nmse": 0.7042744948870451,
+  "nmse_per_test": {
+    "dataset_0": 0.7080921715361678,
+    "dataset_1": 0.5880892990753049,
+    "dataset_2": 0.5218891135119079,
+    "dataset_3": 0.3850442957201577,
+    "dataset_4": 0.47122213982936034,
+    "dataset_5": 0.7004568182379224,
+    "dataset_6": 0.44557647773560866,
+    "dataset_7": 0.43111410306137404
+  },
+  "sample_time": 2.8760440945625305,
+  "evaluate_time": 8.904038429260254
+}

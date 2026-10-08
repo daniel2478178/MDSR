@@ -1,0 +1,23 @@
+{
+  "sample_order": 1371,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Simplify to a physically-inspired Rabi-like formula:\n    # target = A * prob * sin^2(omega * t) / (1 + B * t) + C * t\n    # This captures oscillatory behavior with decay and a linear drift term.\n    \n    sin_term = np.sin(params[0] * omega * t + params[1])**2\n    envelope = sin_term / (1.0 + params[2] * t_safe)\n    \n    core = prob * envelope * params[3]\n    \n    # Optional linear time term for slow drift\n    drift = params[4] * t\n    \n    # Small offset\n    offset = params[5]\n    \n    y = core + drift + offset\n    return y\n\n",
+  "score": -0.6443315316431137,
+  "mean_nmse": 0.42131586377808217,
+  "min_nmse": 0.16694014883348235,
+  "max_nmse": 0.6502884311181062,
+  "median_nmse": 0.4179439752293787,
+  "std_nmse": 0.1729966339108977,
+  "worst2_mean_nmse": 0.6443315316431137,
+  "nmse_per_test": {
+    "dataset_0": 0.6502884311181062,
+    "dataset_1": 0.5552609517968743,
+    "dataset_2": 0.47245585992478556,
+    "dataset_3": 0.16694014883348235,
+    "dataset_4": 0.36343209053397185,
+    "dataset_5": 0.6383746321681214,
+    "dataset_6": 0.2765629628060363,
+    "dataset_7": 0.2472118330432793
+  },
+  "sample_time": 3.0274195075035095,
+  "evaluate_time": 5.052119016647339
+}

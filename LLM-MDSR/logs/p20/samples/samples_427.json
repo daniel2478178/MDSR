@@ -1,0 +1,23 @@
+{
+  "sample_order": 427,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    theta = omega * t\n    # Shared Rabi-like law: target ∝ prob * [A*sin^2(theta/2)/theta + B*sin(theta)/theta]\n    # asymptotic as theta approaches 0 is quadratic in theta\n    \n    # Landau-Zener-like tunneling probability scaled by Rabi frequency\n    # Use prob as effective coupling; physical target often has dependence prob * f(omega*t)\n    \n    # More compact: target = p0 * prob + p1 * prob * sin^2(omega*t)/ (1 + p2 * omega^2 * t^2) + p3\n    # Based on equations of motion in driven two-level systems\n    \n    sin2 = np.sin(theta / 2.0) ** 2\n    denom = 1.0 + params[2] * (omega**2) * (t**2) + eps\n    y = params[0] * prob + params[1] * prob * sin2 / denom + params[3]\n    \n    # Ensure non-negativity by adding linear decay with time (common in damping)\n    # Include mild exponential suppression at long times\n    y = y + params[4] * prob * np.exp(-np.abs(t) * params[5])\n    \n    return y\n\n",
+  "score": -0.5596593893758189,
+  "mean_nmse": 0.4448572826728033,
+  "min_nmse": 0.31348201355212435,
+  "max_nmse": 0.560795513288367,
+  "median_nmse": 0.4339867680983934,
+  "std_nmse": 0.08189993733650731,
+  "worst2_mean_nmse": 0.5596593893758189,
+  "nmse_per_test": {
+    "dataset_0": 0.560795513288367,
+    "dataset_1": 0.4837766052394042,
+    "dataset_2": 0.4511355368920703,
+    "dataset_3": 0.31348201355212435,
+    "dataset_4": 0.36433829680041635,
+    "dataset_5": 0.5585232654632709,
+    "dataset_6": 0.4099690308420565,
+    "dataset_7": 0.41683799930471654
+  },
+  "sample_time": 3.1982553601264954,
+  "evaluate_time": 3.955101251602173
+}

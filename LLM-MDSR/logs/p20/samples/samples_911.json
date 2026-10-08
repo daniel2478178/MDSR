@@ -1,0 +1,23 @@
+{
+  "sample_order": 911,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition probability integrated with Rabi oscillations\n    # target = amplitude * (1 - 2*prob) * sin^2(omega*t/2) / (omega*t/2)^2 + offset\n    eps = 1e-12\n    x = omega * t\n    x_safe = np.where(np.abs(x) < eps, eps, x)\n    \n    # Rabi oscillation term: sin^2(x/2)/(x/2)^2 is the sinc^2 envelope\n    rabi_env = (np.sin(x / 2.0) / (x_safe / 2.0)) ** 2\n    \n    # Transition amplitude peaks at prob=0.5; use prob to weight\n    response = params[0] * (1.0 - 2.0 * prob) * np.sin(x) * rabi_env\n    \n    # Add small damping if needed\n    damping = np.exp(-params[1] * np.abs(t))\n    \n    # Linear baseline term with oscillatory drive\n    baseline = params[2] * prob * np.cos(omega * t) * damping\n    \n    y = response + baseline + params[3] * prob\n    \n    return y\n\n",
+  "score": -1.6069488422859586,
+  "mean_nmse": 1.4017966907605781,
+  "min_nmse": 0.9963084940888818,
+  "max_nmse": 1.6404671290675967,
+  "median_nmse": 1.4236081702200414,
+  "std_nmse": 0.18392390433269973,
+  "worst2_mean_nmse": 1.6069488422859586,
+  "nmse_per_test": {
+    "dataset_0": 1.482879436888201,
+    "dataset_1": 1.5734305555043204,
+    "dataset_2": 1.6404671290675967,
+    "dataset_3": 0.9963084940888818,
+    "dataset_4": 1.4652025299568097,
+    "dataset_5": 1.3820138104832729,
+    "dataset_6": 1.3513108867627048,
+    "dataset_7": 1.322760683332837
+  },
+  "sample_time": 3.4377421140670776,
+  "evaluate_time": 2.108391761779785
+}

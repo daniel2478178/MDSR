@@ -1,0 +1,23 @@
+{
+  "sample_order": 5611,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Try a physical two-level system Rabi-like model: \n    # target = A * prob * sin^2(x/2) / (1 + decay) + B * (1-prob) * cos(x) \n    # Simplify with adjustable parameters: amplitude, detuning, decay\n    A = params[0]\n    B = params[1]\n    gamma = params[2]\n    delta = params[3]\n    phi = params[4]\n    return A * prob * np.sin(x/2 + phi)**2 * np.exp(-gamma*t) + B * (1 - prob) * np.cos(x + phi) * np.exp(-delta*t)\n\n",
+  "score": -1.1474390311342053,
+  "mean_nmse": 0.7248656325258808,
+  "min_nmse": 0.42365420392731906,
+  "max_nmse": 1.1570970846605158,
+  "median_nmse": 0.6437562722166974,
+  "std_nmse": 0.2843407345819963,
+  "worst2_mean_nmse": 1.1474390311342053,
+  "nmse_per_test": {
+    "dataset_0": 1.1570970846605158,
+    "dataset_1": 0.8794645813190876,
+    "dataset_2": 0.7369652211471286,
+    "dataset_3": 0.42365420392731906,
+    "dataset_4": 0.5505473232862663,
+    "dataset_5": 1.1377809776078947,
+    "dataset_6": 0.4724316055191185,
+    "dataset_7": 0.44098406273971574
+  },
+  "sample_time": 1.935347080230713,
+  "evaluate_time": 2.414844512939453
+}

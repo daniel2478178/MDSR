@@ -1,0 +1,23 @@
+{
+  "sample_order": 1220,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-12\n    # Phase angle accumulated during interaction\n    phase = omega * t\n    # Sine and cosine of phase for oscillatory behavior\n    sin_phase = np.sin(phase)\n    cos_phase = np.cos(phase)\n    # Common factors combining probability with phase terms\n    # params[0] and params[1] control amplitudes of sin/cos components\n    # params[2] is a damping rate in time\n    # params[3] is an overall offset\n    # Dividing by sqrt for numeric stability\n    denominator = np.sqrt(np.maximum(prob, eps))\n    \n    # Main expression: linear combination of prob-weighted oscillatory terms\n    # with time decay\n    exp_decay = np.exp(-params[2] * np.abs(t))\n    y = params[0] * prob * sin_phase + params[1] * prob * cos_phase\n    y += params[2] * prob / denominator * exp_decay\n    y += params[3] * prob * np.cos(phase) / (1 + (omega * prob)**2 * eps)\n    \n    return y\n\n",
+  "score": -4.483833626228195,
+  "mean_nmse": 3.373324808662687,
+  "min_nmse": 2.8221993999196076,
+  "max_nmse": 4.490529959979054,
+  "median_nmse": 3.082419924560573,
+  "std_nmse": 0.6577859627217386,
+  "worst2_mean_nmse": 4.483833626228195,
+  "nmse_per_test": {
+    "dataset_0": 4.477137292477336,
+    "dataset_1": 3.2473465492326627,
+    "dataset_2": 2.909639992057718,
+    "dataset_3": 3.2284046868228713,
+    "dataset_4": 2.8221993999196076,
+    "dataset_5": 4.490529959979054,
+    "dataset_6": 2.8749054265139704,
+    "dataset_7": 2.936435162298274
+  },
+  "sample_time": 2.8636603355407715,
+  "evaluate_time": 2.0532193183898926
+}

@@ -1,0 +1,14 @@
+{
+  "sample_order": 792,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Base expression: transition probability modulated by oscillatory driving\n    angle = omega * t\n    prob_safe = np.maximum(np.abs(prob), eps)    # Core shared physical law candidate:\n    # target ~ prob / (1 + (some detuning factor)^2) * trigonometric response\n    # Use params: amplitude, frequency shift, phase, decay, baseline\n    detuning = params[0] * (omega - params[1])\n    lorentz = 1.0 / (1.0 + detuning**2)\n    oscillation = np.sin(angle - params[2]) + params[3]\n    # Damping with time to avoid singularity at t=0\n    envelope = np.exp(-params[4] * np.abs(t))\n    y = params[5] * prob * lorentz * oscillation * envelope + params[6]\n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.827896237373352,
+  "evaluate_time": 1.9722130298614502
+}

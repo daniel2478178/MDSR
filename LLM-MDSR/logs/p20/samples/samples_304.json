@@ -1,0 +1,23 @@
+{
+  "sample_order": 304,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    angle = omega * t\n    \n    # Landau-Zener-Rabi-like: probability-modulated oscillatory response\n    # with linear time damping and frequency scaling\n    y = params[0] * (prob - 0.5) * np.sin(angle + params[1]) / np.sqrt(omega_safe)\n    y += params[2] * (prob - 0.5) / t_safe\n    y += params[3] * np.sin(angle) * np.exp(-params[4] * np.abs(t) * omega_safe)\n    y += params[5]\n    \n    return y\n\n",
+  "score": -0.8522653445387878,
+  "mean_nmse": 0.7857505233564217,
+  "min_nmse": 0.6918286011506738,
+  "max_nmse": 0.8615962550813308,
+  "median_nmse": 0.7840473280097058,
+  "std_nmse": 0.05102525181992145,
+  "worst2_mean_nmse": 0.8522653445387878,
+  "nmse_per_test": {
+    "dataset_0": 0.8615962550813308,
+    "dataset_1": 0.8131786238538535,
+    "dataset_2": 0.7947441257781322,
+    "dataset_3": 0.6918286011506738,
+    "dataset_4": 0.7733505302412793,
+    "dataset_5": 0.8429344339962447,
+    "dataset_6": 0.7557827717621545,
+    "dataset_7": 0.7525888449877055
+  },
+  "sample_time": 2.4437931776046753,
+  "evaluate_time": 2.321500778198242
+}

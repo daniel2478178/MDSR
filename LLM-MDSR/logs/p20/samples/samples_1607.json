@@ -1,0 +1,23 @@
+{
+  "sample_order": 1607,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # prob is the transition probability, often related to sin^2(omega_R * t/2)\n    # Here we propose: target = A * prob * cos(omega*t + phi)^2 + B * t * (1 - prob)\n    # A and phi are params[0], params[1], B = params[2]\n    \n    # Protect against division by zero or invalid values\n    eps = 1e-12\n    p = np.clip(prob, eps, 1 - eps)\n    \n    # Core physical idea: transition probability drives an oscillating signal\n    # The driving frequency provides the oscillation, time modulates amplitude\n    \n    # Main term: prob-modulated oscillation with phase offset\n    osc = np.cos(omega * t + params[1])**2\n    main_term = params[0] * p * osc\n    \n    # Correction term: time-dependent non-oscillatory component \n    # proportional to (1 - prob), representing dephasing or decay\n    correction = params[2] * t * (1 - p)\n    \n    # Sometimes the observable grows linearly with time under driving\n    # Add a small linear time term\n    linear_term = params[3] * t\n    \n    # Combine and add offset\n    y = main_term + correction + linear_term + params[4]\n    \n    return y\n\n",
+  "score": -0.9961542523061018,
+  "mean_nmse": 0.9788525451210869,
+  "min_nmse": 0.9380992750914718,
+  "max_nmse": 0.9970625560027496,
+  "median_nmse": 0.9884778945592476,
+  "std_nmse": 0.02028994604725135,
+  "worst2_mean_nmse": 0.9961542523061018,
+  "nmse_per_test": {
+    "dataset_0": 0.9380992750914718,
+    "dataset_1": 0.9772020565493265,
+    "dataset_2": 0.989920024910797,
+    "dataset_3": 0.9970625560027496,
+    "dataset_4": 0.9870357642076983,
+    "dataset_5": 0.9534481340017121,
+    "dataset_6": 0.992806601595486,
+    "dataset_7": 0.9952459486094539
+  },
+  "sample_time": 2.979168474674225,
+  "evaluate_time": 2.027067184448242
+}

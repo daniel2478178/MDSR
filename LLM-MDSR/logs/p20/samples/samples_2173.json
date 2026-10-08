@@ -1,0 +1,23 @@
+{
+  "sample_order": 2173,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Simplified Rabi model: target = prob * [A * sin^2(Omega_eff * t) + B]\n    # where Omega_eff = sqrt((omega - omega_0)^2 + Omega_R^2)\n    # With only prob, t, omega as variables:\n    # target = prob * [p0 * sin^2(p1 * omega * t) + p2 * sin(p3 * omega * t + p4)]\n    \n    term1 = prob * (params[0] * np.sin(params[1] * x)**2 + params[2])\n    term2 = params[3] * np.sin(params[4] * x + params[5])\n    \n    return term1 + term2\n\n",
+  "score": -0.7106643526303142,
+  "mean_nmse": 0.6489300467020688,
+  "min_nmse": 0.5476681828057895,
+  "max_nmse": 0.7250267385771804,
+  "median_nmse": 0.651772276737659,
+  "std_nmse": 0.05133084178728457,
+  "worst2_mean_nmse": 0.7106643526303142,
+  "nmse_per_test": {
+    "dataset_0": 0.7250267385771804,
+    "dataset_1": 0.6792089946104349,
+    "dataset_2": 0.6470648133306139,
+    "dataset_3": 0.5476681828057895,
+    "dataset_4": 0.6564797401447041,
+    "dataset_5": 0.6963019666834482,
+    "dataset_6": 0.6276198313628158,
+    "dataset_7": 0.6120701061015631
+  },
+  "sample_time": 3.2016096115112305,
+  "evaluate_time": 4.452753067016602
+}

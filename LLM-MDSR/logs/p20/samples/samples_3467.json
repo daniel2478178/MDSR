@@ -1,0 +1,14 @@
+{
+  "sample_order": 3467,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Physical form based on Rabi oscillations with decay\n    # prob = sin^2(Omega*t/2), so sqrt(prob) = |sin(Omega*t/2)|\n    # and sqrt(1-prob) = |cos(Omega*t/2)|\n    # target = amplitude * cos^2(Omega*t/2) * exp(-decay*t) + constant * sin^2(Omega*t/2)\n    # Here Omega = params[1] * omega + params[2] (detuning and driving)\n    # params[0]: overall amplitude\n    # params[1]: effective coupling scale\n    # params[2]: detuning term\n    # params[3]: decay rate\n    # params[4]: offset or second amplitude\n\n    # Using explicit trigonometric forms instead of sqrt to avoid sign issues\n    \n    # Rabi frequency with possible detuning\n    omega_eff = params[1] * omega**2 + params[2] * omega * t\n    # Avoid division by zero issues\n    safe_t = t + 1e-15\n    Omega_eff = np.sqrt(omega_eff**2 + 1e-30) if np.all(np.isfinite(omega_eff)) else np.abs(omega_eff)\n    \n    # Decay term\n    decay = np.exp(-params[3] * t)\n    \n    # Oscillatory part with probability dependence\n    # For Rabi oscillations: prob = (Omega_R^2/(Omega_R^2+delta^2)) * sin^2(sqrt(Omega_R^2+delta^2)*t/2)\n    # We use a simpler functional form containing both prob and 1-prob\n    \n    cos_term = (1 - prob) * np.cos(params[1] * x + params[2])\n    sin_term = prob * np.sin(params[1] * x + params[2])\n    \n    # Mix them with weight params[0]\n    oscillation = params[0] * cos_term + params[4] * sin_term\n    \n    # Apply decay and add small non-oscillating part\n    result = oscillation * decay + params[5] * np.sqrt(prob * (1 - prob)) * np.sin(params[6] * t)\n    \n    return result\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.899300992488861,
+  "evaluate_time": 1.9910905361175537
+}

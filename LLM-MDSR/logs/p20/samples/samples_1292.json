@@ -1,0 +1,23 @@
+{
+  "sample_order": 1292,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical relation: target scales with probability and oscillatory terms from the driving phase\n    # Use a Rabi-like formula, where the target is a function of sinc(omega*t/2) and prob\n    \n    eps = 1e-10\n    # Guard against singularities in sinc\n    x = omega * t / 2.0\n    # Sinc function: sin(x)/x, use np.sinc which has sin(pi x)/(pi x) convention\n    sinc_val = np.sinc(x / np.pi)  # correct conversion to sin(x)/x\n    \n    # Main functional form: target = A * prob * (1 - cos(2*x))? No that's 2 sin^2(x)\n    # Oscillatory decay with time, amplitude dependent on prob\n    # Use classical Rabi oscillation amplitude: p = (Ω_R²/Ω²) sin²(Ω t/2)\n    \n    # We reinterpret the driving strength as proportional to 1/prob? Let's propose:\n    # target = P(t) = sin²(θ) with rotation parameter θ = params[0] * prob * sin(omega * t) + params[1]*omega*t\n    \n    # Simpler physically meaningful: target = prob * sin²(omega * t / 2) * exp(-t/tau) \n    # with amplitude and offset\n    \n    angle_half = omega * t / 2.0\n    osc = np.sin(angle_half)**2\n    \n    # Exponential decay in time for damping\n    decay = np.exp(-np.abs(t) * params[4])\n    \n    # Combine: amplitude * prob * oscillation * decay + slope*t + offset\n    y = params[0] * prob * osc * decay + params[1] * np.abs(t) + params[2] * prob + params[3]\n    \n    return y\n\n",
+  "score": -0.5101906384362318,
+  "mean_nmse": 0.4324306118957688,
+  "min_nmse": 0.3691800449242422,
+  "max_nmse": 0.516477542068542,
+  "median_nmse": 0.4196577595185243,
+  "std_nmse": 0.050805012598833264,
+  "worst2_mean_nmse": 0.5101906384362318,
+  "nmse_per_test": {
+    "dataset_0": 0.516477542068542,
+    "dataset_1": 0.4422708229536461,
+    "dataset_2": 0.39129568066735565,
+    "dataset_3": 0.4431712294849401,
+    "dataset_4": 0.3691800449242422,
+    "dataset_5": 0.5039037348039217,
+    "dataset_6": 0.3970446960834025,
+    "dataset_7": 0.39610114418010034
+  },
+  "sample_time": 2.6630268692970276,
+  "evaluate_time": 2.146679401397705
+}

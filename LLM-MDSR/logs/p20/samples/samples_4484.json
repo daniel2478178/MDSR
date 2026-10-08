@@ -1,0 +1,23 @@
+{
+  "sample_order": 4484,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-inspired transition: prob relates to exponential of inverse detuning,\n    # and the physical target could be the Rabi frequency or coupling strength.\n    # Common form for multi-level systems: target = sqrt(omega^2 + (prob-related gap)^2)\n    gap = params[0] * np.sqrt(np.maximum(1e-12, 1 - prob))  # avoid negative due to numeric\n    return np.sqrt(omega**2 + gap**2) * np.exp(-params[1] * t) + params[2] * np.sin(params[3] * omega * t) * np.sqrt(prob)\n\n",
+  "score": -1.3279796741048429,
+  "mean_nmse": 1.1975454694781644,
+  "min_nmse": 1.0024510831286584,
+  "max_nmse": 1.3324674280284126,
+  "median_nmse": 1.190247650168498,
+  "std_nmse": 0.10367226743198835,
+  "worst2_mean_nmse": 1.3279796741048429,
+  "nmse_per_test": {
+    "dataset_0": 1.1778072493587968,
+    "dataset_1": 1.3234919201812732,
+    "dataset_2": 1.3324674280284126,
+    "dataset_3": 1.0024510831286584,
+    "dataset_4": 1.2719338865689866,
+    "dataset_5": 1.1314410397314907,
+    "dataset_6": 1.2026880509781994,
+    "dataset_7": 1.1380830978494971
+  },
+  "sample_time": 1.3376373648643494,
+  "evaluate_time": 2.131402015686035
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 542,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Implement a physically motivated relation: target proportional to sin^2(omega*t/2) * prob\n    # scaled by dataset-specific amplitude and offset.\n    # This resembles Rabi oscillation / transition probability formula.\n    half_angle = omega * t / 2.0\n    y = params[0] * (np.sin(half_angle) ** 2) * prob + params[1] * prob + params[2]\n    # Allow additional small correction depending on time/omega for flexibility\n    y += params[3] * np.sin(omega * t) / (1.0 + np.abs(params[4]) * t)\n    return y\n\n",
+  "score": -0.6778353989020018,
+  "mean_nmse": 0.5998461568632274,
+  "min_nmse": 0.5265748584943631,
+  "max_nmse": 0.6906517083155581,
+  "median_nmse": 0.5873878092548185,
+  "std_nmse": 0.05052064719510347,
+  "worst2_mean_nmse": 0.6778353989020018,
+  "nmse_per_test": {
+    "dataset_0": 0.6906517083155581,
+    "dataset_1": 0.6068067752685834,
+    "dataset_2": 0.5880895930908406,
+    "dataset_3": 0.5265748584943631,
+    "dataset_4": 0.5866860254187963,
+    "dataset_5": 0.6650190894884456,
+    "dataset_6": 0.574564076395707,
+    "dataset_7": 0.5603771284335253
+  },
+  "sample_time": 2.3195728063583374,
+  "evaluate_time": 2.306872844696045
+}

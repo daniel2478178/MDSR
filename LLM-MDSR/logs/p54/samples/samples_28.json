@@ -1,0 +1,14 @@
+{
+  "sample_order": 28,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Damped oscillator with amplitude modulation via cos(omega*t) term\n    # and time-dependent phase adjustment for improved frequency tracking\n    decay = np.exp(-params[1] * t)\n    phase = params[2] * t + params[3]\n    \n    # Include sinusoid oscillation with modulation and second harmonic correction\n    osc = np.sin(phase) + params[4] * np.sin(2 * phase + params[3])\n    \n    # Multiply by omega-dependent slow modulation term\n    mod = 1.0 + params[5] * np.cos(params[2] * 0.5 * t + params[3])\n    \n    y = params[0] * decay * osc * mod + params[6] + params[7] * np.exp(-params[8] * t) * np.cos(omega * params[9])\n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.6988333463668823,
+  "evaluate_time": 2.7830958366394043
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 2892,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Physically: Rabi-like oscillation with decay, modulated by the transition probability.\n    # target = amplitude * prob * cos(omega*dressed*t + phase) * exp(-decay*t)\n    # plus a baseline contribution from the non-transition component.\n    p = np.clip(prob, 0.0, 1.0)\n    return params[0] * p * np.cos(params[1] * x + params[2]) * np.exp(-params[3] * t) + params[4] * (1.0 - p) * np.cos(params[5] * x + params[6]) * np.exp(-params[7] * t) + params[8] * np.sin(params[9] * t)\n\n",
+  "score": -0.9949281228153677,
+  "mean_nmse": 0.9614441457358562,
+  "min_nmse": 0.8937848204333848,
+  "max_nmse": 0.9971090844353183,
+  "median_nmse": 0.981194277936143,
+  "std_nmse": 0.03785998484222925,
+  "worst2_mean_nmse": 0.9949281228153677,
+  "nmse_per_test": {
+    "dataset_0": 0.8937848204333848,
+    "dataset_1": 0.9456928320724383,
+    "dataset_2": 0.987199338181467,
+    "dataset_3": 0.9971090844353183,
+    "dataset_4": 0.975189217690819,
+    "dataset_5": 0.909472866667779,
+    "dataset_6": 0.9903578452102266,
+    "dataset_7": 0.992747161195417
+  },
+  "sample_time": 2.319106876850128,
+  "evaluate_time": 3.9480974674224854
+}

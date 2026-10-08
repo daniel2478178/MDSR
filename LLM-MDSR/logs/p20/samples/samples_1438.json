@@ -1,0 +1,23 @@
+{
+  "sample_order": 1438,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.maximum(np.abs(omega), eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Rabi-like oscillation: probability transfer with detuning and decay\n    # Normalized sinc terms with detuning parameter\n    delta = omega - params[0]\n    sinc_arg = delta * t_safe / 2.0\n    sinc_term = np.where(np.abs(sinc_arg) < eps, 1.0, np.sin(sinc_arg)**2 / (sinc_arg**2 + eps))\n    \n    # Main Rabi envelope: probability * sinc^2\n    main_term = params[1] * prob * sinc_term\n    \n    # Nonlinear probability dependence\n    prob_nonlinear = np.power(np.maximum(prob, eps), params[2])\n    \n    # Damped oscillation term with phase\n    oscill = params[3] * np.sin(omega_safe * t + params[4]) * np.exp(-params[5] * t_safe)\n    \n    # Frequency-dependent coupling correction\n    omega_corr = params[6] / (1.0 + params[7] * omega_safe**2)\n    \n    # Combined expression\n    y = main_term + prob_nonlinear * oscill + omega_corr * prob * np.cos(omega * t)\n    \n    return y\n\n",
+  "score": -1.0865699173339103,
+  "mean_nmse": 0.9100236710889285,
+  "min_nmse": 0.6197328659132537,
+  "max_nmse": 1.128363440668273,
+  "median_nmse": 0.93301155648377,
+  "std_nmse": 0.1452652774570586,
+  "worst2_mean_nmse": 1.0865699173339103,
+  "nmse_per_test": {
+    "dataset_0": 1.128363440668273,
+    "dataset_1": 0.9629944771904254,
+    "dataset_2": 0.9627828459774499,
+    "dataset_3": 0.6197328659132537,
+    "dataset_4": 0.9032402669900902,
+    "dataset_5": 1.0447763939995476,
+    "dataset_6": 0.8291186827735607,
+    "dataset_7": 0.8291803951988276
+  },
+  "sample_time": 2.640968918800354,
+  "evaluate_time": 3.8769617080688477
+}

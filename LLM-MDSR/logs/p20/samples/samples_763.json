@@ -1,0 +1,23 @@
+{
+  "sample_order": 763,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Candidate: resonant-like behavior modulated by prob and decay in time  \n    eps = 1e-10  \n    angle = omega * t  \n    y = params[0] * prob * np.sin(angle) * np.exp(-params[1] * np.abs(t))  \n    y += params[2] * prob * np.cos(angle) * np.exp(-params[3] * np.abs(t))  \n    # Add term capturing detuning effects between omega and t  \n    y += params[4] * np.sin(angle * params[5]) * (prob - 0.5)  \n    y += params[6] * (1.0 - prob) * np.cos(angle)  \n    return y + params[7]\n\n",
+  "score": -0.618858668199722,
+  "mean_nmse": 0.5234701610722796,
+  "min_nmse": 0.40348304142946756,
+  "max_nmse": 0.6568586263803335,
+  "median_nmse": 0.5098627077888016,
+  "std_nmse": 0.07419291688260478,
+  "worst2_mean_nmse": 0.618858668199722,
+  "nmse_per_test": {
+    "dataset_0": 0.5808587100191105,
+    "dataset_1": 0.5762123358338194,
+    "dataset_2": 0.49367483268693135,
+    "dataset_3": 0.40348304142946756,
+    "dataset_4": 0.5260505828906719,
+    "dataset_5": 0.6568586263803335,
+    "dataset_6": 0.48624819528492924,
+    "dataset_7": 0.46437496405297396
+  },
+  "sample_time": 2.4675711393356323,
+  "evaluate_time": 3.1449809074401855
+}

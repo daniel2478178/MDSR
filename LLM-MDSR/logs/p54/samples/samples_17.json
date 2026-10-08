@@ -1,0 +1,23 @@
+{
+  "sample_order": 17,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Modulated decaying oscillation with quadratic frequency chirp and offset\n    decay = np.exp(-params[1] * t)\n    frequency = params[2] + params[3] * t\n    y = params[0] * decay * np.sin(frequency * t + params[4]) + params[5] * decay * np.cos(frequency * t + params[4]) + params[6]\n    return y\n\n",
+  "score": -2.6035765153315396e-05,
+  "mean_nmse": 6.779340415338699e-06,
+  "min_nmse": 1.5170295014605706e-11,
+  "max_nmse": 4.9543564830164956e-05,
+  "median_nmse": 2.532721572071283e-07,
+  "std_nmse": 1.6187040303802995e-05,
+  "worst2_mean_nmse": 2.6035765153315396e-05,
+  "nmse_per_test": {
+    "dataset_0": 4.9543564830164956e-05,
+    "dataset_1": 1.769233318842757e-08,
+    "dataset_2": 3.363488381814649e-08,
+    "dataset_3": 8.83356516337486e-09,
+    "dataset_4": 4.7290943059611004e-07,
+    "dataset_5": 2.5279654764658375e-06,
+    "dataset_6": 1.5170295014605706e-11,
+    "dataset_7": 1.630107633017725e-06
+  },
+  "sample_time": 2.435640494028727,
+  "evaluate_time": 3.460092306137085
+}

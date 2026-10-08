@@ -1,0 +1,14 @@
+{
+  "sample_order": 3372,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Physical law: Landau-Zener transition probability relationship\n    # target = A * sqrt(prob*(1-prob)) * sinc^2(x/2) * exp(-t/tau) + B*prob\n    # Simplify to: A * sqrt(prob*(1-prob)) * (sin(x/2)/(x/2))^2 * exp(-t/tau) + B*prob\n    # params[0] = amplitude, params[1] = decay rate, params[2] = offset\n    # Handle x=0 case for sinc\n    sinc_factor = np.where(np.abs(x) < 1e-10, 1.0, (np.sin(x/2)/(x/2))**2)\n    return params[0] * np.sqrt(prob * (1 - prob)) * sinc_factor * np.exp(-params[1] * t) + params[2] * prob\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 1.436840534210205,
+  "evaluate_time": 1.9364862442016602
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 2401,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Landau-Zener-Stückelberg-Majorana type transition with driving\n    # target = A * (1 - exp(-B * t)) * prob * exp(-C * (omega * t - D)^2)\n    # Simplified to: params[0] * prob * (1 - exp(-params[1] * t)) * exp(-params[2] * (omega * t - params[3])**2)\n    x = omega * t\n    # Assuming target is likely related to population transfer efficiency\n    # Use a smooth saturating function of time and Gaussian resonance in omega*t\n    y = params[0] * prob * (1.0 - np.exp(-params[1] * t)) * np.exp(-params[2] * (x - params[3])**2)\n    # Add a small linear correction for baseline offset\n    y = y + params[4] * prob * t\n    return y\n\n",
+  "score": -1.6663257637997837,
+  "mean_nmse": 1.2944934541277537,
+  "min_nmse": 0.7239482771644183,
+  "max_nmse": 1.7188328376047506,
+  "median_nmse": 1.3330648097491795,
+  "std_nmse": 0.3129873058450097,
+  "worst2_mean_nmse": 1.6663257637997837,
+  "nmse_per_test": {
+    "dataset_0": 1.7188328376047506,
+    "dataset_1": 1.510679764330881,
+    "dataset_2": 1.4254828800983776,
+    "dataset_3": 0.7239482771644183,
+    "dataset_4": 1.2406467393999812,
+    "dataset_5": 1.6138186899948168,
+    "dataset_6": 1.077894617670563,
+    "dataset_7": 1.0446438267582396
+  },
+  "sample_time": 2.9465959668159485,
+  "evaluate_time": 3.095750331878662
+}

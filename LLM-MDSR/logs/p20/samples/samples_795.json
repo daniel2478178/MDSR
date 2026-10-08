@@ -1,0 +1,23 @@
+{
+  "sample_order": 795,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Landau-Zener-like transition with Rabi oscillations\n    # target relates to prob*(sin^2(omega*t) + cos^2(omega*t)) = prob\n    # but with phase shifts and damping effects\n    eps = 1e-10\n    angle = omega * t\n    \n    # Rabi oscillation term with frequency modulation\n    rabi_term = prob * np.sin(angle)**2\n    \n    # Damping/decay term based on interaction time\n    decay = np.exp(-params[0] * np.abs(t))\n    \n    # Frequency-dependent amplitude correction\n    freq_corr = 1.0 / (1.0 + params[1] * omega**2)\n    \n    # Quantum tunneling-like term combining all effects\n    y = params[2] * rabi_term * decay * freq_corr\n    \n    # Add small offset for numerical stability\n    y += params[3] * prob * (1.0 - np.exp(-np.abs(omega) * eps))\n    \n    return y\n\n",
+  "score": -4.261647248571384,
+  "mean_nmse": 3.8764025370878814,
+  "min_nmse": 3.5177945542390714,
+  "max_nmse": 4.330624487456146,
+  "median_nmse": 3.8224456165246297,
+  "std_nmse": 0.26872565001292986,
+  "worst2_mean_nmse": 4.261647248571384,
+  "nmse_per_test": {
+    "dataset_0": 4.330624487456146,
+    "dataset_1": 3.8433074516715195,
+    "dataset_2": 3.5177945542390714,
+    "dataset_3": 4.005123722909519,
+    "dataset_4": 3.5462746810319263,
+    "dataset_5": 4.192670009686622,
+    "dataset_6": 3.7738416083305046,
+    "dataset_7": 3.80158378137774
+  },
+  "sample_time": 2.827896237373352,
+  "evaluate_time": 2.104732036590576
+}

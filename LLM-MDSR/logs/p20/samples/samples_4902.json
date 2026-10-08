@@ -1,0 +1,23 @@
+{
+  "sample_order": 4902,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t    \n    # Physically motivated form: probability-weighted Rabi oscillation with detuning and decay    \n    # params[0]: amplitude, params[1]: frequency scaling, params[2]: phase offset, params[3]: decay rate    \n    # params[4]: oscillation strength, params[5]: frequency offset, params[6]: nonlinearity    \n    return params[0] * prob * np.sin(params[1] * x + params[2]) * np.exp(-params[3] * t) + params[4] * (1 - prob) * np.cos(params[5] * x + params[6]) * (1 - prob)\n\n",
+  "score": -1.2161497374185681,
+  "mean_nmse": 0.7728309764313095,
+  "min_nmse": 0.3238774607467237,
+  "max_nmse": 1.2737627035363681,
+  "median_nmse": 0.7492069486230472,
+  "std_nmse": 0.32419640680401496,
+  "worst2_mean_nmse": 1.2161497374185681,
+  "nmse_per_test": {
+    "dataset_0": 1.2737627035363681,
+    "dataset_1": 0.9817605727974498,
+    "dataset_2": 0.8352564327115497,
+    "dataset_3": 0.3238774607467237,
+    "dataset_4": 0.6631574645345446,
+    "dataset_5": 1.1585367713007684,
+    "dataset_6": 0.48673761579242797,
+    "dataset_7": 0.45955879003064337
+  },
+  "sample_time": 1.826179325580597,
+  "evaluate_time": 5.8164918422698975
+}

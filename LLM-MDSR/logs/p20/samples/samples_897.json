@@ -1,0 +1,23 @@
+{
+  "sample_order": 897,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    # Oscillatory response with damping; target proportional to prob-driven\n    # coherence decay modulated by frequency\n    coherence = np.exp(-params[0] * np.abs(t)) * np.cos(angle)\n    amplitude = params[1] * prob * coherence\n    # Add a term capturing threshold-like behavior with frequency\n    freq_factor = 1.0 / (1.0 + params[2] * omega**2)\n    nonlin = params[3] * prob * freq_factor * np.sin(angle)\n    y = amplitude + nonlin + params[4]\n    return y\n\n",
+  "score": -0.8287067438584919,
+  "mean_nmse": 0.711995910762085,
+  "min_nmse": 0.5816300654348697,
+  "max_nmse": 0.8407994856926747,
+  "median_nmse": 0.7059311312163349,
+  "std_nmse": 0.09222667591813266,
+  "worst2_mean_nmse": 0.8287067438584919,
+  "nmse_per_test": {
+    "dataset_0": 0.7861283389819479,
+    "dataset_1": 0.6607674351930831,
+    "dataset_2": 0.5981656963371257,
+    "dataset_3": 0.8407994856926747,
+    "dataset_4": 0.5816300654348697,
+    "dataset_5": 0.816614002024309,
+    "dataset_6": 0.6715460762917792,
+    "dataset_7": 0.7403161861408906
+  },
+  "sample_time": 2.09993714094162,
+  "evaluate_time": 2.613973379135132
+}

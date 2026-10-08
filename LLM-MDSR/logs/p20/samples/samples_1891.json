@@ -1,0 +1,23 @@
+{
+  "sample_order": 1891,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    a0 = params[0]\n    a1 = params[1]\n    a2 = params[2]\n    a3 = params[3]\n    a4 = params[4]\n    \n    theta = a0 * omega * t + a1\n    oscillatory = np.cos(theta) ** 2\n    rabi_factor = 1.0 / (1.0 + (omega / a2) ** 2 + eps)\n    amplitude = prob * (1.0 - oscillatory) * rabi_factor\n    \n    time_envelope = np.exp(-a3 * t ** 2)\n    phase_shift = a4 * omega * t\n    \n    return amplitude * time_envelope * np.cos(phase_shift) + a4 * (1.0 - prob) * np.sin(omega * t + a1) / (omega + eps)\n\n",
+  "score": -4.540947658412765,
+  "mean_nmse": 3.2445645603813302,
+  "min_nmse": 1.7103031710895797,
+  "max_nmse": 4.681300606658676,
+  "median_nmse": 2.956402286978008,
+  "std_nmse": 0.8804142442130545,
+  "worst2_mean_nmse": 4.540947658412765,
+  "nmse_per_test": {
+    "dataset_0": 4.681300606658676,
+    "dataset_1": 3.4483949033955397,
+    "dataset_2": 2.9089650660836277,
+    "dataset_3": 1.7103031710895797,
+    "dataset_4": 2.915032124242296,
+    "dataset_5": 4.400594710166853,
+    "dataset_6": 2.99777244971372,
+    "dataset_7": 2.8941534517003484
+  },
+  "sample_time": 2.212107002735138,
+  "evaluate_time": 2.4198267459869385
+}

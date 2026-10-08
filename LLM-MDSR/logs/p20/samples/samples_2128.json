@@ -1,0 +1,23 @@
+{
+  "sample_order": 2128,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Landau-Zener-like transition with Rabi oscillations\n    # target = prob * amplitude * exp(-decay*t) + background\n    # Amplitude modulated by sin(omega*t/2)/ (omega*t/2) sinc-like factor\n    # Use params[0] as overall amplitude, params[1] as decay rate,\n    # params[2] as phase offset, params[3] as background offset,\n    # params[4] as extra frequency scale\n    \n    eps = 1e-10\n    x = omega * t\n    x_safe = np.where(np.abs(x) < eps, eps, x)\n    \n    # Sinc-like envelope from resonance physics\n    sinc_factor = np.sin(x/2) / (x/2)\n    \n    # Exponential decay of amplitude\n    decay = np.exp(-params[1] * np.abs(t))\n    \n    # Oscillatory component and background\n    oscillation = np.sin(x + params[2]) * sinc_factor\n    result = params[0] * prob * oscillation * decay + params[3] * np.cos(params[4] * x) + params[5]\n    \n    return result\n\n",
+  "score": -0.8379725792767243,
+  "mean_nmse": 0.7818180885930258,
+  "min_nmse": 0.7176400868698959,
+  "max_nmse": 0.8653333151736093,
+  "median_nmse": 0.7903176098427409,
+  "std_nmse": 0.04470362933855203,
+  "worst2_mean_nmse": 0.8379725792767243,
+  "nmse_per_test": {
+    "dataset_0": 0.8653333151736093,
+    "dataset_1": 0.8106118433798394,
+    "dataset_2": 0.7911718943048914,
+    "dataset_3": 0.7176400868698959,
+    "dataset_4": 0.7894633253805905,
+    "dataset_5": 0.7988226078241488,
+    "dataset_6": 0.7294263295492956,
+    "dataset_7": 0.7520753062619359
+  },
+  "sample_time": 2.240686058998108,
+  "evaluate_time": 3.000011444091797
+}

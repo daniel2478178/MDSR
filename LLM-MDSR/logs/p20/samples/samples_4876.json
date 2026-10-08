@@ -1,0 +1,23 @@
+{
+  "sample_order": 4876,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Physical candidate: driven transition amplitude with resonance-like structure.\n    # Use sin^2 resonant envelope, detuning via omega, and exponential decay in time.\n    delta = omega - params[0]  # detuning parameter (dataset-specific resonance frequency)\n    rabi = params[1] * prob\n    decay = params[2] * t\n    sinc_term = np.sinc(delta * t / np.pi)  # sinc(x) = sin(pi x)/(pi x)\n    return params[3] * (t * rabi * sinc_term) ** 2 * np.exp(-decay) + params[4] * (1 - prob) * np.sin(x)\n\n",
+  "score": -3.607328501714454,
+  "mean_nmse": 2.424274573769479,
+  "min_nmse": 1.2604368531023082,
+  "max_nmse": 3.6706526493225957,
+  "median_nmse": 2.3698134444642975,
+  "std_nmse": 0.8473040310449669,
+  "worst2_mean_nmse": 3.607328501714454,
+  "nmse_per_test": {
+    "dataset_0": 3.6706526493225957,
+    "dataset_1": 2.886474440887552,
+    "dataset_2": 2.2892446750350524,
+    "dataset_3": 2.4503822138935427,
+    "dataset_4": 1.9103319442339106,
+    "dataset_5": 3.5440043541063115,
+    "dataset_6": 1.3826694595745608,
+    "dataset_7": 1.2604368531023082
+  },
+  "sample_time": 3.466620763142904,
+  "evaluate_time": 2.3965537548065186
+}

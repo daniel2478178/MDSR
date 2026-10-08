@@ -1,0 +1,23 @@
+{
+  "sample_order": 3358,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared equation: Rabi-like oscillation with decay.\n    target = A * (1 - prob) * sin^2(omega_eff * t / 2) / (omega_eff^2) + B * prob\n    where omega_eff = sqrt((omega - omega_0)^2 + (Omega_R)^2)\n    Simplified: use sin^2(omega * t) decay with prob term.\n    \"\"\"\n    x = omega * t\n    # Physically motivated form: Rabi oscillation amplitude proportional to sqrt(prob*(1-prob)),\n    # with detuning and decay terms.\n    # For a two-level system driven near resonance, the transition probability follows\n    # P = (Omega^2 / (Omega^2 + Delta^2)) * sin^2( sqrt(Omega^2+Delta^2) * t / 2 )\n    # Here, prob is likely the measured transition probability, and target is related to energy shift.\n    # Try: target = params0 * (1 - 2*prob) * theta(t, omega) + params1\n    # For Rabi oscillations: prob = sin^2(Omega_R * t / 2) when on resonance.\n    # Hence target might be detuning: target ~ omega - omega_res\n    # Simple harmonic law: \n    # target = params[0] * (1 - 2*prob) * np.sin(params[1]*x + params[2]) + params[3]\n    # But let's try a much simpler shared law:\n    # For driven harmonic oscillator, transition probability relates to time integral of force.\n    # A candidate: target = params[0] * (1 - 2*prob) * np.cos(omega*t) + params[1]*np.sin(omega*t) + params[2]\n    # Let's use: target = params[0] * (1 - 2*prob) * np.sin(params[1]*omega*t) + params[2]*t + params[3]\n    # More parsimonious: target = C * (1 - 2*prob) * omega * t  (like Bloch angle)\n    # Bloch angle: theta = omega_R * t, and prob = sin^2(theta/2) => theta = 2*arcsin(sqrt(prob))\n    # So target could be detuning * t? \n    # Actually, for Rabi problem: prob = (Omega_R^2 / (Omega_R^2+Delta^2)) * sin^2(0.5*sqrt(Omega_R^2+Delta^2)*t)\n    # Use prob to infer Omega_R * t? \n    # Let's assume target = params[0] * (1 - 2*prob) * omega * t + params[1]\n    # But t and omega enter as product x. Need something with sin or cos.\n    # Simplest shared law with prob, t, omega: \n    # target = A * (1 - 2*prob) * np.sin(B*omega*t) + C * np.cos(D*t) + E  # too many params\n    # Reduce to 4 params: \n    # target = params[0] * (1 - 2*prob) * np.sin(params[1]*omega*t) + params[2] * np.exp(-params[3]*t)\n    # That uses prob, t, omega naturally.\n    theta = params[0] * (1 - 2 * prob)\n    envelope = np.exp(-params[3] * t)\n    oscillatory = np.sin(params[1] * x)\n    return theta * oscillatory * envelope + params[2] * envelope\n\n",
+  "score": -0.9763283745448921,
+  "mean_nmse": 0.9186934484476907,
+  "min_nmse": 0.6001072241195782,
+  "max_nmse": 0.982111352458589,
+  "median_nmse": 0.961426024657313,
+  "std_nmse": 0.12075924940018926,
+  "worst2_mean_nmse": 0.9763283745448921,
+  "nmse_per_test": {
+    "dataset_0": 0.9564984205741909,
+    "dataset_1": 0.9576263864789213,
+    "dataset_2": 0.9652256628357045,
+    "dataset_3": 0.6001072241195782,
+    "dataset_4": 0.9671069143335075,
+    "dataset_5": 0.9503262301498391,
+    "dataset_6": 0.970545396631195,
+    "dataset_7": 0.982111352458589
+  },
+  "sample_time": 4.538788398106893,
+  "evaluate_time": 2.0760464668273926
+}

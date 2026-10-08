@@ -1,0 +1,23 @@
+{
+  "sample_order": 1855,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    freq_factor = params[0]\n    phase = params[1]\n    c1 = params[2]\n    c2 = params[3]\n    c3 = params[4]\n    c4 = params[5]\n    \n    # Landau-Zener-Stückelberg type transition probability with interference\n    # target = A * [prob - sin^2(θ)] / (θ) + B*sin(θ)*cos(φ)\n    # where θ = 0.5*sqrt((Δ)^2 + (omega*t)^2) type structure\n    \n    theta = np.sqrt((params[0] * (prob - 0.5))**2 + (params[1] * omega * t)**2 + eps)\n    delta_phase = params[2] * omega * t + params[3]\n    \n    # Main structure: probability-dependent amplitude modulation with interference\n    y = params[4] * ((prob - 0.5) * np.cos(delta_phase) / theta + \n                     0.5 * (1 - 2*prob) * np.sin(delta_phase) * np.sinc(delta_phase/np.pi))\n    \n    # Additional term capturing driving effect\n    y += params[5] * np.sin(omega * t) * (prob - 0.5) / (1 + (params[6] * t)**2 + eps)\n    \n    # cubic term for fine-tuning\n    y += params[7] * (prob - 0.5)**3\n    \n    return y\n\n",
+  "score": -3.367126247275225,
+  "mean_nmse": 1.7508773434058158,
+  "min_nmse": 0.7163778065709528,
+  "max_nmse": 4.259857844377539,
+  "median_nmse": 1.4113984990192079,
+  "std_nmse": 1.077537442972422,
+  "worst2_mean_nmse": 3.367126247275225,
+  "nmse_per_test": {
+    "dataset_0": 2.474394650172911,
+    "dataset_1": 1.2572637931271615,
+    "dataset_2": 0.9251563632273134,
+    "dataset_3": 4.259857844377539,
+    "dataset_4": 1.0880863751308594,
+    "dataset_5": 1.7203487097285357,
+    "dataset_6": 1.565533204911254,
+    "dataset_7": 0.7163778065709528
+  },
+  "sample_time": 2.40046489238739,
+  "evaluate_time": 4.926132440567017
+}

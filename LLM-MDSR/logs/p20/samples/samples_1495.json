@@ -1,0 +1,23 @@
+{
+  "sample_order": 1495,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: transition probability related to sin^2(omega*t) Rabi-like oscillations\n    # with amplitude modulation and exponential decay\n    \n    eps = 1e-12\n    \n    # Safe computations to avoid division by zero\n    omega_safe = np.maximum(np.abs(omega), eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Main oscillatory term: probability-modulated Rabi oscillations\n    # sin^2(pi*omega*t) gives periodic transitions\n    \n    # Core physical structure based on Rabi formula: P(t) = sin^2(omega_R*t/2)\n    # Here we invert: target related to probability via arcsin-like transformation\n    \n    # Term 1: Primary amplitude * sin^2(omega*t) - probability coupling\n    oscillation = np.sin(params[0] * omega * t + params[1])**2\n    \n    # Term 2: probability-dependent amplitude scaling\n    prob_term = prob * (params[2] * oscillation + params[3])\n    \n    # Term 3: exponential decay envelope (damping)\n    decay_factor = np.exp(-params[4] * t_safe)\n    \n    # Term 4: frequency-dependent offset\n    freq_offset = params[5] * np.sin(params[6] * omega_safe * t_safe)\n    \n    # Combine: target = scaled probability with oscillation + decay + linear offset\n    y = params[7] * prob_term * decay_factor + freq_offset + params[8] * t_safe + params[9]\n    \n    return y\n\n",
+  "score": -0.6072427427682836,
+  "mean_nmse": 0.37555325340031653,
+  "min_nmse": 0.1907331932532635,
+  "max_nmse": 0.6198661493629823,
+  "median_nmse": 0.34255739227654636,
+  "std_nmse": 0.16741212114922124,
+  "worst2_mean_nmse": 0.6072427427682836,
+  "nmse_per_test": {
+    "dataset_0": 0.6198661493629823,
+    "dataset_1": 0.5007357733426602,
+    "dataset_2": 0.4035887402500487,
+    "dataset_3": 0.1907331932532635,
+    "dataset_4": 0.281526044303044,
+    "dataset_5": 0.5946193361735849,
+    "dataset_6": 0.2112690801697642,
+    "dataset_7": 0.2020877103471844
+  },
+  "sample_time": 2.5902581810951233,
+  "evaluate_time": 6.01759147644043
+}

@@ -1,0 +1,14 @@
+{
+  "sample_order": 3914,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition probability formula with oscillatory corrections\n    # target = params[0] * sqrt(prob*(1-prob)) * sin(omega*t + params[1]) + \n    #          params[2] * (1 - 2*prob) + params[3]\n    # Using probability, time, and frequency in a physically plausible way\n    theta = omega * t\n    # Envelope and oscillation based on transition dynamics\n    amp = np.sqrt(prob * (1 - prob) + 1e-12)  # To avoid sqrt of negative\n    oscill = np.sin(theta + params[0]) + params[1] * np.sin(2*theta + params[2])\n    linear_term = params[3] * prob + params[4] * (1 - prob)\n    time_damping = np.exp(-params[5] * t)\n    # Return physical quantity combining Landau-Zener probability and phase-related terms\n    y = params[6] * amp * oscill * time_damping + linear_term + params[7]\n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.198653221130371,
+  "evaluate_time": 1.9731457233428955
+}

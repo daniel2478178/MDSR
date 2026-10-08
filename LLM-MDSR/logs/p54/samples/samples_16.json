@@ -1,0 +1,14 @@
+{
+  "sample_order": 16,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Uses omega as a physical frequency scaling factor\n    # Structure: amplitude * exp(-damping*t) * [sin(freq*t + phase) + epsilon * sin(2*freq*t + phase)]\n    # with additional harmonic term that couples to omega\n    freq = params[1] * (1 + params[6] * np.exp(-params[7] * omega))\n    envelope = np.exp(-params[4] * t)\n    phase = params[2] * t + params[3]\n    \n    # Main oscillation with anharmonic correction\n    oscillation = np.sin(phase)\n    if len(params) > 5 and params[5] > 0.01:\n        # Add a higher harmonic that becomes important when nonlinearity is present\n        oscillation += params[5] * np.sin(2 * phase)\n    \n    # Parametric coupling to omega with its own decay\n    parametric = params[8] * np.cos(freq * t + params[9]) * np.exp(-params[4] * omega * t)\n    \n    y = params[0] * envelope * oscillation + params[4] + parametric\n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.435640494028727,
+  "evaluate_time": 2.7512574195861816
+}

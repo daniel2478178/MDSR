@@ -1,0 +1,23 @@
+{
+  "sample_order": 281,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target proportional to prob times damped oscillatory functions of angle\n    # with frequency dependent amplitude and possible t-decay\n    angle = omega * t\n    eps = 1e-12\n    # Ensure positive values for sqrt and log-like terms\n    prob_safe = np.maximum(np.abs(prob), eps)\n    \n    # Use bounded angle to avoid large oscillations causing numerical issues\n    angle_mod = angle  # keep as is, but may add harmonic combinations\n    \n    # Strong candidate: probability-driven sinusoidal response with Rabi-like frequency\n    # amplitude scaling with sqrt(prob*(1-prob)) captured via prob and its complement\n    inv_sqrt_omega = 1.0 / np.sqrt(np.abs(omega) + eps)\n    \n    # Main term: product of prob and a damped sine with frequency omega (actually pulse area)\n    pulse_area = params[0] * np.sin(angle/2) + params[1] * np.sin(angle)\n    \n    # Additional amplitude factor that depends on prob (transition) and time decay\n    amplitude = (prob * np.exp(-np.abs(t)*params[2]) + \n                 (1-prob)*np.exp(-np.abs(t)*params[3]))\n    \n    # Combine with offset and possible t term\n    y = params[4] * amplitude * (pulse_area + params[5]*np.sin(angle)**2) * inv_sqrt_omega + params[6]*t + params[7]\n    \n    return y\n\n",
+  "score": -0.604290109712984,
+  "mean_nmse": 0.4036872179456219,
+  "min_nmse": 0.2446097999576434,
+  "max_nmse": 0.6045367617935309,
+  "median_nmse": 0.3561720167958816,
+  "std_nmse": 0.13759395631164545,
+  "worst2_mean_nmse": 0.604290109712984,
+  "nmse_per_test": {
+    "dataset_0": 0.6045367617935309,
+    "dataset_1": 0.4980331379770303,
+    "dataset_2": 0.39556662642636403,
+    "dataset_3": 0.2446097999576434,
+    "dataset_4": 0.3167774071653992,
+    "dataset_5": 0.604043457632437,
+    "dataset_6": 0.2829395910987259,
+    "dataset_7": 0.28299096151384434
+  },
+  "sample_time": 3.555688738822937,
+  "evaluate_time": 2.5253758430480957
+}

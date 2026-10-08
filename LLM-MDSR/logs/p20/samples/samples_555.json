@@ -1,0 +1,23 @@
+{
+  "sample_order": 555,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Extract parameters with defaults for safety\n    p0 = params[0] if len(params) > 0 else 1.0\n    p1 = params[1] if len(params) > 1 else 1.0\n    p2 = params[2] if len(params) > 2 else 0.0\n    p3 = params[3] if len(params) > 3 else 0.0\n    p4 = params[4] if len(params) > 4 else 0.0\n    \n    # Avoid division by zero\n    t_safe = np.where(np.abs(t) < 1e-12, 1e-12, t)\n    omega_safe = np.where(np.abs(omega) < 1e-12, 1e-12, omega)\n    \n    # Physical model: transition probability modulated by Rabi-type oscillation\n    # target = amplitude * prob * sin^2(omega*t/2) / (omega*t/2)^2  (sinc^2 envelope)\n    # plus a small linear correction term\n    x = omega_safe * t_safe\n    sinc_term = np.sin(x/2) / (x/2 + 1e-12)\n    envelope = sinc_term**2\n    \n    # Main term: amplitude * prob * envelope\n    main_term = p0 * prob * envelope\n    \n    # Correction: linear in prob and time for systematics\n    correction = p1 * prob * t_safe\n    \n    # Offset and possible frequency shift\n    offset = p2 + p3 * np.cos(omega_safe) \n    \n    # Additional small exponential decay in time\n    decay = p4 * np.exp(-np.abs(t_safe) * 0.01)\n    \n    y = main_term + correction + offset + decay\n    return y\n\n",
+  "score": -0.5606866104982426,
+  "mean_nmse": 0.3493597795961507,
+  "min_nmse": 0.15896112988823416,
+  "max_nmse": 0.5653492524420863,
+  "median_nmse": 0.32436377365997693,
+  "std_nmse": 0.15476176045667567,
+  "worst2_mean_nmse": 0.5606866104982426,
+  "nmse_per_test": {
+    "dataset_0": 0.5653492524420863,
+    "dataset_1": 0.4668565496284084,
+    "dataset_2": 0.3787836008398457,
+    "dataset_3": 0.15896112988823416,
+    "dataset_4": 0.2699439464801081,
+    "dataset_5": 0.5560239685543991,
+    "dataset_6": 0.20620105889227858,
+    "dataset_7": 0.19275873004384575
+  },
+  "sample_time": 2.7904852628707886,
+  "evaluate_time": 2.0598948001861572
+}

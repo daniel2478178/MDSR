@@ -1,0 +1,23 @@
+{
+  "sample_order": 2688,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Oscillatory resonant transition probability formula: Landau-Zener type\n    # target scales with transition probability and has an oscillatory dependence\n    # on the accumulated phase 2*pi*omega*t with frequency parameters\n    return params[0] * prob * np.sin(params[1] * x + params[2]) * np.exp(-params[3] * t) + params[4] * np.cos(params[5] * omega) * prob * (1 - np.exp(-params[6] * t)) + params[7] * np.sin(params[8] * x)\n\n",
+  "score": -0.49301135773478955,
+  "mean_nmse": 0.3701108642829778,
+  "min_nmse": 0.2382546045082473,
+  "max_nmse": 0.4959281997375827,
+  "median_nmse": 0.3482642657121905,
+  "std_nmse": 0.08454796257848099,
+  "worst2_mean_nmse": 0.49301135773478955,
+  "nmse_per_test": {
+    "dataset_0": 0.4959281997375827,
+    "dataset_1": 0.4121044074360538,
+    "dataset_2": 0.36495124073330215,
+    "dataset_3": 0.2382546045082473,
+    "dataset_4": 0.33157729069107883,
+    "dataset_5": 0.49009451573199647,
+    "dataset_6": 0.31358948311382484,
+    "dataset_7": 0.3143871723117364
+  },
+  "sample_time": 1.7766649723052979,
+  "evaluate_time": 6.478673219680786
+}

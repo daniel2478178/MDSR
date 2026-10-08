@@ -1,0 +1,23 @@
+{
+  "sample_order": 1346,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Core physical structure: Rabi-like oscillation involving probability,\n    # time, and frequency with exponential relaxation.\n    # The observable is proportional to prob times a phase-modulated term\n    # that includes hyperbolic sine to capture both growth and decay.\n    \n    # Rabi frequency term (oscillatory in time and frequency)\n    rabi_phase = params[0] * omega * t + params[1]\n    rabi_term = np.sin(rabi_phase) * np.cos(rabi_phase)  # sin*cos = 0.5*sin(2*phase)\n    \n    # Probability-dependent modulation with dimensional scaling\n    prob_factor = np.power(np.maximum(prob, eps), params[2])\n    \n    # Time decay envelope (hyperbolic, saturating effect)\n    time_envelope = np.exp(-params[3] * t_safe) * np.sinh(params[4] * t_safe)\n    \n    # Frequency scaling (inverse square root, physical detuning)\n    freq_scale = 1.0 / np.sqrt(omega_safe + eps)\n    \n    # Combine terms with amplitude and offset\n    y = params[5] * (rabi_term * prob_factor + params[6] * time_envelope * freq_scale) + params[7] + params[8] * prob\n    \n    return y\n\n",
+  "score": -0.3766075121203947,
+  "mean_nmse": 0.27193201791872157,
+  "min_nmse": 0.0493989015336792,
+  "max_nmse": 0.37768300640136626,
+  "median_nmse": 0.2825971490593814,
+  "std_nmse": 0.09805799406777665,
+  "worst2_mean_nmse": 0.3766075121203947,
+  "nmse_per_test": {
+    "dataset_0": 0.3755320178394232,
+    "dataset_1": 0.3256352352813296,
+    "dataset_2": 0.29768638243431234,
+    "dataset_3": 0.0493989015336792,
+    "dataset_4": 0.26750791568445037,
+    "dataset_5": 0.37768300640136626,
+    "dataset_6": 0.23926683215588931,
+    "dataset_7": 0.24274585201932206
+  },
+  "sample_time": 3.548093020915985,
+  "evaluate_time": 9.34785509109497
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 2435,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Simplified shared physical law: damped sinusoidal oscillation in omega*t,\n    # amplitude modulated by transition probability\n    main = params[0] * prob * np.cos(x + params[1]) * np.exp(-params[2] * np.abs(t))\n    secondary = params[3] * prob * np.sin(x) * np.exp(-params[4] * np.abs(t))\n    baseline = params[5] * t\n    \n    return main + secondary + baseline + params[6]\n\n",
+  "score": -0.7693027389537108,
+  "mean_nmse": 0.5941333663554242,
+  "min_nmse": 0.42048813200314106,
+  "max_nmse": 0.7733108147906036,
+  "median_nmse": 0.6122996316656016,
+  "std_nmse": 0.13860466364466806,
+  "worst2_mean_nmse": 0.7693027389537108,
+  "nmse_per_test": {
+    "dataset_0": 0.7652946631168182,
+    "dataset_1": 0.6920357337175466,
+    "dataset_2": 0.6524956689159215,
+    "dataset_3": 0.42048813200314106,
+    "dataset_4": 0.5721035944152818,
+    "dataset_5": 0.7733108147906036,
+    "dataset_6": 0.45135826883715696,
+    "dataset_7": 0.42598005504692377
+  },
+  "sample_time": 1.6621573567390442,
+  "evaluate_time": 2.489210367202759
+}

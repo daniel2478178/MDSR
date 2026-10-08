@@ -1,0 +1,23 @@
+{
+  "sample_order": 614,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target = A * (2*prob - 1) * sin(omega*t) / (omega*t)\n    # This represents a Rabi-like resonance with phase accumulation\n    eps = 1e-10\n    angle = omega * t\n    \n    # Normalize probability to [-1, 1] range\n    p_norm = 2 * prob - 1\n    \n    # sinc function: sin(x)/x, with safe handling near zero\n    sinc_val = np.sin(angle) / np.maximum(np.abs(angle), eps)\n    sinc_val = np.where(np.abs(angle) < eps, 1.0, sinc_val)\n    \n    # Linear frequency detuning term\n    freq_term = params[0] * p_norm * sinc_val\n    \n    # Amplitude modulation by omega\n    mod_term = params[1] * p_norm * np.exp(-params[2] * omega**2)\n    \n    # Time-dependent decay/resonance effect\n    time_term = params[3] * np.sin(angle) * p_norm / np.sqrt(1 + params[4] * t**2)\n    \n    # Baseline offset\n    baseline = params[5]\n    \n    return freq_term + mod_term + time_term + baseline\n\n",
+  "score": -1.5340790539102513,
+  "mean_nmse": 0.7604471205186609,
+  "min_nmse": 0.39622859688152207,
+  "max_nmse": 2.4869970266283605,
+  "median_nmse": 0.525678384658687,
+  "std_nmse": 0.6549350078504276,
+  "worst2_mean_nmse": 1.5340790539102513,
+  "nmse_per_test": {
+    "dataset_0": 0.581161081192142,
+    "dataset_1": 0.5436066700383443,
+    "dataset_2": 2.4869970266283605,
+    "dataset_3": 0.39622859688152207,
+    "dataset_4": 0.5077500992790296,
+    "dataset_5": 0.5806247290234509,
+    "dataset_6": 0.48573141466919034,
+    "dataset_7": 0.5014773464372475
+  },
+  "sample_time": 3.9749409556388855,
+  "evaluate_time": 3.7263481616973877
+}

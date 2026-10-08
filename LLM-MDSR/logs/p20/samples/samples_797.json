@@ -1,0 +1,23 @@
+{
+  "sample_order": 797,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    theta = omega * t\n    # For driven two-level systems, common relation: target = amplitude * prob * sin(omega*t) + offset\n    # Simplify to include most essential terms with few parameters\n    eps = 1e-12\n    # Guard against division by zero\n    t_safe = np.abs(t) + eps\n    omega_safe = np.abs(omega) + eps\n\n    # Key structure: target scales with prob and oscillatory behavior in omega*t\n    y = params[0] * prob * np.sin(theta) + params[1] * prob * np.cos(theta) + params[2] * prob + params[3]\n    return y\n\n",
+  "score": -0.7066153244046696,
+  "mean_nmse": 0.6601858692748962,
+  "min_nmse": 0.5501924078747836,
+  "max_nmse": 0.7215394344640176,
+  "median_nmse": 0.6786924628194785,
+  "std_nmse": 0.049514713818771566,
+  "worst2_mean_nmse": 0.7066153244046696,
+  "nmse_per_test": {
+    "dataset_0": 0.7215394344640176,
+    "dataset_1": 0.6916912143453214,
+    "dataset_2": 0.6859100480032388,
+    "dataset_3": 0.5501924078747836,
+    "dataset_4": 0.6714748776357181,
+    "dataset_5": 0.6880697791511917,
+    "dataset_6": 0.641350827302124,
+    "dataset_7": 0.6312583654227746
+  },
+  "sample_time": 2.6387139558792114,
+  "evaluate_time": 1.997408151626587
+}

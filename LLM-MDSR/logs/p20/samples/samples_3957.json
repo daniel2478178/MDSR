@@ -1,0 +1,23 @@
+{
+  "sample_order": 3957,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Using Rabi-like oscillation with Landau-Zener type transition probability\n    # target likely = detuning or energy or Rabi frequency related quantity\n    # Simple structure: target = p0 * sqrt(prob*(1-prob)) * sin(p1*omega*t + p2) + p3*(1-2*prob)*cos(p4*omega*t)\n    # But keep simpler: often target ~ sqrt(prob*(1-prob)) * omega or similar\n    # Try: target = p0 * sqrt(prob*(1-prob)) * sin(p1*t*omega + p2) + p3 * t * (1-2*prob)\n    \n    # Given typical Rabi: transition prob = sin^2(Omega*t/2), so Omega = 2*arcsin(sqrt(prob))/t\n    # Target might be related to detuning or generalized Rabi frequency: sqrt((p0*t)^2 + (delta)^2) etc\n    # Let's try: target = p0 * sqrt(prob) * sin(p1 * omega * t + p2) + p3 * (2*prob - 1)\n    \n    # more physical: for driven two-level: \n    # P(t) = (Omega^2 / (Omega^2+delta^2)) * sin^2(sqrt(Omega^2+delta^2)*t/2)\n    # So sqrt(prob) contains combination.\n    # target could be delta (detuning) or Rabi freq. Let's assume target ~ sqrt(prob)*omega\n    # simpler: target = p0 * (prob - 0.5) * sin(p1 * omega * t + p2) * exp(-p3 * t) + p4 * prob\n    \n    return params[0] * (2*prob - 1) * np.sin(params[1] * omega * t + params[2]) + params[3] * prob * np.cos(params[4] * omega * t) + params[5] * np.sqrt(prob) * np.exp(-params[6] * t) + params[7]\n\n",
+  "score": -0.4663346913228183,
+  "mean_nmse": 0.3405706165704086,
+  "min_nmse": 0.2375450819684977,
+  "max_nmse": 0.5450755479739139,
+  "median_nmse": 0.3275413650320005,
+  "std_nmse": 0.0942541065633296,
+  "worst2_mean_nmse": 0.4663346913228183,
+  "nmse_per_test": {
+    "dataset_0": 0.3875938346717227,
+    "dataset_1": 0.304677304449172,
+    "dataset_2": 0.5450755479739139,
+    "dataset_3": 0.2375450819684977,
+    "dataset_4": 0.2501644258722009,
+    "dataset_5": 0.38090516169961075,
+    "dataset_6": 0.2681981503133218,
+    "dataset_7": 0.3504054256148289
+  },
+  "sample_time": 2.809840977191925,
+  "evaluate_time": 5.914379596710205
+}

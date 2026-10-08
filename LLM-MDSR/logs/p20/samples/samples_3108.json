@@ -1,0 +1,23 @@
+{
+  "sample_order": 3108,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    cos_term = np.cos(x) ** 2\n    sin_term = np.sin(x) ** 2\n    prob_weighted = params[0] * (prob * cos_term + (1 - prob) * sin_term)\n    time_decay = np.exp(-params[1] * t)\n    oscillation = 1.0 + params[2] * np.sin(params[3] * x)\n    base = params[4] * np.sqrt(np.maximum(prob, 1e-10)) * np.sqrt(np.maximum(1 - prob, 1e-10))\n    return prob_weighted * time_decay * oscillation + base * np.cos(params[5] * t + params[6]) + params[7] * np.sin(params[8] * t) + params[9]\n\n",
+  "score": -0.8660314551806252,
+  "mean_nmse": 0.8086370945194847,
+  "min_nmse": 0.7137804516734969,
+  "max_nmse": 0.8807196381106723,
+  "median_nmse": 0.8207317685355586,
+  "std_nmse": 0.05262247612856736,
+  "worst2_mean_nmse": 0.8660314551806252,
+  "nmse_per_test": {
+    "dataset_0": 0.7137804516734969,
+    "dataset_1": 0.7868136228896769,
+    "dataset_2": 0.8295682043331918,
+    "dataset_3": 0.8807196381106723,
+    "dataset_4": 0.8118953327379254,
+    "dataset_5": 0.7476789022296847,
+    "dataset_6": 0.8472973319306519,
+    "dataset_7": 0.8513432722505782
+  },
+  "sample_time": 1.1664384007453918,
+  "evaluate_time": 5.122058868408203
+}

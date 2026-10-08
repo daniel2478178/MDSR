@@ -1,0 +1,23 @@
+{
+  "sample_order": 254,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # target = A * prob * exp(-t/tau) * sin^2(omega*t/2) + B * prob * cos(omega*t) + C\n    # Simplify to a Reyleigh-like amplitude with envelope\n    half_angle = omega * t * 0.5\n    # Use sin^2 form: (1-cos(omega*t))/2\n    rabi_osc = (1.0 - np.cos(omega * t)) * 0.5\n    \n    # Exponential decay envelope to capture lifetime effects\n    decay_env = np.exp(-np.abs(t) * params[4])\n    \n    # Resonant amplitude factor\n    # Incorporate instantaneous value plus baseline offset\n    amp = params[0] * rabi_osc * decay_env\n    \n    # Additional term proportional to prob * cosine to adjust phase\n    phase_correction = params[1] * prob * np.cos(omega * t)\n    \n    # Term with t to model time-dependent growth/decay\n    t_dep = params[2] * prob * t * decay_env\n    \n    # Background term with omega dependence\n    omega_background = params[3] * (1.0 / (1.0 + params[5] * np.abs(omega)))\n    \n    y = amp + phase_correction + t_dep + omega_background + params[6]\n    return y\n\n",
+  "score": -0.5302927720173487,
+  "mean_nmse": 0.4009047831012479,
+  "min_nmse": 0.3336641024378532,
+  "max_nmse": 0.5358254790455285,
+  "median_nmse": 0.3577262484413881,
+  "std_nmse": 0.07989402267498619,
+  "worst2_mean_nmse": 0.5302927720173487,
+  "nmse_per_test": {
+    "dataset_0": 0.5247600649891689,
+    "dataset_1": 0.4236859306759869,
+    "dataset_2": 0.37438039194836514,
+    "dataset_3": 0.3346744927000198,
+    "dataset_4": 0.3336641024378532,
+    "dataset_5": 0.5358254790455285,
+    "dataset_6": 0.33917569807864933,
+    "dataset_7": 0.3410721049344111
+  },
+  "sample_time": 3.3771252632141113,
+  "evaluate_time": 5.165191888809204
+}

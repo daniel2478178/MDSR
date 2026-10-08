@@ -1,0 +1,23 @@
+{
+  "sample_order": 2259,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    import numpy as np\n    eps = 1e-10\n    # Ensure numerical stability for omega near zero\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Physical model based on Rabi oscillations:\n    # P(t) = prob * sin^2(Omega_R * t) where Omega_R = sqrt(omega^2 + detuning^2)\n    # Assume target = some function of the transition probability and driving parameters\n    # A common form: target = C * (prob * sin^2(omega_eff * t / 2))^alpha\n    # Here we model as: target = A * prob^B * sin^C(omega_eff * t) + D * t + E\n    # Trying: sin^2 term typical in physics; using params for amplitude, exponents, and offsets.\n    \n    omega_eff = np.sqrt(omega_safe**2 + params[0]**2)  # params[0] = detuning-like\n    sin_term = np.sin(omega_eff * t)\n    # Note: sin^2 = (1 - cos(2x))/2, but we'll use raw sin^p with powers.\n    \n    # Construct as: prob^p1 * (sin(x))^p2 * exp(-p3 * t) + p4\n    # Using exponential decay often in interactions.\n    # Let's suggest: target = p5 * (prob**p6) * (np.sin(omega_eff*t)**p7) + p8\n    \n    # But to keep simple: target = params[1] * (prob**params[2]) * (np.sin(params[3]*omega_eff*t)) + params[4]\n    \n    # We'll choose a physically sensible: Rabi formula with damping:\n    # target = params[1] * prob * np.sin(params[2] * omega_eff * t)**2 * np.exp(-params[3]*t) + params[4]\n    \n    # This uses 5 parameters plus detuning param[0], total 6. Adjust to <=4? \n    # But MAX_NPARAMS = 10, okay.\n    \n    # Let's try a cleaner expression:\n    # target = A * prob * (1 - cos(B * omega_eff * t)) / 2 * exp(-C*t) + D\n    # That's sin^2 form: sin^2(y) = (1-cos(2y))/2.\n    # So define: y = B * omega_eff * t.\n    # Then (1 - cos(y))/2 = sin^2(y/2). But use directly.\n    \n    # Final suggestion:\n    # Use function: target = params[1] * prob * (1 - np.cos(params[2] * omega_eff * t)) * np.exp(-params[3] * t) + params[4]\n    \n    # But to avoid too many params, maybe replace prob with something.\n    \n    # Rewrite using atan? But physical laws often simple.\n    \n    # Simpler: target = params[1] * prob * np.sin(params[2] * omega_safe * t)**2 + params[3] * np.exp(-params[4]*t)\n    \n    # For physical: target might be something like Rabi frequency amplitude.\n    \n    # Let's settle: \n    # target = A * (prob^alpha) * sin^2(beta * omega * t) + C * t + D\n    # with 5 params: A, alpha, beta, C, D. That is 5.\n    \n    A = params[0]\n    alpha = params[1]\n    beta = params[2]\n    C = params[3]\n    D = params[4]\n    \n    # Use safe omega\n    omega_safe = np.where(np.abs(omega) < 1e-10, 1e-10, omega)\n    # Compute sin^2 term\n    sin2 = np.sin(beta * omega_safe * t)**2\n    \n    # Ensure prob is positive and non-zero to avoid errors if alpha not integer – but fine.\n    return A * np.power(np.abs(prob) + 1e-15, alpha) * sin2 + C * t + D\n\n",
+  "score": -0.8525497640691353,
+  "mean_nmse": 0.7854267242780183,
+  "min_nmse": 0.5798279481459989,
+  "max_nmse": 0.8548753381772971,
+  "median_nmse": 0.8018440057892402,
+  "std_nmse": 0.08136676793786811,
+  "worst2_mean_nmse": 0.8525497640691353,
+  "nmse_per_test": {
+    "dataset_0": 0.8548753381772971,
+    "dataset_1": 0.8097117099417225,
+    "dataset_2": 0.8162689856164161,
+    "dataset_3": 0.5798279481459989,
+    "dataset_4": 0.7939763016367579,
+    "dataset_5": 0.8502241899609735,
+    "dataset_6": 0.7930175742866403,
+    "dataset_7": 0.78551174645834
+  },
+  "sample_time": 3.587310791015625,
+  "evaluate_time": 2.6158523559570312
+}

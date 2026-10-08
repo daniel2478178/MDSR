@@ -1,0 +1,14 @@
+{
+  "sample_order": 3519,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Try a physically-inspired Rabi-like formula:\n    # target ≈ amplitude * (prob * (1-prob))^0.5 * sin(omega_eff * t) + baseline\n    # where omega_eff depends on omega and detuning, but simplified here\n    # using a periodic Rabi oscillation modulated by transition probability\n    # and an exponential decay in time.\n    # Simplified structure with fewer parameters but still flexible:\n    # target = p0 * sqrt(prob*(1-prob)) * sin(p1 * omega * t + p2) * exp(-p3*t) \n    #        + p4 * prob + p5\n    # Let's use up to 6 parameters.\n    p = params\n    term1 = p[0] * np.sqrt(prob * (1 - prob)) * np.sin(p[1] * omega * t + p[2]) * np.exp(-p[3] * t)\n    term2 = p[4] * prob\n    term3 = p[5]\n    return term1 + term2 + term3\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 1.8245952725410461,
+  "evaluate_time": 1.9476048946380615
+}

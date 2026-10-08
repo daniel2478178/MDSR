@@ -1,0 +1,23 @@
+{
+  "sample_order": 249,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener transition probability formula for driven two-level systems\n    # target = amplitude * sqrt(prob*(1-prob)) * sin(omega*t) / (omega*t)\n    # with correction for finite pulse effects\n    eps = 1e-10\n    tau = omega * t\n    tau_safe = np.maximum(np.abs(tau), eps)\n    \n    # Ground state amplitude (sqrt of prob for resonant case)\n    amp = np.sqrt(np.maximum(prob, 0.0))\n    # Coherence term: sqrt(prob*(1-prob)) gives oscillatory amplitude\n    coherence = np.sqrt(np.maximum(prob * (1 - prob), eps))\n    \n    # Main physical relation: transition amplitude follows sin(omega*t/2) \n    # with Rabi-like oscillations damped by Gaussian envelope\n    sinc_term = np.sin(tau) / tau_safe\n    \n    # Parameterization: params[0] is overall scale, params[1] is damping rate\n    # params[2] is phase offset, params[3] is DC offset\n    y = (params[0] * coherence * sinc_term * \n         np.exp(-params[1] * np.abs(t)) + \n         params[2] * amp * np.cos(tau) + \n         params[3])\n    \n    return y\n\n",
+  "score": -0.9716470043726555,
+  "mean_nmse": 0.9678846671003282,
+  "min_nmse": 0.9632944661462616,
+  "max_nmse": 0.9718455954182332,
+  "median_nmse": 0.9678918161729327,
+  "std_nmse": 0.0032133067482727285,
+  "worst2_mean_nmse": 0.9716470043726555,
+  "nmse_per_test": {
+    "dataset_0": 0.9638634066645104,
+    "dataset_1": 0.9685675950523005,
+    "dataset_2": 0.9718455954182332,
+    "dataset_3": 0.9656384279322913,
+    "dataset_4": 0.9712033949683851,
+    "dataset_5": 0.967216037293565,
+    "dataset_6": 0.9632944661462616,
+    "dataset_7": 0.9714484133270779
+  },
+  "sample_time": 4.2213170528411865,
+  "evaluate_time": 2.285107135772705
+}

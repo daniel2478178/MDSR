@@ -1,0 +1,14 @@
+{
+  "sample_order": 600,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Rabi-like model: p = sin^2(Omega*t/2), invert to get Omega*t\n    # target often scales as sqrt(prob) times sin/cos of omega*t with damping\n    eps = 1e-8\n    p_clip = np.clip(prob, 0.0, 1.0)\n    # Effective Rabi angle from population\n    rabi = 2.0 * np.arcsin(np.sqrt(p_clip + eps))\n    # Detuning-like term, combined with omega*t phase\n    phase = omega * t\n    # Common form: peak amplitude (params[0]) * decay envelope * interference term\n    decay = np.exp(-params[1] * np.abs(t))\n    # Combined angular argument\n    arg = params[2] * rabi + params[3] * phase\n    y = params[0] * decay * np.sin(arg)\n    # Optional linear offset in prob to account for baseline\n    y = y + params[4] * p_clip + params[5] * rabi * decay\n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.5264075994491577,
+  "evaluate_time": 1.9858994483947754
+}

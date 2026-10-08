@@ -1,0 +1,23 @@
+{
+  "sample_order": 1578,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    p = np.maximum(prob, eps)\n    \n    # Physical model: Landau-Zener-like transition probability modified\n    # by interaction-time-dependent oscillatory interference.\n    # target = amplitude * p^alpha * cos(omega*t)^2-like structure with detuning response\n    \n    # Time-dependent Rabi oscillation factor with parameter-controlled frequency offset\n    rabi_term = np.sin(params[0] * omega * t + params[1])**2\n    \n    # Frequency response (Lorentzian-like detuning curve)\n    lorentzian = 1.0 / (1.0 + params[2] * (omega - params[3])**2)\n    \n    # Power-law scaling on probability (threshold-like behavior)\n    p_power = np.power(p, params[4])\n    \n    # Asymmetric interference between probability and time-frequency coupling\n    interference = (1.0 - p) * np.cos(params[5] * omega * t + params[6])\n    \n    # Combine: principal term + interference, all scaled by final amplitude\n    y = params[7] * (p_power * rabi_term * lorentzian + interference)\n    \n    # Add small linear trend in time to account for residual phase drift\n    y += params[8] * t + params[9]\n    \n    return y\n\n",
+  "score": -0.40916371907272775,
+  "mean_nmse": 0.2752783675973186,
+  "min_nmse": 0.08418235939129018,
+  "max_nmse": 0.42327116082310595,
+  "median_nmse": 0.29345014084659193,
+  "std_nmse": 0.11368977460596563,
+  "worst2_mean_nmse": 0.40916371907272775,
+  "nmse_per_test": {
+    "dataset_0": 0.39505627732234955,
+    "dataset_1": 0.3642530035897273,
+    "dataset_2": 0.32000620269295743,
+    "dataset_3": 0.08418235939129018,
+    "dataset_4": 0.2668940790002265,
+    "dataset_5": 0.42327116082310595,
+    "dataset_6": 0.18543310241331146,
+    "dataset_7": 0.1631307555455804
+  },
+  "sample_time": 3.3861191272735596,
+  "evaluate_time": 4.773153305053711
+}

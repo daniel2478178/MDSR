@@ -1,0 +1,23 @@
+{
+  "sample_order": 2307,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Physical model: damped driven harmonic oscillator response\n    # target = A * prob * sin^2(x)/x^2 * exp(-gamma*t) + C\n    x = omega_safe * t / 2.0\n    \n    # Main term: sinc^2 resonance with damping\n    sinc_sq = np.where(np.abs(x) < eps, 1.0, (np.sin(x) / x)**2)\n    \n    # Amplitude modulation and exponential decay\n    main_term = params[0] * prob * sinc_sq * np.exp(-params[1] * np.abs(t))\n    \n    # Optional frequency shift term\n    detuning = (omega_safe - params[2])\n    resonance_width = params[3] * detuning**2\n    \n    # Combined response with Lorentzian-like enhancement\n    response = main_term / (1.0 + resonance_width)\n    \n    # Add small baseline offset\n    result = response + params[4] * (1.0 - prob)\n    \n    return result\n\n",
+  "score": -1.3713227187950654,
+  "mean_nmse": 0.9462962694710242,
+  "min_nmse": 0.20933704340767187,
+  "max_nmse": 1.5113308493950448,
+  "median_nmse": 0.9493189656048352,
+  "std_nmse": 0.3648107526539564,
+  "worst2_mean_nmse": 1.3713227187950654,
+  "nmse_per_test": {
+    "dataset_0": 1.2313145881950858,
+    "dataset_1": 1.051161156555868,
+    "dataset_2": 1.1586492039123306,
+    "dataset_3": 0.20933704340767187,
+    "dataset_4": 0.8474767746538023,
+    "dataset_5": 1.5113308493950448,
+    "dataset_6": 0.7925395140567183,
+    "dataset_7": 0.7685610255916724
+  },
+  "sample_time": 2.6896289587020874,
+  "evaluate_time": 3.354193687438965
+}

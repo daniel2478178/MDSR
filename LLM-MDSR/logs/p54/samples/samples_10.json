@@ -1,0 +1,23 @@
+{
+  "sample_order": 10,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Modified damped oscillator with envelope modulation and nonlinear frequency term\n    y = params[0] * np.exp(-params[1] * t) * np.sin(params[2] * t + params[3]) + params[4] + params[5] * np.cos(params[2] * 2 * t + params[3])\n    return y\n\n",
+  "score": -0.00022543167366159968,
+  "mean_nmse": 5.7825104357786114e-05,
+  "min_nmse": 1.408732020009296e-07,
+  "max_nmse": 0.0004450625375657759,
+  "median_nmse": 2.600017117269723e-06,
+  "std_nmse": 0.0001463732399994029,
+  "worst2_mean_nmse": 0.00022543167366159968,
+  "nmse_per_test": {
+    "dataset_0": 7.231721770929346e-07,
+    "dataset_1": 4.454588555823384e-06,
+    "dataset_2": 5.800809757423451e-06,
+    "dataset_3": 1.812287522384335e-06,
+    "dataset_4": 3.3877467121551114e-06,
+    "dataset_5": 1.2188193696328759e-06,
+    "dataset_6": 1.408732020009296e-07,
+    "dataset_7": 0.0004450625375657759
+  },
+  "sample_time": 3.118907372156779,
+  "evaluate_time": 3.12962007522583
+}

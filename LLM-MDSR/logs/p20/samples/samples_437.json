@@ -1,0 +1,23 @@
+{
+  "sample_order": 437,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical form: target related to Rabi-like oscillations with damping\n    # Model: prob * [A * sin^2(omega*t/2) + B * sin(omega*t) * t] + C * t\n    omega_t = omega * t\n    half_omega_t = omega_t / 2.0\n    \n    # Rabi oscillation term (sin^2 envelope)\n    rabi_term = params[0] * np.sin(half_omega_t) ** 2 * prob\n    \n    # Damping/decay term combined with time-dependent oscillation\n    damped_osc = params[1] * np.exp(-params[2] * np.abs(t)) * np.sin(omega_t) * prob\n    \n    # Linear time dependence capturing secular growth\n    secular = params[3] * t\n    \n    # Constant offset\n    offset = params[4]\n    \n    y = rabi_term + damped_osc + secular + offset\n    \n    return y\n\n",
+  "score": -0.7447612451812264,
+  "mean_nmse": 0.6166767096507415,
+  "min_nmse": 0.4689501950028462,
+  "max_nmse": 0.7472132656079182,
+  "median_nmse": 0.6116905237084047,
+  "std_nmse": 0.09589007226680485,
+  "worst2_mean_nmse": 0.7447612451812264,
+  "nmse_per_test": {
+    "dataset_0": 0.7472132656079182,
+    "dataset_1": 0.6797911251410201,
+    "dataset_2": 0.6403761587801527,
+    "dataset_3": 0.4689501950028462,
+    "dataset_4": 0.5830048886366567,
+    "dataset_5": 0.7423092247545348,
+    "dataset_6": 0.5453482066717619,
+    "dataset_7": 0.5264206126110417
+  },
+  "sample_time": 2.1102101802825928,
+  "evaluate_time": 2.0422017574310303
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 419,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"Discover one shared physical law from multiple datasets.\"\"\"\n    # Use np.where to avoid invalid values and keep numerical stability\n    t_safe = np.where(np.abs(t) < 1e-12, 1e-12, t)\n    omega_safe = np.where(np.abs(omega) < 1e-12, 1e-12, omega)\n    \n    # Physical form: probability scaling with Rabi-like oscillations\n    angle = omega * t\n    \n    # Amplitude term with sinusoidal dependence on omega*t\n    amplitude = params[0] * np.sqrt(prob) + params[1]\n    \n    # Oscillation envelope: decay in time and frequency-dependent phase\n    oscillation = np.sin(angle) * np.exp(-params[2] * np.abs(t))\n    \n    # Frequency-dependent modulation of the envelope\n    modulation = np.cos(angle) + params[3] * np.sin(angle) / (1.0 + omega_safe)\n    \n    # Combine: target = amplitude * oscillation * modulation + offset\n    y = amplitude * oscillation * modulation + params[4] * prob * np.cos(angle) + params[5]\n    \n    return y\n\n",
+  "score": -0.7644306239575793,
+  "mean_nmse": 0.6940250454892568,
+  "min_nmse": 0.626581908786415,
+  "max_nmse": 0.7655386477528878,
+  "median_nmse": 0.6839960094530877,
+  "std_nmse": 0.0464501780852793,
+  "worst2_mean_nmse": 0.7644306239575793,
+  "nmse_per_test": {
+    "dataset_0": 0.7655386477528878,
+    "dataset_1": 0.7075990088095199,
+    "dataset_2": 0.6847205549519959,
+    "dataset_3": 0.626581908786415,
+    "dataset_4": 0.6832714639541795,
+    "dataset_5": 0.7633226001622708,
+    "dataset_6": 0.6698791890587961,
+    "dataset_7": 0.6512869904379902
+  },
+  "sample_time": 2.7666330337524414,
+  "evaluate_time": 3.6065406799316406
+}

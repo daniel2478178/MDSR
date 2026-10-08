@@ -1,0 +1,23 @@
+{
+  "sample_order": 358,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition probability relation:\n    # target = A * sqrt(prob * (1 - prob)) * cosh(omega * t) + B\n    eps = 1e-10\n    p_clip = np.clip(prob, eps, 1 - eps)\n    angle = omega * t\n    \n    term1 = params[0] * np.sqrt(p_clip * (1 - p_clip)) * np.cosh(angle)\n    term2 = params[1] * np.sin(angle) * prob\n    term3 = params[2] * p_clip * np.exp(-np.abs(t))\n    \n    return term1 + term2 + term3 + params[3]\n\n",
+  "score": -0.8862048851454412,
+  "mean_nmse": 0.7813620755608945,
+  "min_nmse": 0.6936418805590854,
+  "max_nmse": 0.9328408918652489,
+  "median_nmse": 0.768070419210253,
+  "std_nmse": 0.07394097273678328,
+  "worst2_mean_nmse": 0.8862048851454412,
+  "nmse_per_test": {
+    "dataset_0": 0.7750055059231742,
+    "dataset_1": 0.6936418805590854,
+    "dataset_2": 0.7068308242177322,
+    "dataset_3": 0.9328408918652489,
+    "dataset_4": 0.7291776370641194,
+    "dataset_5": 0.7611353324973319,
+    "dataset_6": 0.8126956539348308,
+    "dataset_7": 0.8395688784256333
+  },
+  "sample_time": 2.734046995639801,
+  "evaluate_time": 2.0286219120025635
+}

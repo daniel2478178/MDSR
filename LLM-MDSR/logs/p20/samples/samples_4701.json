@@ -1,0 +1,23 @@
+{
+  "sample_order": 4701,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    return params[0] * (1 - prob) * np.sin(params[1] * x + params[2]) * np.exp(-params[3] * t) + params[4] * np.sqrt(prob) * np.cos(params[5] * x + params[6]) + params[7] * prob * np.cos(params[8] * t) + params[9] * np.sqrt(prob) * np.sin(params[10] * x + params[11]) if len(params) >= 12 else params[0] * (1 - prob) * np.sin(params[1] * x + params[2]) * np.exp(-params[3] * t) + params[4] * np.sqrt(prob) * np.cos(params[5] * x + params[6]) + params[7] * prob * np.cos(params[8] * t)\n\n",
+  "score": -0.38807878958448483,
+  "mean_nmse": 0.3108890911496874,
+  "min_nmse": 0.22343295169896096,
+  "max_nmse": 0.404768564584839,
+  "median_nmse": 0.30338778499071817,
+  "std_nmse": 0.05429506314150023,
+  "worst2_mean_nmse": 0.38807878958448483,
+  "nmse_per_test": {
+    "dataset_0": 0.404768564584839,
+    "dataset_1": 0.3317274454479182,
+    "dataset_2": 0.29736264787904426,
+    "dataset_3": 0.22343295169896096,
+    "dataset_4": 0.309412922102392,
+    "dataset_5": 0.3713890145841307,
+    "dataset_6": 0.2843873874442536,
+    "dataset_7": 0.26463179545596016
+  },
+  "sample_time": 1.5841016173362732,
+  "evaluate_time": 5.496772289276123
+}

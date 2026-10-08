@@ -1,0 +1,23 @@
+{
+  "sample_order": 831,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical motivation: transition probability in driven systems often follows\n    # Rabi-like oscillations: target ~ prob * sin^2(omega*t/2) or similar,\n    # but here we need a simpler form consistent with shared structure.\n    # Use a generalized Rabi formula: target = A * prob * sin^2(omega*t/2 + phase)\n    # with possible offset and damping.\n    eps = 1e-12\n    angle = omega * t / 2.0 + params[1]\n    # Apply damping to prevent sin^2 from creating too large/oscillatory values\n    damping = np.exp(-params[2] * np.abs(t))\n    y = params[0] * prob * np.sin(angle) ** 2 * damping + params[3] * prob * np.cos(angle) + params[4]\n    return y\n\n",
+  "score": -0.6993791188287901,
+  "mean_nmse": 0.6200173608024568,
+  "min_nmse": 0.531265509352633,
+  "max_nmse": 0.7064191693468581,
+  "median_nmse": 0.6188196789802345,
+  "std_nmse": 0.06035989472464489,
+  "worst2_mean_nmse": 0.6993791188287901,
+  "nmse_per_test": {
+    "dataset_0": 0.7064191693468581,
+    "dataset_1": 0.661465817891435,
+    "dataset_2": 0.6364364057979309,
+    "dataset_3": 0.531265509352633,
+    "dataset_4": 0.5534799753920537,
+    "dataset_5": 0.6923390683107222,
+    "dataset_6": 0.577529988165484,
+    "dataset_7": 0.6012029521625379
+  },
+  "sample_time": 3.0354599952697754,
+  "evaluate_time": 2.2232913970947266
+}

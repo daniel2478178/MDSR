@@ -1,0 +1,23 @@
+{
+  "sample_order": 1629,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    theta = omega * t\n    # Lorentzian-like resonance with detuning and damping\n    detuned = theta - params[0]\n    lorentzian = params[1] / (1.0 + (detuned / params[2])**2)\n    # Transition probability weight with power-law enhancement\n    prob_term = prob * (params[3] * t**2)\n    # Oscillating component with frequency modulation\n    osc = params[4] * np.cos(detuned) * prob * np.sin(theta) ** 2\n    return prob_term * lorentzian + osc + params[5]\n\n",
+  "score": -0.5614263555908274,
+  "mean_nmse": 0.49495976042704826,
+  "min_nmse": 0.35438951775841293,
+  "max_nmse": 0.5689518252925144,
+  "median_nmse": 0.5045761183138994,
+  "std_nmse": 0.06354627148008661,
+  "worst2_mean_nmse": 0.5614263555908274,
+  "nmse_per_test": {
+    "dataset_0": 0.5689518252925144,
+    "dataset_1": 0.535761130029132,
+    "dataset_2": 0.5179603504361423,
+    "dataset_3": 0.35438951775841293,
+    "dataset_4": 0.4911918861916565,
+    "dataset_5": 0.5539008858891403,
+    "dataset_6": 0.4659815334384118,
+    "dataset_7": 0.471540954380976
+  },
+  "sample_time": 1.6422740817070007,
+  "evaluate_time": 5.712859392166138
+}

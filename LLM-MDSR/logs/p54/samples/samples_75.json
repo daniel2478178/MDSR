@@ -1,0 +1,14 @@
+{
+  "sample_order": 75,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    t_flat = np.asarray(t).ravel()\n    omega_flat = np.asarray(omega).ravel()\n    freq = float(omega_flat[0]) if omega_flat.size > 0 else 1.0\n    \n    A = params[0]\n    B = params[1] if len(params) > 1 else 0.0\n    C = params[2] if len(params) > 2 else 0.0\n    \n    y = A * np.cos(freq * t_flat) + B * np.sin(freq * t_flat) + C\n    \n    return y.reshape(np.shape(t)) if np.ndim(t) > 1 else y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 1.5643402934074402,
+  "evaluate_time": 2.9088799953460693
+}

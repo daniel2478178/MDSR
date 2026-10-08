@@ -1,0 +1,23 @@
+{
+  "sample_order": 2481,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Simplified shared structure: exponential decay modulated by a Rabi-like oscillation\n    # with prob controlling the amplitude and detuning via omega*t\n    return params[0] * prob * np.exp(-params[1] * t) * np.sin(params[2] * x + params[3]) + params[4] * prob * np.cos(params[5] * omega * t) + params[6] * prob\n\n",
+  "score": -0.9506760851098226,
+  "mean_nmse": 0.7400516245376456,
+  "min_nmse": 0.4816956448312158,
+  "max_nmse": 0.9906300170687372,
+  "median_nmse": 0.7270199906515611,
+  "std_nmse": 0.1511738990565194,
+  "worst2_mean_nmse": 0.9506760851098226,
+  "nmse_per_test": {
+    "dataset_0": 0.9906300170687372,
+    "dataset_1": 0.7893172403162594,
+    "dataset_2": 0.7675875016921859,
+    "dataset_3": 0.4816956448312158,
+    "dataset_4": 0.6668620702908595,
+    "dataset_5": 0.9107221531509081,
+    "dataset_6": 0.6271458893400628,
+    "dataset_7": 0.6864524796109364
+  },
+  "sample_time": 1.0496190786361694,
+  "evaluate_time": 3.141601800918579
+}

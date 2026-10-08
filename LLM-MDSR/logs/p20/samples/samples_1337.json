@@ -1,0 +1,14 @@
+{
+  "sample_order": 1337,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical form: target = A * [p * (1 - p) * sin^2(Ωτ + φ) + p^2] * exp(-Γτ)\n    # with additional frequency-dependent phase shift\n    \n    # Rabi-like oscillation term modulated by probability\n    rabi_term = np.sin(params[0] * omega_safe * t_safe * np.sqrt(1 - prob) + params[1])**2\n    \n    # Probability-dependent amplitude: p(1-p) for two-level system\n    prob_factor = prob * (1 - prob) * rabi_term + prob**2\n    \n    # Decay envelope\n    decay = np.exp(-params[2] * t_safe)\n    \n    # Frequency-dependent correction\n    freq_correction = params[3] * np.sin(omega_safe * t_safe) / omega_safe\n    \n    y = params[4] * prob_factor * decay + freq_correction + params[5]\n    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.4278611540794373,
+  "evaluate_time": 1.9715056419372559
+}

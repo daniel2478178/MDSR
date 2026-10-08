@@ -1,0 +1,23 @@
+{
+  "sample_order": 1699,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: driven transition amplitude with detuning and damping\n    # params: [amplitude, phase, detuning, decay, offset, scale]\n    # target = A * prob * (1 - exp(-decay*t)) * sin(detuning*omega*t)/(detuning*omega) + offset\n    \n    # Use minimum 6 params, but allow up to 10 if more are needed\n    A = params[0]\n    phase = params[1]\n    detuning = params[2]\n    decay = params[3]\n    offset = params[4]\n    scale = params[5] if len(params) > 5 else 1.0\n    extra = params[6] if len(params) > 6 else 0.0\n    \n    # Avoid division by zero\n    omega_t = omega * t + 1e-12\n    detuning_omega_t = detuning * omega_t\n    \n    # Shared physical structure: damped resonance with detuning\n    envelope = np.exp(-decay * np.abs(t))\n    resonance = np.sin(detuning_omega_t + phase) / (detuning_omega_t + 1e-12)\n    prob_factor = prob / (1.0 + extra * prob)\n    \n    return A * prob_factor * envelope * resonance + offset\n\n",
+  "score": -0.8097154812014344,
+  "mean_nmse": 0.5332041371271933,
+  "min_nmse": 0.2514399570959822,
+  "max_nmse": 0.9992379889156598,
+  "median_nmse": 0.5235834428649083,
+  "std_nmse": 0.21396531625351917,
+  "worst2_mean_nmse": 0.8097154812014344,
+  "nmse_per_test": {
+    "dataset_0": 0.620192973487209,
+    "dataset_1": 0.5507432637675063,
+    "dataset_2": 0.4964236219623103,
+    "dataset_3": 0.2514399570959822,
+    "dataset_4": 0.4162013152044396,
+    "dataset_5": 0.6028813036828311,
+    "dataset_6": 0.32851267290160774,
+    "dataset_7": 0.9992379889156598
+  },
+  "sample_time": 3.1872174739837646,
+  "evaluate_time": 2.5919265747070312
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 1856,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    x = params[0] * omega * t + params[1]\n    # Rabi-like transition probability contribution with detuning and time\n    rabi_part = prob * np.abs(np.sin(x) + eps) ** 2\n    # Oscillatory interference term dependent on phase\n    osc = params[2] * np.sin(params[3] * omega * t + params[4]) * prob\n    # Exponential decay envelope in time\n    dec = params[5] * np.exp(-params[6] * np.abs(t))\n    # Overall scale and offset\n    return params[7] * (rabi_part + osc + dec) + params[8]\n\n",
+  "score": -0.3980304592267875,
+  "mean_nmse": 0.31744671464116025,
+  "min_nmse": 0.2519176415421483,
+  "max_nmse": 0.4015609654373415,
+  "median_nmse": 0.29756632765135704,
+  "std_nmse": 0.05285186704914397,
+  "worst2_mean_nmse": 0.3980304592267875,
+  "nmse_per_test": {
+    "dataset_0": 0.4015609654373415,
+    "dataset_1": 0.34290423923306285,
+    "dataset_2": 0.3094187319938697,
+    "dataset_3": 0.2519176415421483,
+    "dataset_4": 0.2857139233088444,
+    "dataset_5": 0.3944999530162334,
+    "dataset_6": 0.27931703132303326,
+    "dataset_7": 0.27424123127474864
+  },
+  "sample_time": 2.40046489238739,
+  "evaluate_time": 4.129362106323242
+}

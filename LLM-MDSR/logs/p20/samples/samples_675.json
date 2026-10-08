@@ -1,0 +1,23 @@
+{
+  "sample_order": 675,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    theta = omega * t\n    safe_prob = np.clip(prob, 1e-6, 1 - 1e-6)\n    # Rabi-like probability of two-level system under resonant drive:\n    # P = (Omega_R/Omega)^2 * sin^2(Omega*t/2), with Omega_R = coupling\n    # Rearranged: target = Omega_R * sin(Omega*t/2) where Omega = sqrt(Omega_R^2 + delta^2)\n    # Here driving omega is related; we model transition amplitude as sqrt(P) times oscillation\n    amp = np.sqrt(safe_prob)\n    osc = np.sin(params[0] * t * np.sqrt(np.abs(omega) + params[1]))\n    y = params[2] * amp * osc / (1.0 + params[3] * np.abs(omega) * t)\n    return y\n\n",
+  "score": -1.461331949336438,
+  "mean_nmse": 1.1624383356944152,
+  "min_nmse": 1.0169748432845866,
+  "max_nmse": 1.7791455696209686,
+  "median_nmse": 1.0704807604121225,
+  "std_nmse": 0.23688175697332212,
+  "worst2_mean_nmse": 1.461331949336438,
+  "nmse_per_test": {
+    "dataset_0": 1.135590864895378,
+    "dataset_1": 1.0597954188511134,
+    "dataset_2": 1.0811661019731313,
+    "dataset_3": 1.0169748432845866,
+    "dataset_4": 1.0448912616354367,
+    "dataset_5": 1.1435183290519075,
+    "dataset_6": 1.7791455696209686,
+    "dataset_7": 1.0384242962427999
+  },
+  "sample_time": 5.131128370761871,
+  "evaluate_time": 2.179081439971924
+}

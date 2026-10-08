@@ -1,0 +1,23 @@
+{
+  "sample_order": 2347,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Use physics: Landau-Zener-Stückelberg-Majorana interference in a driven two-level system.\n    # target = amplitude * prob * cos(delta * t) + offset, where detuning depends on omega\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Dimensionless time variable\n    tau = omega_safe * t\n    \n    # Core physics: probability-dependent amplitude scaling with interference fringes\n    # and a secular drift term proportional to time\n    base_osc = params[0] * prob * np.cos(tau) + params[1] * prob * np.sin(tau)\n    \n    # Nonlinear term: transition probability saturates with a Lorentzian-like envelope\n    envelope = params[2] * prob / (1.0 + (params[3] * tau) ** 2)\n    \n    # Slow drift in time\n    drift = params[4] * t\n    \n    # Result combines interference pattern with saturation and drift\n    return base_osc + envelope + drift + params[5]\n\n",
+  "score": -0.6428609588237286,
+  "mean_nmse": 0.4617359903338095,
+  "min_nmse": 0.27233768471055647,
+  "max_nmse": 0.6504881980882627,
+  "median_nmse": 0.44702687850259937,
+  "std_nmse": 0.1334108464538323,
+  "worst2_mean_nmse": 0.6428609588237286,
+  "nmse_per_test": {
+    "dataset_0": 0.6504881980882627,
+    "dataset_1": 0.5555486059725451,
+    "dataset_2": 0.48605731196081364,
+    "dataset_3": 0.27233768471055647,
+    "dataset_4": 0.40799644504438504,
+    "dataset_5": 0.6352337195591944,
+    "dataset_6": 0.3566027043966458,
+    "dataset_7": 0.32962325293807265
+  },
+  "sample_time": 2.1325867772102356,
+  "evaluate_time": 2.237381935119629
+}

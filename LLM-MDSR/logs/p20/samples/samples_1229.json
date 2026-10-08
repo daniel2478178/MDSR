@@ -1,0 +1,23 @@
+{
+  "sample_order": 1229,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"Improved version of `equation_v0`. Rewrite the mathematical expression in the function body. Return a complete valid implementation with an explicit return statement.\"\"\"\n    # Use prob as the primary variable; the target likely follows a Rabi-like formula\n    # where prob ~ sin^2(Omega*t/2), so invert or transform accordingly.\n    theta = 2 * np.arcsin(np.sqrt(np.clip(prob, 0, 1)))  # dimensionless Rabi angle\n    # Assume target depends on theta, omega, and t in a damped oscillatory manner\n    # with different parameters per dataset\n    Om_eff = params[0] * omega + params[1] * theta / (t + 1e-10)\n    decay = np.exp(-params[2] * np.abs(t))\n    y = params[3] * Om_eff * decay * theta + params[4] * np.cos(omega * t) + params[5]\n    return y\n\n",
+  "score": -0.9998893941124436,
+  "mean_nmse": 0.9922053985281792,
+  "min_nmse": 0.943645652445739,
+  "max_nmse": 0.9999711832601952,
+  "median_nmse": 0.9991008025083479,
+  "std_nmse": 0.018365729153866805,
+  "worst2_mean_nmse": 0.9998893941124436,
+  "nmse_per_test": {
+    "dataset_0": 0.9976415243894493,
+    "dataset_1": 0.9991575713124496,
+    "dataset_2": 0.9999711832601952,
+    "dataset_3": 0.9998076049646919,
+    "dataset_4": 0.9989745626396421,
+    "dataset_5": 0.943645652445739,
+    "dataset_6": 0.9994010555090205,
+    "dataset_7": 0.999044033704246
+  },
+  "sample_time": 2.5902244448661804,
+  "evaluate_time": 2.6959502696990967
+}

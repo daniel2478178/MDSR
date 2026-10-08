@@ -1,0 +1,23 @@
+{
+  "sample_order": 2244,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Physical model: target = A * (sqrt(prob) * cos(omega*t) + (1-prob) * sin(omega*t)) * exp(-gamma*t)\n    # This represents a damped oscillation where the transition probability modulates the amplitude\n    \n    p_sqrt = np.sqrt(np.clip(prob, 0, 1))\n    p_comp = 1.0 - prob\n    \n    # Main oscillatory term with probability-weighted coupling\n    term1 = params[0] * (p_sqrt * np.cos(omega_safe * t) + p_comp * np.sin(omega_safe * t))\n    \n    # Damping envelope with frequency-dependent rate\n    damp = np.exp(-params[1] * np.abs(t) / (1.0 + params[2] * omega_safe))\n    \n    # Additional correction for strong driving fields\n    correction = params[3] * (2.0 * prob - 1.0) * np.sin(omega_safe * t) * np.exp(-params[4] * np.abs(t))\n    \n    return (term1 + correction) * damp + params[5]\n\n",
+  "score": -1.2346805034249253,
+  "mean_nmse": 0.9094456932945605,
+  "min_nmse": 0.7600689286087454,
+  "max_nmse": 1.5753165631648207,
+  "median_nmse": 0.8212618467861543,
+  "std_nmse": 0.25458547448469354,
+  "worst2_mean_nmse": 1.2346805034249253,
+  "nmse_per_test": {
+    "dataset_0": 1.5753165631648207,
+    "dataset_1": 0.7784183415274831,
+    "dataset_2": 0.7892162043898445,
+    "dataset_3": 0.8940444436850298,
+    "dataset_4": 0.7600689286087454,
+    "dataset_5": 0.8359773714082506,
+    "dataset_6": 0.8203115612371054,
+    "dataset_7": 0.8222121323352033
+  },
+  "sample_time": 2.0206575989723206,
+  "evaluate_time": 3.024069309234619
+}

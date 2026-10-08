@@ -1,0 +1,23 @@
+{
+  "sample_order": 628,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Robust physical expression: combine Rabi-like oscillations with decay\n    eps = 1e-10\n    angle = omega * t\n    # Fundamental: probability times sinusoidal envelope with frequency offset\n    # Use params[0] to scale amplitude, params[1] for phase shift,\n    # params[2] for exponential decay rate, params[3] for baseline\n    # Additional params for frequency modulation in prob-space\n    sin_component = np.sin(angle + params[1])\n    cos_component = np.cos(angle + params[1])\n    \n    # Decay envelope based on t (time-dependent relaxation)\n    decay = np.exp(-params[2] * np.abs(t))\n    \n    # Prob-dependent modulation via geometric mean of prob and its complement\n    prob_safe = np.clip(prob, eps, 1 - eps)\n    prob_factor = np.sqrt(prob_safe * (1 - prob_safe))\n    \n    # Main term: oscillation amplitude controlled by prob and decay\n    main_term = params[0] * prob_factor * sin_component * decay\n    \n    # Secondary term for possible asymmetry or offset in t\n    secondary = params[3] * (1 - prob_safe) * cos_component * np.exp(-params[2] * np.abs(t) * 2)\n    \n    # Add small baseline\n    y = main_term + secondary + params[4]\n    \n    # Ensure numerical stability\n    y = np.where(np.isfinite(y), y, 0.0)\n    return y\n\n",
+  "score": -0.9953104248517487,
+  "mean_nmse": 0.9727645443472673,
+  "min_nmse": 0.9299982702380435,
+  "max_nmse": 0.9956736272415146,
+  "median_nmse": 0.9908620119566741,
+  "std_nmse": 0.027200542573479213,
+  "worst2_mean_nmse": 0.9953104248517487,
+  "nmse_per_test": {
+    "dataset_0": 0.931153253019727,
+    "dataset_1": 0.9558478077756578,
+    "dataset_2": 0.9906520801178638,
+    "dataset_3": 0.9956736272415146,
+    "dataset_4": 0.9910719437954845,
+    "dataset_5": 0.9299982702380435,
+    "dataset_6": 0.9927721501278646,
+    "dataset_7": 0.9949472224619827
+  },
+  "sample_time": 3.80397891998291,
+  "evaluate_time": 2.7849841117858887
+}

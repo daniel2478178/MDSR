@@ -1,0 +1,23 @@
+{
+  "sample_order": 938,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target proportional to transition probability,\n    # with dependence on the accumulated phase omega*t, \n    # describing a possible Rabi-like or interference phenomenon.\n    eps = 1e-10\n    angle = omega * t\n    # Encode dimensionless phase and keep parameters few:\n    # params[0] overall amplitude\n    # params[1] phase offset effect\n    # params[2] exponential decay in time\n    # params[3] small offset\n    y = params[0] * prob * np.sin(angle + params[1]) + params[2] * np.exp(-np.abs(t) * eps) + params[3]\n    return y\n\n",
+  "score": -0.9032351309075901,
+  "mean_nmse": 0.869852904113266,
+  "min_nmse": 0.8421225488061992,
+  "max_nmse": 0.9047573733477713,
+  "median_nmse": 0.8657278608714177,
+  "std_nmse": 0.023887117571201044,
+  "worst2_mean_nmse": 0.9032351309075901,
+  "nmse_per_test": {
+    "dataset_0": 0.9047573733477713,
+    "dataset_1": 0.8570382886827487,
+    "dataset_2": 0.8455970245199201,
+    "dataset_3": 0.8861808856683092,
+    "dataset_4": 0.8421225488061992,
+    "dataset_5": 0.901712888467409,
+    "dataset_6": 0.8469967903536835,
+    "dataset_7": 0.8744174330600868
+  },
+  "sample_time": 3.18743759393692,
+  "evaluate_time": 2.0134048461914062
+}

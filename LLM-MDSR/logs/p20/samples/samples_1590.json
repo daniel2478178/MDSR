@@ -1,0 +1,23 @@
+{
+  "sample_order": 1590,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    \n    # Physical model: damped Rabi-like oscillation\n    # Transition probability follows sin^2(Omega*t/2), driving frequency sets time scale\n    # Simple universal form: prob = sin^2(params0 * omega * t / 2) for resonant driving\n    \n    # Extract physical meaning: Reconstruct probability from sin^2 form\n    # If prob = sin^2(x), then x = arcsin(sqrt(prob))\n    inner = np.clip(prob, 0.0, 1.0)  # Numerical safety\n    phase = np.arcsin(np.sqrt(inner + eps))  # Reconstruct phase from probability\n    \n    # Relate reconstructed phase to physical time/frequency\n    # phase = params[0] * omega * t / 2 + params[1] (detuning offset)\n    \n    # Expected time evolution from reconstructed phase vs actual time\n    # If system is in Rabi oscillation, target should relate to difference\n    predicted_phase = params[0] * omega * t + params[1]\n    \n    # Damped oscillation envelope\n    envelope = np.exp(-params[2] * np.maximum(t, 0))\n    \n    # Target measures deviation from ideal Rabi form, modulated by amplitude\n    # Simple shared law: target = params[3] * envelope * sin(predicted_phase) + params[4]\n    \n    # More physically: target = params[3] * prob * cos(params[5]*omega*t) * exp(-params[2]*t) + params[4]\n    \n    # Final: damped cosine of reconstructed phase plus offset\n    y = params[3] * envelope * np.cos(predicted_phase) + params[4]\n    \n    # Must use all variables: t, omega, prob all appear through phase\n    return y\n\n",
+  "score": -0.9997798129286299,
+  "mean_nmse": 0.9992278702197857,
+  "min_nmse": 0.9982633837599529,
+  "max_nmse": 0.9999996665593233,
+  "median_nmse": 0.9992652953499304,
+  "std_nmse": 0.0004629233261523943,
+  "worst2_mean_nmse": 0.9997798129286299,
+  "nmse_per_test": {
+    "dataset_0": 0.9991524555888469,
+    "dataset_1": 0.9995599592979366,
+    "dataset_2": 0.9999996665593233,
+    "dataset_3": 0.9982633837599529,
+    "dataset_4": 0.9989873432508167,
+    "dataset_5": 0.9993295626015478,
+    "dataset_6": 0.9992928086177693,
+    "dataset_7": 0.9992377820820915
+  },
+  "sample_time": 3.245751678943634,
+  "evaluate_time": 2.653505802154541
+}

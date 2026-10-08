@@ -1,0 +1,23 @@
+{
+  "sample_order": 312,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Keep arguments identical; use np.math for safe operations\n    eps = 1e-10\n    # Physical law inspired by Fermi's golden rule for driven systems:\n    # transition rate ~ prob * (sin(omega*t)/(omega))^2 with corrections\n    # Here target is related to the rotation angle and has a resonance term\n    angle = omega * t\n    # Use params[0] as overall scale, params[1] as offset\n    # params[2], params[3] characterize the resonance shape\n    # params[4] accounts for time decay\n    # sin(angle) dominates; avoid division by small omega\n    omega_effective = np.sqrt(omega**2 + eps)\n    # A physically plausible form: target = A * (prob * sin^2(angle/2)) / (omega_eff^2) + B\n    # plus an exponential damping in time\n    half_angle = angle / 2.0\n    resonance = np.sin(half_angle)**2\n    # Add a term proportional to t to allow linear growth\n    term1 = params[0] * prob * resonance / omega_effective\n    term2 = params[1] * t * prob\n    term3 = params[2] * np.exp(-params[3] * np.abs(t)) * np.sin(omega * t + params[4]) * prob\n    y = term1 + term2 + term3 + params[5]\n    return y\n\n",
+  "score": -0.5339648554770922,
+  "mean_nmse": 0.4836646615197259,
+  "min_nmse": 0.3762764684625617,
+  "max_nmse": 0.5433339102725161,
+  "median_nmse": 0.48976173827248526,
+  "std_nmse": 0.046583982834683506,
+  "worst2_mean_nmse": 0.5339648554770922,
+  "nmse_per_test": {
+    "dataset_0": 0.5433339102725161,
+    "dataset_1": 0.49855697320348386,
+    "dataset_2": 0.495564509060299,
+    "dataset_3": 0.3762764684625617,
+    "dataset_4": 0.4839589674846716,
+    "dataset_5": 0.5245958006816681,
+    "dataset_6": 0.4701207393696604,
+    "dataset_7": 0.476909923622947
+  },
+  "sample_time": 3.7425689101219177,
+  "evaluate_time": 2.178640127182007
+}

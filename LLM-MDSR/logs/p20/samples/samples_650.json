@@ -1,0 +1,23 @@
+{
+  "sample_order": 650,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Physical relation: Rabi-like oscillations where prob enters via arcsin\n    # target = amplitude * angular_detuning * sin^2(theta/2) with corrections\n    angle = omega * t\n    # Use atan2 or sqrt transforms to link prob to an angle, then drive oscillations\n    p = np.clip(prob, 0.0, 1.0)\n    # Convert probability to an effective rotation angle\n    theta = 2 * np.arcsin(np.sqrt(p))\n    # Oscillatory term with detuning-like parameters\n    osc = np.sin(theta + params[0] * angle) + params[1] * np.cos(theta - params[2] * angle)\n    # Physical scale from omega and t, possibly an envelope decay\n    envelope = np.exp(-params[3] * np.abs(t))\n    # Amplitude modulation with resonance\n    detuning = params[4] * (omega - params[5])\n    # Combine: target as product of detuning-related, probability-driven oscillation, with decay\n    y = params[6] * detuning * osc * envelope + params[7] * p * np.sin(angle)\n    return y\n\n",
+  "score": -2.9588228716308205,
+  "mean_nmse": 1.68802670460952,
+  "min_nmse": 1.140155028806634,
+  "max_nmse": 3.226510147563456,
+  "median_nmse": 1.3133971220141478,
+  "std_nmse": 0.7516250803817238,
+  "worst2_mean_nmse": 2.9588228716308205,
+  "nmse_per_test": {
+    "dataset_0": 3.226510147563456,
+    "dataset_1": 1.4493239251629852,
+    "dataset_2": 1.2768980968144805,
+    "dataset_3": 1.140155028806634,
+    "dataset_4": 1.3498961472138153,
+    "dataset_5": 2.6911355956981855,
+    "dataset_6": 1.1917294826344604,
+    "dataset_7": 1.1785652129821442
+  },
+  "sample_time": 4.28266978263855,
+  "evaluate_time": 3.303410530090332
+}

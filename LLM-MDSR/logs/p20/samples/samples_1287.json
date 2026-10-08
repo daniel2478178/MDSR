@@ -1,0 +1,23 @@
+{
+  "sample_order": 1287,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Key physical insight: transition probability in a driven system often\n    # follows a Rabi-like formula: prob = (Omega_R^2 / (Omega_R^2 + delta^2)) \n    # * sin^2(sqrt(Omega_R^2 + delta^2) * t / 2), where delta = omega - omega_0\n    # Here we invert this: given prob, t, and omega, we solve for a scaled\n    # effective coupling strength. The target may be a physical observable\n    # like the energy or population difference.\n    #\n    # We propose: target = params[0] * arcsin(sqrt(max(prob,0)) )^2 / t^2 \n    #              + params[1] * (omega - params[2])^2 * prob + params[3]\n    # This captures a resonance-like behavior with an offset.\n\n    # Ensure numerical stability\n    prob_clipped = np.clip(prob, 0, 1)  # probability must be in [0,1]\n    sqrt_prob = np.sqrt(prob_clipped)\n    \n    # Avoid division by zero for t=0\n    t_safe = np.where(np.abs(t) < 1e-12, 1e-12, t)\n    \n    # Rabi-frequency-like term: arcsin(sqrt(prob))/t gives a frequency scale\n    # Squaring gives energy-like quantity\n    rabi_freq_sq = (np.arcsin(sqrt_prob) / t_safe) ** 2\n    \n    # Detuning term: (omega - omega_0)^2 * prob, representing off-resonance effects\n    detuning_sq = (omega - params[2]) ** 2 * prob_clipped\n    \n    # Combine: target = a * rabi_freq_sq + b * detuning_sq + c\n    # with an additional amplitude scaling\n    y = params[0] * rabi_freq_sq + params[1] * detuning_sq + params[3]\n    \n    return y\n\n",
+  "score": -0.9998549678477697,
+  "mean_nmse": 0.9824905876274055,
+  "min_nmse": 0.9433596111316125,
+  "max_nmse": 0.9999392932704716,
+  "median_nmse": 0.9900829284398935,
+  "std_nmse": 0.019203859321235386,
+  "worst2_mean_nmse": 0.9998549678477697,
+  "nmse_per_test": {
+    "dataset_0": 0.9433596111316125,
+    "dataset_1": 0.9804062448335461,
+    "dataset_2": 0.9997706424250677,
+    "dataset_3": 0.9999392932704716,
+    "dataset_4": 0.9869321625781087,
+    "dataset_5": 0.9602711642558875,
+    "dataset_6": 0.9932336943016783,
+    "dataset_7": 0.9960118882228705
+  },
+  "sample_time": 4.003638446331024,
+  "evaluate_time": 2.419335126876831
+}

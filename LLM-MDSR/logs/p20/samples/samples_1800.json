@@ -1,0 +1,23 @@
+{
+  "sample_order": 1800,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    theta = params[0] * omega * t + params[1]\n    cos_term = np.cos(theta)**2\n    prob_term = prob * (cos_term + params[2])\n    sinc_term = np.sinc(omega * t / np.pi)\n    resonance = params[3] * sinc_term**2 * np.sin(params[4] * omega * t + params[5])\n    decay = np.exp(-params[6] * np.abs(t))\n    return params[7] * prob_term * decay + resonance + params[8]\n\n",
+  "score": -0.6009335381045167,
+  "mean_nmse": 0.43201800365466714,
+  "min_nmse": 0.24698670361833147,
+  "max_nmse": 0.6132221570147982,
+  "median_nmse": 0.4159905730247529,
+  "std_nmse": 0.1283531537476064,
+  "worst2_mean_nmse": 0.6009335381045167,
+  "nmse_per_test": {
+    "dataset_0": 0.6132221570147982,
+    "dataset_1": 0.5368051913322018,
+    "dataset_2": 0.4563981559873739,
+    "dataset_3": 0.24698670361833147,
+    "dataset_4": 0.3755829900621319,
+    "dataset_5": 0.5886449191942352,
+    "dataset_6": 0.319851316864884,
+    "dataset_7": 0.31865259516338046
+  },
+  "sample_time": 1.798921823501587,
+  "evaluate_time": 6.710376739501953
+}

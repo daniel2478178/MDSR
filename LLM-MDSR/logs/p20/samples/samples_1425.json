@@ -1,0 +1,23 @@
+{
+  "sample_order": 1425,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical model: transition probability evolves quantum-mechanically\n    # with Rabi-like oscillations driven by detuning and time-dependent coupling.\n    # Base form: target = prob * (A*sin^2(omega*t+phi) + C) with decay\n    \n    sin_omega_t = np.sin(omega * t + params[1])\n    cot_omega_t = np.cos(omega * t + params[1]) / np.maximum(sin_omega_t, eps)\n    \n    # Main oscillatory term from probability and Rabi frequency\n    osc = prob * (1.0 + params[0] * cot_omega_t**2)\n    \n    # Time-decay envelope with characteristic rate\n    decay_env = np.exp(-t_safe * params[2])\n    \n    # Frequency-dependent phase factor combining rotation and probability\n    phase_correction = params[3] * np.sin(omega_safe * t_safe) * np.sqrt(prob + eps)\n    \n    # Final amplitude scaling\n    y = params[4] * (osc * decay_env + phase_correction) + params[5]\n    \n    return y\n\n",
+  "score": -1.4230703261728636e+31,
+  "mean_nmse": 3.571369654094855e+30,
+  "min_nmse": 0.9765721325017354,
+  "max_nmse": 2.8134934019899057e+31,
+  "median_nmse": 6.661429949379514e+17,
+  "std_nmse": 9.284770112313256e+30,
+  "worst2_mean_nmse": 1.4230703261728636e+31,
+  "nmse_per_test": {
+    "dataset_0": 1.3322859898759027e+18,
+    "dataset_1": 0.9765721325017354,
+    "dataset_2": 3.2647250355821426e+29,
+    "dataset_3": 0.995031645186752,
+    "dataset_4": 0.9782330778707276,
+    "dataset_5": 2.8134934019899057e+31,
+    "dataset_6": 1.0955070930023672e+29,
+    "dataset_7": 0.9931725459238023
+  },
+  "sample_time": 4.2459710240364075,
+  "evaluate_time": 2.183581829071045
+}

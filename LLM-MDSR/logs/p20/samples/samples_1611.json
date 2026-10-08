@@ -1,0 +1,23 @@
+{
+  "sample_order": 1611,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Base Rabi-like oscillation amplitude depends on prob and detuning correction\n    # p is probability, use sqrt(p*(1-p)) for amplitude when p in [0,1], but clamp\n    prob_clipped = np.clip(prob, eps, 1.0 - eps)\n    amp = params[0] * np.sqrt(prob_clipped * (1.0 - prob_clipped))\n    \n    # Generalized oscillatory factor in time and omega, with phase offset\n    # Many driven systems have sin^2(0.5 * sqrt(omega^2 + Delta^2) * t) or similar\n    # Use combination of sin and cos to capture phase and resonance behavior\n    oscillation = np.sin(params[1] * omega * t + params[2]) ** 2\n    oscillation = oscillation + params[3] * np.cos(params[4] * omega * t)\n    \n    # Probability modulation: a smooth nonlinear transformation \n    # allows the amplitude to shift with prob non-linearly\n    prob_factor = np.power(prob_clipped, params[5]) * np.power(1.0 - prob_clipped, params[6])\n    \n    # Time decay envelope: exponential decay with rate param, and also mild power law\n    decay = np.exp(-params[7] * np.abs(t))\n    \n    # Combine all, with overall scaling and offset\n    y = amp * prob_factor * oscillation * decay + params[8] * prob + params[9]\n    \n    return y\n\n",
+  "score": -0.7866023035338197,
+  "mean_nmse": 0.5370180961113613,
+  "min_nmse": 0.14326222218439663,
+  "max_nmse": 0.7944497629043294,
+  "median_nmse": 0.6230860447220756,
+  "std_nmse": 0.2514265884294702,
+  "worst2_mean_nmse": 0.7866023035338197,
+  "nmse_per_test": {
+    "dataset_0": 0.77875484416331,
+    "dataset_1": 0.7646982900869068,
+    "dataset_2": 0.7337944304159645,
+    "dataset_3": 0.14326222218439663,
+    "dataset_4": 0.3443074331587962,
+    "dataset_5": 0.7944497629043294,
+    "dataset_6": 0.22450012694899985,
+    "dataset_7": 0.5123776590281869
+  },
+  "sample_time": 3.0926939845085144,
+  "evaluate_time": 6.889291048049927
+}

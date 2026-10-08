@@ -1,0 +1,14 @@
+{
+  "sample_order": 20,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Parametric oscillator with amplitude modulation by omega and time-dependent envelope\n    # params: [base_amplitude, damping, frequency, phase, offset, omega_coupling, nonlinearity]\n    envelope = np.exp(-params[1] * t)\n    omega_factor = 1.0 + params[5] * np.sin(omega)\n    phase = params[2] * t + params[3]\n    # Main oscillation with slight harmonic distortion coupled to omega\n    y = params[0] * envelope * omega_factor * np.sin(phase)\n    # Add a second harmonic that is modulated by both envelope and omega\n    y += params[0] * envelope * np.cos(2 * phase) * params[6] * omega_factor\n    y += params[4]\n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 1.5502987504005432,
+  "evaluate_time": 2.701070547103882
+}

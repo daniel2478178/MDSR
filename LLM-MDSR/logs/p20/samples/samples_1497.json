@@ -1,0 +1,23 @@
+{
+  "sample_order": 1497,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.maximum(np.abs(omega), eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Rabi-like physics: transition probability often enters as sqrt(p / (1-p)) or sin^2\n    # Target likely: energy or amplitude related to prob, scaled by sin(omega*t/2) / omega\n    # Using Landau-Zener / Rabi-type formula: amplitude ~ sqrt(prob) * sin(omega*t) / (omega*t)\n    # Linear response in prob and oscillatory time dependence\n    \n    # Core Rabi oscillation term\n    rabi_term = np.sqrt(np.maximum(prob, eps)) * np.sin(params[0] * omega * t)\n    \n    # Frequency scaling as 1/omega or 1/omega^2 (avoid singularities)\n    freq_scale = 1.0 / (omega_safe + params[1])\n    \n    # Probability modulation\n    prob_mod = np.power(np.maximum(prob, eps), params[2])\n    \n    # Phase factor and small offset\n    phase = np.sin(params[3] * omega * t + params[4])\n    \n    # Exponential decay in time (damping)\n    decay = np.exp(-params[5] * t_safe)\n    \n    # Combine: target = amplitude * rabi_term * prob_mod * freq_scale + phase*decay + offset\n    y = params[6] * rabi_term * prob_mod * freq_scale + params[7] * phase * decay + params[8]\n    return y\n\n",
+  "score": -0.4564953282118132,
+  "mean_nmse": 0.3240241421366125,
+  "min_nmse": 0.2283953363713662,
+  "max_nmse": 0.511637446054536,
+  "median_nmse": 0.2921136120797788,
+  "std_nmse": 0.09762829935850662,
+  "worst2_mean_nmse": 0.4564953282118132,
+  "nmse_per_test": {
+    "dataset_0": 0.40135321036909044,
+    "dataset_1": 0.33318858900677234,
+    "dataset_2": 0.511637446054536,
+    "dataset_3": 0.23825458184544598,
+    "dataset_4": 0.25103863515278535,
+    "dataset_5": 0.39467691479450545,
+    "dataset_6": 0.23364842349839812,
+    "dataset_7": 0.2283953363713662
+  },
+  "sample_time": 2.569440007209778,
+  "evaluate_time": 4.582427740097046
+}

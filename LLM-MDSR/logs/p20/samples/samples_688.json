@@ -1,0 +1,23 @@
+{
+  "sample_order": 688,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Robust angle and parameter handling\n    angle = omega * t\n    # Use prob for transition probability scaling with sine dependence on angle\n    # Parameters: params[0] amplitude, params[1] phase offset, params[2] damping\n    term = params[0] * prob * np.sin(angle + params[1])\n    # Add exponential decay in time for finite interaction effects\n    decay = params[2] * np.exp(-params[3] * np.abs(t)) * prob\n    # Combine with a constant offset\n    y = term + decay + params[4]\n    return y\n\n",
+  "score": -0.625896456148034,
+  "mean_nmse": 0.49250928658321314,
+  "min_nmse": 0.38360839745615266,
+  "max_nmse": 0.6390551440891789,
+  "median_nmse": 0.46625296818438,
+  "std_nmse": 0.09110120567990608,
+  "worst2_mean_nmse": 0.625896456148034,
+  "nmse_per_test": {
+    "dataset_0": 0.6390551440891789,
+    "dataset_1": 0.5470720406399856,
+    "dataset_2": 0.49321126059811504,
+    "dataset_3": 0.38360839745615266,
+    "dataset_4": 0.4392946757706449,
+    "dataset_5": 0.6127377682068892,
+    "dataset_6": 0.41051007470327167,
+    "dataset_7": 0.4145849312014674
+  },
+  "sample_time": 2.8735169768333435,
+  "evaluate_time": 2.1877143383026123
+}

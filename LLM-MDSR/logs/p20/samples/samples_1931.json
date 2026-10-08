@@ -1,0 +1,23 @@
+{
+  "sample_order": 1931,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Landau-Zener-like transition probability with Rabi oscillations\n    rabi = np.sqrt((params[0] * omega) ** 2 + (prob * params[1]) ** 2)\n    osc = np.sin(rabi * t + params[2]) ** 2\n    # Resonance envelope controlled by detuning from prob\n    detuning = prob - params[3]\n    envelope = params[4] * np.exp(-params[5] * (detuning * omega) ** 2 * t**2)\n    # Decay time constant\n    decay = np.exp(-params[6] * t)\n    # Final shared physical law\n    y = params[7] * prob * osc * envelope * decay + params[8] * prob * (1 - np.exp(-params[9] * t))\n    return y\n\n",
+  "score": -0.9417990833918162,
+  "mean_nmse": 0.624124350628234,
+  "min_nmse": 0.22220170174270915,
+  "max_nmse": 0.9831729268878374,
+  "median_nmse": 0.6478960449700408,
+  "std_nmse": 0.2532905270188227,
+  "worst2_mean_nmse": 0.9417990833918162,
+  "nmse_per_test": {
+    "dataset_0": 0.7692776599588734,
+    "dataset_1": 0.9004252398957948,
+    "dataset_2": 0.9831729268878374,
+    "dataset_3": 0.22220170174270915,
+    "dataset_4": 0.5265144299812082,
+    "dataset_5": 0.7740600770883476,
+    "dataset_6": 0.42496537898418574,
+    "dataset_7": 0.39237739048691594
+  },
+  "sample_time": 1.652539074420929,
+  "evaluate_time": 5.566901206970215
+}

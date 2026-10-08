@@ -1,0 +1,23 @@
+{
+  "sample_order": 5107,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Quantum transition physics: target = params[0] * prob * exp(-t/tau) * cos(omega*t + phi) + params[1] * (1-prob) * sin(omega*t)\n    \"\"\"\n    tau = np.abs(params[2]) + 1e-10\n    return (params[0] * prob * np.exp(-t / tau) * np.cos(omega * t + params[3]) + \n            params[1] * (1 - prob) * np.sin(omega * t)) / (1.0 + params[4] * prob * (1 - prob))\n\n",
+  "score": -11.385940147077452,
+  "mean_nmse": 8.892385120317375,
+  "min_nmse": 3.9925039921493823,
+  "max_nmse": 11.988941104462011,
+  "median_nmse": 10.058528388540015,
+  "std_nmse": 2.8480049939181122,
+  "worst2_mean_nmse": 11.385940147077452,
+  "nmse_per_test": {
+    "dataset_0": 3.9925039921493823,
+    "dataset_1": 11.988941104462011,
+    "dataset_2": 10.299802716014785,
+    "dataset_3": 9.771766786372424,
+    "dataset_4": 10.782939189692895,
+    "dataset_5": 4.186070396767467,
+    "dataset_6": 10.275387693495892,
+    "dataset_7": 9.841669083584137
+  },
+  "sample_time": 2.3186267018318176,
+  "evaluate_time": 2.616281270980835
+}

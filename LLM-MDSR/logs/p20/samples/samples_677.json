@@ -1,0 +1,23 @@
+{
+  "sample_order": 677,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Landau-Zener type transition probability relation.\n    \"\"\"\n    eps = 1e-12\n    # Use arcsin to invert typical transition probability formula\n    # P = exp(-pi*gamma^2/(2*omega)) - type relations\n    # Here we model target as correction to Rabi formula\n    \n    # Avoid log of zero\n    prob_safe = np.clip(prob, eps, 1.0 - eps)\n    \n    # Common Rabi formula: target = omega/2 * sqrt(t^2 + (delta/omega)^2)\n    # but with prob-dependence through arcsin\n    \n    # params[0]: amplitude scaling\n    # params[1]: frequency offset\n    # params[2]: exponent for t\n    # params[3]: constant term\n    \n    # Physical ansatz: target proportional to sqrt(omega) * arcsin(sqrt(prob)) * decay\n    angle_factor = np.arcsin(np.sqrt(prob_safe))\n    \n    # Avoid division by zero for omega\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Decay term based on interaction time\n    decay = np.exp(-params[2] * np.abs(t))\n    \n    # Combine: target = A * omega^0.5 * arcsin(sqrt(P)) * exp(-k*t) / sqrt(1+ (t*omega)^2)\n    # But with only 4 parameters\n    \n    t_omega = t * omega\n    denominator = np.sqrt(1.0 + t_omega**2)\n    \n    y = params[0] * np.sqrt(omega_safe) * angle_factor * decay / denominator + params[1] * prob * t + params[3]\n    \n    return y\n\n",
+  "score": -0.6113153038287218,
+  "mean_nmse": 0.5970372070991932,
+  "min_nmse": 0.5627696697968054,
+  "max_nmse": 0.6118699946006803,
+  "median_nmse": 0.5994247779373121,
+  "std_nmse": 0.014818567168996991,
+  "worst2_mean_nmse": 0.6113153038287218,
+  "nmse_per_test": {
+    "dataset_0": 0.6118699946006803,
+    "dataset_1": 0.5930281798711676,
+    "dataset_2": 0.5976803915015891,
+    "dataset_3": 0.5627696697968054,
+    "dataset_4": 0.6075199775797868,
+    "dataset_5": 0.591499666013718,
+    "dataset_6": 0.601169164373035,
+    "dataset_7": 0.6107606130567634
+  },
+  "sample_time": 2.7188296914100647,
+  "evaluate_time": 2.0875039100646973
+}

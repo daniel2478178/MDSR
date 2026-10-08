@@ -1,0 +1,23 @@
+{
+  "sample_order": 850,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physically motivated form: amplitude / (1 + (delta^2) * (sin^2(Omega*t)))\n    # where delta is a detuning-like parameter and amplitude scales with prob\n    eps = 1e-10\n    angle = omega * t\n    delta = params[0] * (1.0 - prob) + eps  # prob-dependent effective detuning\n    amplitude = params[1] * prob + params[2]\n    \n    y = amplitude / (1.0 + delta**2 * np.sin(angle)**2 + params[3] * np.cos(angle)**2)\n    y = y + params[4] * np.exp(-params[5] * np.abs(t)) * np.cos(angle) * prob\n    \n    return y\n\n",
+  "score": -0.7324595746007145,
+  "mean_nmse": 0.6550027177326055,
+  "min_nmse": 0.5175270509576513,
+  "max_nmse": 0.7390893706813152,
+  "median_nmse": 0.661914930017919,
+  "std_nmse": 0.06776285851141217,
+  "worst2_mean_nmse": 0.7324595746007145,
+  "nmse_per_test": {
+    "dataset_0": 0.7390893706813152,
+    "dataset_1": 0.7001563153132141,
+    "dataset_2": 0.6803036363073128,
+    "dataset_3": 0.5175270509576513,
+    "dataset_4": 0.6435262237285252,
+    "dataset_5": 0.725829778520114,
+    "dataset_6": 0.619747789239855,
+    "dataset_7": 0.6138415771128566
+  },
+  "sample_time": 2.2526148557662964,
+  "evaluate_time": 2.22973895072937
+}

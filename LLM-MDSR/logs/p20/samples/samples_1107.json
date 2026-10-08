@@ -1,0 +1,23 @@
+{
+  "sample_order": 1107,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    prob_safe = np.clip(prob, eps, 1.0 - eps)\n    t_safe = np.abs(t) + eps\n    omega_safe = np.abs(omega) + eps\n\n    # Based on Rabi oscillation physics:\n    # prob = (Omega^2/(Omega^2+Delta^2)) * sin^2(sqrt(Omega^2+Delta^2)*t/2)\n    # Solve for amplitude Omega (target often ~ Omega^2 or Omega*t)\n    # Using identity: sin^2(x) = (1-cos(2x))/2 => cos(2x) = 1 - 2*prob/(Omega^2/(Omega^2+Delta^2))\n    # Here we derive effective frequency from prob and t: Omega_eff = 2*arcsin(sqrt(prob))/t\n    # Target likely related to Omega_eff^2 or Omega_eff scaled by omega\n\n    x = np.sqrt(prob_safe)\n    theta = np.arcsin(x)  # theta = Omega_eff * t / 2\n    Omega_eff = 2.0 * theta / t_safe  # effective Rabi frequency\n\n    # Angle from omega*t\n    r = omega * t\n\n    # Candidate: target = A * Omega_eff^2 * sin^2(r/2) + B * Omega_eff + C\n    # But simplify to account for detuning via omega dependence\n\n    term1 = params[0] * Omega_eff**2 * (1.0 - np.cos(r)) / 2.0  # sin^2(r/2)\n    term2 = params[1] * Omega_eff * np.sin(r) / (1.0 + params[2] * t_safe * omega_safe)\n    term3 = params[3] * prob_safe * omega_safe / (omega_safe + params[4])\n\n    y = term1 + term2 + term3 + params[5]\n\n    return y\n\n",
+  "score": -0.9963656808290653,
+  "mean_nmse": 0.9795780624017373,
+  "min_nmse": 0.9426756210296107,
+  "max_nmse": 0.9970984462960824,
+  "median_nmse": 0.9890753197490791,
+  "std_nmse": 0.019375301215733418,
+  "worst2_mean_nmse": 0.9963656808290653,
+  "nmse_per_test": {
+    "dataset_0": 0.9426756210296107,
+    "dataset_1": 0.9775045096769744,
+    "dataset_2": 0.9914464289691286,
+    "dataset_3": 0.9970984462960824,
+    "dataset_4": 0.9867042105290298,
+    "dataset_5": 0.9529270759248847,
+    "dataset_6": 0.9926352914261395,
+    "dataset_7": 0.9956329153620483
+  },
+  "sample_time": 5.416295409202576,
+  "evaluate_time": 2.634941577911377
+}

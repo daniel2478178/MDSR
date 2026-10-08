@@ -1,0 +1,14 @@
+{
+  "sample_order": 2208,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Parse parameters\n    a1, a2, a3, a4, a5, a6, a7, a8, a9, a10 = params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7], params[8], params[9]\n    \n    # Protect against division by zero / log issues\n    eps = 1e-10\n    prob_safe = np.maximum(prob, eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Physical model: relationship between probability, time and frequency\n    # try tanh-based saturation plus harmonic term\n    \n    # Use logit-like transformation of probability\n    prob_transform = np.log(prob_safe / (1.0 - prob_safe + eps))\n    \n    # Combine variables via nested nonlinear combinations\n    x1 = t * omega\n    x2 = prob_transform * omega_safe\n    \n    # Main functional form with internal parameterized modulation\n    y = a1 * np.tanh(a2 * x1 + a3 * prob_transform + a4) \n    \n    # Add an oscillatory component that scales with probability and time\n    y += a5 * np.sin(a6 * prob_transform + a7) * np.cos(a8 * t * omega_safe + a9)\n    \n    # Saturating logarithmic contribution\n    y += a10 * np.log(t_safe ** 0.5 + 1.0 + eps)\n    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 1.9990202188491821,
+  "evaluate_time": 1.9661319255828857
+}

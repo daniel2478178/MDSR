@@ -1,0 +1,23 @@
+{
+  "sample_order": 1622,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p0, p1, p2, p3, p4 = params[:5]\n    phase = p0 * omega * t + p1\n    s = np.sin(phase)\n    c = np.cos(phase)\n    \n    # Landau-Zener-like transition probability effect combined\n    # with Rabi oscillation and frequency detuning resonance\n    term1 = prob * (c**2 + p2 * s**2)\n    \n    # Resonant amplification near omega matching (driving frequency effect)\n    term2 = p3 * np.sin(omega * t + p4)\n    \n    # Attenuation over time for decoherence\n    attenuation = np.exp(-p2 * np.abs(t))\n    \n    return p0 * term1 + p1 * term2 * attenuation + p2 * prob * p3 * (1 - np.cos(omega * t))\n\n",
+  "score": -1.6943583711406145,
+  "mean_nmse": 1.5084052470047138,
+  "min_nmse": 1.1130661994776898,
+  "max_nmse": 1.7306808176835737,
+  "median_nmse": 1.5518837077848286,
+  "std_nmse": 0.18015843433533102,
+  "worst2_mean_nmse": 1.6943583711406145,
+  "nmse_per_test": {
+    "dataset_0": 1.5962610758495273,
+    "dataset_1": 1.1130661994776898,
+    "dataset_2": 1.7306808176835737,
+    "dataset_3": 1.397053420738823,
+    "dataset_4": 1.6041011707649617,
+    "dataset_5": 1.5075063397201298,
+    "dataset_6": 1.4605370272053502,
+    "dataset_7": 1.6580359245976555
+  },
+  "sample_time": 2.1105690598487854,
+  "evaluate_time": 2.3159124851226807
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 4680,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Assume target ~ detuning or Rabi frequency.\n    # A physically motivated ansatz: target = params[2] * (1 - prob) * cos(params[3] * omega * t) + params[4] * prob\n    x = omega * t\n    \n    # Try a modulation envelope with sin^2 and cos and exponential decay.\n    # target = A * (1 - prob) * cos(B * omega * t) * exp(-C * t) + D * prob * sin(E * t)\n    \n    # Let's aim for a simple detuning-based formula.\n    # If target = sqrt( (prob * params[0])^2 + (omega - params[1])^2 ) * cos(params[2]*t) + params[3]*prob\n    # that's too many params.\n    \n    # Let's implement a cleaner function:\n    # target = params[0] * prob * np.cos(params[1] * x) * np.exp(-params[2] * t) + params[3] * (1 - prob) * np.sin(params[4] * x) * np.exp(-params[5] * t)\n    \n    # But we must ensure it's a valid function with sigma.\n    # Use a two-term damped oscillator.\n    \n    # Let's just make it compact: \n    y = params[0] * prob * np.cos( params[1] * omega * t + params[2] ) * np.exp( -params[3] * t ) + params[4] * (1 - prob) * np.sin( params[5] * omega * t + params[6] ) * np.exp( -params[7] * t )\n    \n    # That's 8 params, but we can reduce.\n    # Actually for a physical law, we might expect target = detuning * prob * sinc^2(...) or similar.\n    # But let's keep a simpler expression.\n    # Use only 4 parameters: \n    # target = params[0] * ( 1 - prob ) * np.cos( params[1] * omega * t + params[2] ) * np.exp( -params[3] * t ) + params[0] * prob * np.sin( params[1] * omega * t )\n    \n    # Wait, we can try:\n    y = params[0] * prob * np.cos(params[1]*omega*t) * np.exp(-params[2]*t) + params[0] * (1-prob) * np.sin(params[1]*omega*t) * np.exp(-params[2]*t) + params[3] * np.sin(omega*t)\n    \n    # But that mixes.\n    # Let's pick a simpler structure that might match Rabi oscillations: \n    # target = params[0] * np.sin( params[1] * np.sqrt(prob) * t ) * np.cos( params[2] * omega * t ) * np.exp(-params[3]*t)\n    \n    # I'll implement a reasonable guess:\n    return params[0] * np.sin( params[1] * np.sqrt(prob) * t + params[2] * omega * t ) * np.exp( -params[3] * t ) + params[0] * prob * np.cos( params[2] * omega * t ) * np.exp( -params[3]*t )\n\n",
+  "score": -0.95987013563011,
+  "mean_nmse": 0.7439703842312035,
+  "min_nmse": 0.5672023274978092,
+  "max_nmse": 1.0265474010121869,
+  "median_nmse": 0.712223067447918,
+  "std_nmse": 0.15312031765274856,
+  "worst2_mean_nmse": 0.95987013563011,
+  "nmse_per_test": {
+    "dataset_0": 0.8931928702480331,
+    "dataset_1": 0.703220133310484,
+    "dataset_2": 0.721226001585352,
+    "dataset_3": 1.0265474010121869,
+    "dataset_4": 0.6151721781868379,
+    "dataset_5": 0.8419603726214421,
+    "dataset_6": 0.5672023274978092,
+    "dataset_7": 0.5832417893874826
+  },
+  "sample_time": 2.830506682395935,
+  "evaluate_time": 2.746466875076294
+}

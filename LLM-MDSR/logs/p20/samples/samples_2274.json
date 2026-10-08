@@ -1,0 +1,23 @@
+{
+  "sample_order": 2274,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared equation:\n        target = f(prob, t, omega, params)\n    Keep ONE common symbolic structure for every dataset.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Effective Rabi frequency with detuning: sqrt(omega^2 + constant^2)\n    x = omega_safe * t\n    \n    # Physical model: target amplitude proportional to sin^2(omega*t/2) divided by \n    # (detuning^2 + omega^2), scaled by prob and with overall amplitude and phase.\n    # Use params[0] as amplitude scaling, params[1] as phase shift,\n    # params[2] as an effective detuning-like parameter.\n    \n    # Key structure: target = params[0] * prob * sin^2(params[1]*omega*t + params[2]) \n    #                 + params[3] * t * prob * cos^2(omega*t)\n    \n    # Simplified but physically motivated: Landau-Zener-like transition probability \n    # times a time-dependent oscillation. \n    # Let's try: target = params[0] * prob * (1 - cos(params[1]*omega*t + params[2])) \n    #            + params[3] * prob * t * omega\n    \n    term1 = params[0] * prob * (1 - np.cos(x + params[1]))\n    term2 = params[2] * prob * t * omega_safe\n    term3 = params[3] * np.sin(x)\n    \n    return term1 + term2 + term3 + params[4]\n\n",
+  "score": -0.7118653774395286,
+  "mean_nmse": 0.6510032222773441,
+  "min_nmse": 0.5853048596171853,
+  "max_nmse": 0.7284674351982519,
+  "median_nmse": 0.6525539476706561,
+  "std_nmse": 0.04487119828033834,
+  "worst2_mean_nmse": 0.7118653774395286,
+  "nmse_per_test": {
+    "dataset_0": 0.7284674351982519,
+    "dataset_1": 0.6715332223566391,
+    "dataset_2": 0.6555098684915952,
+    "dataset_3": 0.5853048596171853,
+    "dataset_4": 0.6495980268497169,
+    "dataset_5": 0.6952633196808053,
+    "dataset_6": 0.6215438096613715,
+    "dataset_7": 0.6008052363631871
+  },
+  "sample_time": 2.1466835141181946,
+  "evaluate_time": 2.0993783473968506
+}

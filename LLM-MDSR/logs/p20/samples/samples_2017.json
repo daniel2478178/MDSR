@@ -1,0 +1,23 @@
+{
+  "sample_order": 2017,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    p4 = params[4]\n    \n    # Physically inspired: transition probability modifies oscillatory response\n    # with frequency and time, including decay and phase-like terms.\n    # Structure: p0 * prob * sin(omega*t + p1) + p2 * prob * exp(-p3*t) * cos(omega*t) + p4\n    return p0 * prob * np.sin(omega * t + p1) + p2 * prob * np.exp(-p3 * t) * np.cos(omega * t) + p4\n\n",
+  "score": -0.858924790788195,
+  "mean_nmse": 0.7399147344844719,
+  "min_nmse": 0.6048321014605055,
+  "max_nmse": 0.8817115201227743,
+  "median_nmse": 0.7580656809368307,
+  "std_nmse": 0.09744949586243029,
+  "worst2_mean_nmse": 0.858924790788195,
+  "nmse_per_test": {
+    "dataset_0": 0.8034861975541929,
+    "dataset_1": 0.6654280188795789,
+    "dataset_2": 0.6048321014605055,
+    "dataset_3": 0.8817115201227743,
+    "dataset_4": 0.6115906145314473,
+    "dataset_5": 0.8361380614536155,
+    "dataset_6": 0.7294033019244266,
+    "dataset_7": 0.7867280599492348
+  },
+  "sample_time": 2.7526146173477173,
+  "evaluate_time": 5.017876625061035
+}

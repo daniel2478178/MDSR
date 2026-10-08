@@ -1,0 +1,23 @@
+{
+  "sample_order": 30,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    decay = np.exp(-params[1] * t)\n    chirp = params[2] + params[3] * t\n    theta = chirp * t + params[4]\n    breathing = 1.0 + params[5] * np.cos(params[6] * t) * np.exp(-params[7] * t)\n    y = params[0] * decay * breathing * np.sin(theta) + params[8] * decay * np.cos(params[2] * t + params[4]) + params[9]\n    return y\n\n",
+  "score": -0.0024368098358082224,
+  "mean_nmse": 0.0006352483989829141,
+  "min_nmse": 2.2793919881717936e-10,
+  "max_nmse": 0.0024984191726626663,
+  "median_nmse": 2.128369891376016e-07,
+  "std_nmse": 0.0010427395675041853,
+  "worst2_mean_nmse": 0.0024368098358082224,
+  "nmse_per_test": {
+    "dataset_0": 0.0024984191726626663,
+    "dataset_1": 2.231565447381601e-07,
+    "dataset_2": 1.5303575693799291e-07,
+    "dataset_3": 1.9583884163765656e-07,
+    "dataset_4": 0.0023752004989537785,
+    "dataset_5": 0.0002075927437308189,
+    "dataset_6": 2.2793919881717936e-10,
+    "dataset_7": 2.0251743353704308e-07
+  },
+  "sample_time": 4.711079299449921,
+  "evaluate_time": 4.305294513702393
+}

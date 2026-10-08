@@ -1,0 +1,23 @@
+{
+  "sample_order": 448,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    # Physical model: target is proportional to a damped Rabi-like oscillation\n    # where the amplitude depends on prob and the frequency on omega.\n    p_clipped = np.clip(prob, 0.0, 1.0)\n    sinc_arg = np.sin(angle) / np.maximum(angle, eps)\n    # Use a common structure: amplitude * sqrt(prob*(1-prob)) * sinc(omega*t)*exp(-t/tau)\n    y = params[0] * np.sqrt(p_clipped + eps) * np.sqrt(np.maximum(1.0 - p_clipped, eps)) * sinc_arg * np.exp(-np.abs(t) * params[1]) + params[2]\n    return y\n\n",
+  "score": -1.0000011680751217,
+  "mean_nmse": 0.9955701969768438,
+  "min_nmse": 0.9829610465657764,
+  "max_nmse": 1.000003055260114,
+  "median_nmse": 0.9980611540727391,
+  "std_nmse": 0.005869001540549016,
+  "worst2_mean_nmse": 1.0000011680751217,
+  "nmse_per_test": {
+    "dataset_0": 0.9829610465657764,
+    "dataset_1": 0.9961247539294338,
+    "dataset_2": 0.9999975542160444,
+    "dataset_3": 1.000003055260114,
+    "dataset_4": 0.9960360631745155,
+    "dataset_5": 0.9894410989021919,
+    "dataset_6": 0.9999987228765452,
+    "dataset_7": 0.9999992808901296
+  },
+  "sample_time": 2.3979936838150024,
+  "evaluate_time": 2.171076774597168
+}

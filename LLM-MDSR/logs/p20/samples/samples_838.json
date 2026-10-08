@@ -1,0 +1,23 @@
+{
+  "sample_order": 838,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    # Based on the transition probability in a driven two-level system,\n    # the target often relates to the energy or amplitude of oscillations.\n    # Here we propose: target = A * sqrt(prob) * sin(angle) * exp(-gamma*|t|) \n    #                  + B * prob * cos(angle) + C * prob * angle^2 + D\n    # But we can simplify to a more physically motivated form:\n    # In Rabi oscillations with frequency omega and detuning, the transition \n    # probability relates to sin^2(Omega_R*t/2). The target might be the \n    # generalized Rabi frequency. So we try:\n    # target = p0 * sqrt(prob) * |sin(angle)| + p1 * prob * cos(angle) + p2\n    # However, to avoid absolute value issues, use squared sine.\n    \n    # Let’s construct a simpler, physically plausible model:\n    # target = a * (prob - 0.5) * sin(angle) / (1 + b*t^2) + c * prob + d\n    # But we need to keep it general. \n    \n    # Given the clues, the target might be the generalized Rabi frequency \n    # Omega_R = sqrt(omega^2 + (detuning)^2). \n    # If prob = sin^2(Omega_R*t/2), then we can invert:\n    # Omega_R = 2*arcsin(sqrt(prob))/t.\n    # But we don't have direct access to that because t and omega are given.\n    # However, we can model the target as a function of prob and t:\n    # target = A * sqrt(prob) / t + B * omega * t * (1 - prob) + C\n    \n    # To satisfy shared structure, use params.\n    # Proposed: y = p0 * (np.sqrt(prob)/ (t+eps)) + p1 * omega * t * prob + p2 * prob * np.cos(omega*t) + p3\n    # But to avoid singularities in t=0, replace 1/t with sinc.\n    \n    t_safe = t + eps\n    # Use 2*arcsin(sqrt(prob))/t as a core frequency estimate\n    inv_rabi = 2.0 * np.arcsin(np.sqrt(np.clip(prob, 0, 1))) / t_safe\n    # Then combine with omega\n    y = params[0] * inv_rabi * np.sin(angle) + params[1] * omega * t * prob + params[2] * prob * np.cos(angle) + params[3] * inv_rabi * prob\n    return y\n\n",
+  "score": -1.461933627364255,
+  "mean_nmse": 1.3217721679283403,
+  "min_nmse": 1.1221535998888998,
+  "max_nmse": 1.461982400238259,
+  "median_nmse": 1.312636721719673,
+  "std_nmse": 0.10352677991253559,
+  "worst2_mean_nmse": 1.461933627364255,
+  "nmse_per_test": {
+    "dataset_0": 1.461982400238259,
+    "dataset_1": 1.1221535998888998,
+    "dataset_2": 1.3083391428661144,
+    "dataset_3": 1.2508077866025886,
+    "dataset_4": 1.300268233545938,
+    "dataset_5": 1.461884854490251,
+    "dataset_6": 1.3169343005732317,
+    "dataset_7": 1.3518070252214411
+  },
+  "sample_time": 2.8105883598327637,
+  "evaluate_time": 2.0177459716796875
+}

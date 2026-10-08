@@ -1,0 +1,23 @@
+{
+  "sample_order": 1186,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physically motivated Rabi-like oscillation with damping:\n    # target = A * prob * sin^2(Omega_eff * t/2) / (Omega_eff^2) + B\n    # where Omega_eff = sqrt(delta^2 + omega^2) with delta as detuning\n    \n    # Omega_eff combines frequency and possibly probability-dependent detuning\n    omega_eff = np.sqrt(params[0] * omega_safe**2 + params[1] * prob + params[2]**2 + eps)\n    \n    # Rabi oscillation probability term with sin^2 envelope\n    rabi_osc = params[3] * prob * np.sin(omega_eff * t_safe / 2.0)**2 / (omega_eff**2 + eps)\n    \n    # Additional frequency-shifted oscillation to capture transient behavior\n    freq_mod = params[4] * np.sin(params[5] * omega * t + params[6]) * np.exp(-params[7] * t_safe)\n    \n    # Time-decay envelope for overall amplitude (damped system)\n    decay_envelope = params[8] * np.exp(-params[9] * t_safe)\n    \n    # Combine: target = Rabi term + transient oscillation + decaying background\n    y = rabi_osc + freq_mod + decay_envelope\n    \n    return y\n\n",
+  "score": -0.7895826544139232,
+  "mean_nmse": 0.5559682106420423,
+  "min_nmse": 0.3859927983158947,
+  "max_nmse": 0.9616255273178018,
+  "median_nmse": 0.5227439899428092,
+  "std_nmse": 0.17457936466882684,
+  "worst2_mean_nmse": 0.7895826544139232,
+  "nmse_per_test": {
+    "dataset_0": 0.6175397815100445,
+    "dataset_1": 0.5478265850237201,
+    "dataset_2": 0.4456171775593758,
+    "dataset_3": 0.49766139486189837,
+    "dataset_4": 0.3859927983158947,
+    "dataset_5": 0.6045648620112397,
+    "dataset_6": 0.3869175585363629,
+    "dataset_7": 0.9616255273178018
+  },
+  "sample_time": 3.434898853302002,
+  "evaluate_time": 2.1146700382232666
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 994,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical law: transition probability follows Rabi-like oscillation\n    # target = A * prob * sin^2(omega*t/2) / (omega^2) + B * prob\n    # Simplified as amplitude * prob * sinc^2(omega*t) behavior with offset\n    eps = 1e-12\n    angle = omega * t\n    # Avoid division by zero for omega near zero\n    omega_safe = np.maximum(np.abs(omega), eps)\n    # Rabi formula shape: sin^2(x)/x^2 form, scaled by prob\n    sinc_term = np.sin(angle) / (omega_safe * t + eps)\n    # Main physical contribution: prob * sinc^2(omega*t/2)\n    y = params[0] * prob * (np.sin(angle/2) / (omega_safe * t/2 + eps))**2\n    # Add linear coupling term and offset\n    y = params[0] * prob * (np.sin(angle/2) / (omega_safe * t/2 + eps))**2 + params[1] * prob + params[2]\n    return y\n\n",
+  "score": -0.7784906289896956,
+  "mean_nmse": 0.7085045601278617,
+  "min_nmse": 0.5793192529959759,
+  "max_nmse": 0.7912741103435889,
+  "median_nmse": 0.7196073120901875,
+  "std_nmse": 0.064080106414366,
+  "worst2_mean_nmse": 0.7784906289896956,
+  "nmse_per_test": {
+    "dataset_0": 0.7912741103435889,
+    "dataset_1": 0.7558211562106528,
+    "dataset_2": 0.7323543898979072,
+    "dataset_3": 0.5793192529959759,
+    "dataset_4": 0.7068602342824677,
+    "dataset_5": 0.7657071476358022,
+    "dataset_6": 0.6696074026527694,
+    "dataset_7": 0.6670927870037293
+  },
+  "sample_time": 2.2114533185958862,
+  "evaluate_time": 1.9941844940185547
+}

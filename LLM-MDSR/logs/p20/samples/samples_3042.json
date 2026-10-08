@@ -1,0 +1,23 @@
+{
+  "sample_order": 3042,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    p = np.clip(prob, 1e-12, 1 - 1e-12)\n    \n    # Two-level Rabi-like model: probability of transition as function of detuning and time\n    # Target often relates to Rabi frequency or decay rate\n    # Physical relation: target = params[0] * (1 - 2*p) * sin(params[1]*t) + params[2]*cos(params[1]*t)\n    # derived from solving Schrödinger equation for two-level system\n    \n    omega_eff = params[0] * np.sqrt(1 + (params[1]*(omega - params[2])/params[0])**2)\n    theta = np.arcsin(params[0]*omega_eff / (params[0]**2 + (omega - params[2])**2))\n    \n    # Rabi oscillation: p = sin^2(omega_eff * t / 2) for resonant case\n    # For off-resonant: p = (params[0]^2 / (params[0]^2 + delta^2)) * sin^2(omega_eff * t/2)\n    \n    delta = omega - params[2]\n    Omega = np.sqrt(params[0]**2 + delta**2)\n    \n    # General solution: target = params[3] * derivative or related quantity\n    # Here we propose target = params[3] * (1 - 2*p) * Omega * sin(Omega * t) / params[0]\n    \n    if params[0] < 1e-12:\n        return np.zeros_like(prob)\n    \n    y = params[3] * (1 - 2*p) * np.sin(Omega * t) / params[0]\n    \n    # Add small correction to match possible data variations\n    y = y + params[4] * np.cos(2*Omega*t) * np.exp(-params[5]*t)\n    \n    return y\n\n",
+  "score": -4.094005264814108,
+  "mean_nmse": 3.158500817457152,
+  "min_nmse": 2.2165318177991993,
+  "max_nmse": 4.1751526769259435,
+  "median_nmse": 2.9879093724176293,
+  "std_nmse": 0.7259880979489808,
+  "worst2_mean_nmse": 4.094005264814108,
+  "nmse_per_test": {
+    "dataset_0": 3.8780218278109087,
+    "dataset_1": 4.012857852702272,
+    "dataset_2": 2.555026396129471,
+    "dataset_3": 3.2429409294149005,
+    "dataset_4": 2.2165318177991993,
+    "dataset_5": 4.1751526769259435,
+    "dataset_6": 2.4545972234541633,
+    "dataset_7": 2.732877815420358
+  },
+  "sample_time": 2.646569311618805,
+  "evaluate_time": 2.80308198928833
+}

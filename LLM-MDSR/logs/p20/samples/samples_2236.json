@@ -1,0 +1,23 @@
+{
+  "sample_order": 2236,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Use a generalized Rabi-like formula with amplitude modulation\n    # Based on transition probability, time, and frequency\n    # p = prob, x = omega*t\n    \n    x = omega * t  # phase accumulation\n    \n    # Main Rabi formula: target scales with prob and sinusoidal response\n    # Amplitude modulation via params[0], phase shift via params[1]  \n    # Damping via params[2]\n    rabi_term = prob * (params[0] * np.sin(x + params[1]) + params[2]) * np.exp(-params[3] * np.abs(t))\n    \n    # Additional frequency-dependent correction: modulation of the driving term\n    # that appears in typical two-level systems\n    correction = params[4] * np.sin(2 * x + params[5]) * np.exp(-params[6] * t**2)\n    \n    # Offset term\n    offset = params[7]\n    \n    return rabi_term + correction + offset\n\n",
+  "score": -0.5177003181700823,
+  "mean_nmse": 0.40793514936827724,
+  "min_nmse": 0.2981122078306523,
+  "max_nmse": 0.5273700234452272,
+  "median_nmse": 0.3920370292239649,
+  "std_nmse": 0.08166284975625313,
+  "worst2_mean_nmse": 0.5177003181700823,
+  "nmse_per_test": {
+    "dataset_0": 0.5273700234452272,
+    "dataset_1": 0.4756910001200079,
+    "dataset_2": 0.4175088349278312,
+    "dataset_3": 0.2981122078306523,
+    "dataset_4": 0.36656522352009857,
+    "dataset_5": 0.5080306128949373,
+    "dataset_6": 0.33616908780884336,
+    "dataset_7": 0.3340342043986202
+  },
+  "sample_time": 2.0588911175727844,
+  "evaluate_time": 2.711531162261963
+}

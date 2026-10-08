@@ -1,0 +1,23 @@
+{
+  "sample_order": 2020,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: probability of transition in a driven two-level system\n    # with Landau-Zener-like behavior, where the target is related to the\n    # transition probability modified by detuning and time-dependent oscillations.\n    # Assume target = prob * (params[0] * cos(omega*t) + params[1] * sin(omega*t) + params[2])\n    # plus an exponential decay term to capture additional dynamics.\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Main term: probability scaled by a harmonic combination of cos and sin\n    # plus a constant offset, representing a Rabi-like oscillation envelope.\n    oscillatory = params[0] * np.cos(x) + params[1] * np.sin(x) + params[2]\n    base = prob * oscillatory\n    \n    # Additional term: exponential decay of a power-law in t, capturing\n    # non-adiabatic corrections or decoherence effects.\n    tau = params[3]\n    decay = np.exp(-params[4] * np.abs(t))\n    power = np.power(np.maximum(t, eps), params[5])\n    correction = params[6] * decay * np.sin(x * params[7] + params[8]) * power\n    \n    # Final target combines main probability term and correction\n    return base + correction + params[9]\n\n",
+  "score": -0.35883605088983495,
+  "mean_nmse": 0.2506885334400477,
+  "min_nmse": 0.11293191587247878,
+  "max_nmse": 0.35900052410886674,
+  "median_nmse": 0.24571835718999363,
+  "std_nmse": 0.08055728611623561,
+  "worst2_mean_nmse": 0.35883605088983495,
+  "nmse_per_test": {
+    "dataset_0": 0.35867157767080315,
+    "dataset_1": 0.2938701619253676,
+    "dataset_2": 0.27159679806056897,
+    "dataset_3": 0.11293191587247878,
+    "dataset_4": 0.2198399163194183,
+    "dataset_5": 0.35900052410886674,
+    "dataset_6": 0.19961035272353356,
+    "dataset_7": 0.18998702083934466
+  },
+  "sample_time": 2.8562018275260925,
+  "evaluate_time": 5.9631006717681885
+}

@@ -1,0 +1,14 @@
+{
+  "sample_order": 4544,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Shared physical structure: amplitude-modulated oscillation\n    # Typical Rabi-like or driven transition: target ∝ sqrt(prob*(1-prob)) * sin^2(Ω_eff*t/2)\n    # Effective Rabi frequency combining detuning and drive strength\n    delta = params[0]                     # detuning parameter\n    g = params[1]                         # coupling strength\n    gamma = params[2]                     # decay/damping rate\n    \n    # Effective Rabi frequency: sqrt(g^2 + (omega - omega0)^2) with omega0=delta\n    omega_eff = np.sqrt(g**2 + (omega - delta)**2)\n    \n    # Rabi oscillation amplitude\n    rabi_amp = (g**2) / (g**2 + (omega - delta)**2 + 1e-15)\n    \n    # Damped oscillation with envelope from transition probability\n    env = np.sqrt(prob * (1 - prob) + 1e-15)\n    \n    # Physical law: target = oscillation amplitude * envelope * damped sine-squared\n    osc = np.sin(omega_eff * t / 2)**2\n    \n    decay = np.exp(-gamma * t)\n    \n    y = params[3] * env * rabi_amp * osc * decay\n    \n    # Include possibility of offset if needed\n    y = y + params[4] * (1 - prob) * np.sin(omega * t) * np.exp(-gamma * t)\n    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 4.220014214515686,
+  "evaluate_time": 1.9750866889953613
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 1515,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Physical model: Landau-Zener-like transition probability combined with Rabi oscillation\n    # target = A * (1 - exp(-b*t)) * prob^n * sin^2(omega*t/2 + phase) + C\n    sin_term = np.sin(omega * t / 2 + params[0])\n    rabi_factor = sin_term ** 2\n    time_factor = 1.0 - np.exp(-params[1] * t)\n    prob_factor = np.power(np.maximum(prob, eps), params[2])\n    y = params[3] * time_factor * prob_factor * rabi_factor + params[4] * time_factor * rabi_factor + params[5]\n    return y\n\n",
+  "score": -0.842539275275636,
+  "mean_nmse": 0.6993477746880312,
+  "min_nmse": 0.5846556845601818,
+  "max_nmse": 0.9260080322133251,
+  "median_nmse": 0.671812538105808,
+  "std_nmse": 0.0987240885558159,
+  "worst2_mean_nmse": 0.842539275275636,
+  "nmse_per_test": {
+    "dataset_0": 0.9260080322133251,
+    "dataset_1": 0.707159107909462,
+    "dataset_2": 0.6818714783409917,
+    "dataset_3": 0.5846556845601818,
+    "dataset_4": 0.6617535978706244,
+    "dataset_5": 0.7590705183379468,
+    "dataset_6": 0.6504401286822028,
+    "dataset_7": 0.623823649589516
+  },
+  "sample_time": 1.9434435963630676,
+  "evaluate_time": 3.3131606578826904
+}

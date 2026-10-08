@@ -1,0 +1,23 @@
+{
+  "sample_order": 1235,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Use atan form to capture Rabi-like oscillation behavior\n    # target ~ params[0] * sin^2(params[1]*omega*t) * prob + params[2]*prob + params[3]\n    angle = params[1] * omega * t\n    # Add damping-like factor with t and prob\n    oscillatory = params[0] * np.sin(angle)**2 * prob\n    # Additional term proportional to sqrt(prob) and 1/(1+(omega*t)^2)\n    resonance = params[2] * np.sqrt(prob + eps) / (1 + (omega * t)**2)\n    # Linear offset and scale\n    y = oscillatory + resonance + params[3] * prob + params[4]\n    return y\n\n",
+  "score": -0.7149854664124122,
+  "mean_nmse": 0.6639473403113396,
+  "min_nmse": 0.5377759118178614,
+  "max_nmse": 0.7295795115915145,
+  "median_nmse": 0.6795287594944129,
+  "std_nmse": 0.05485955987168522,
+  "worst2_mean_nmse": 0.7149854664124122,
+  "nmse_per_test": {
+    "dataset_0": 0.7295795115915145,
+    "dataset_1": 0.6979477420755483,
+    "dataset_2": 0.6817222087681141,
+    "dataset_3": 0.5377759118178614,
+    "dataset_4": 0.6773353102207118,
+    "dataset_5": 0.7003914212333101,
+    "dataset_6": 0.6470932692895415,
+    "dataset_7": 0.6397333474941153
+  },
+  "sample_time": 2.2497130036354065,
+  "evaluate_time": 2.0111587047576904
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 1465,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical model based on Rabi oscillation probabilities\n    # P = sin²(Ω_eff * t / 2) with Ω_eff = sqrt(Ω² + Δ²)\n    # Here prob is the transition probability, often P = sin²(...)\n    \n    # Extract detuning-like parameter and coupling\n    delta = params[0]  # detuning parameter\n    g = params[1]      # coupling strength\n    \n    # Effective Rabi frequency\n    Omega_eff = np.sqrt(delta**2 + (g * omega)**2 + eps)\n    \n    # Invert the Rabi formula to find characteristic time\n    # prob ≈ sin²(Ω_eff * t_R/2) → solve for t_R\n    # Simplification: target = Ω_eff / (prob-adjusted time)\n    \n    # Since we don't know exact dataset, use a minimal physical expression\n    # relating prob and time through oscillatory envelope\n    y = params[2] * prob * np.sin(params[3] * omega * t + params[4])**2 + params[5]\n    \n    # Add mild damping term\n    y = y + params[6] * np.exp(-params[7] * t_safe)\n    \n    # Scale by frequency factor\n    y = y * (1.0 + params[8] * np.cos(params[9] * omega_safe * t_safe))\n    \n    return y\n\n",
+  "score": -0.44729434101634513,
+  "mean_nmse": 0.3340105644392957,
+  "min_nmse": 0.2343370413480478,
+  "max_nmse": 0.44754528314373376,
+  "median_nmse": 0.30771469271976726,
+  "std_nmse": 0.07548651723919945,
+  "worst2_mean_nmse": 0.44729434101634513,
+  "nmse_per_test": {
+    "dataset_0": 0.44704339888895656,
+    "dataset_1": 0.37223252339865576,
+    "dataset_2": 0.3276920656747293,
+    "dataset_3": 0.2343370413480478,
+    "dataset_4": 0.28773731976480516,
+    "dataset_5": 0.44754528314373376,
+    "dataset_6": 0.28014023916493536,
+    "dataset_7": 0.275356644130502
+  },
+  "sample_time": 2.6304816007614136,
+  "evaluate_time": 7.409526109695435
+}

@@ -1,0 +1,14 @@
+{
+  "sample_order": 2122,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Physical model: Landau-Zener transition with Rabi oscillations\n    # target = prob * (a1 + a2*cos(omega*t)) * exp(-a3*t) + a4*sin(omega*t)*sqrt(prob*(1-prob))\n    \n    x = omega_safe * t\n    \n    # Main Rabi frequency oscillation term\n    term1 = params[0] * np.sqrt(prob * (1 - prob)) * np.sin(x + params[1])\n    \n    # Probability amplitude with exponential decay\n    term2 = prob * params[2] * np.exp(-params[3] * np.abs(t))\n    \n    # Nonlinear coupling term with time dependence\n    term3 = (1 - 2*prob) * params[4] * np.cos(x) * t\n    \n    # Base probability contribution\n    term4 = params[5] * prob\n    \n    return term1 + term2 + term3 + term4 + params[6]\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.4860299825668335,
+  "evaluate_time": 1.957998514175415
+}

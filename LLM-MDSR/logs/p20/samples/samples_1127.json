@@ -1,0 +1,23 @@
+{
+  "sample_order": 1127,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    sin_angle = np.sin(angle)\n    cos_angle = np.cos(angle)\n    \n    # Physical model: probability-modulated Rabi-like oscillation with exponential decay\n    term1 = params[0] * prob * sin_angle * np.exp(-params[1] * np.abs(t))\n    term2 = params[2] * prob * cos_angle * np.exp(-params[3] * np.abs(t))\n    term3 = params[4] * prob * t * sin_angle * cos_angle\n    term4 = params[5] * prob * np.sign(t) * np.exp(-params[6] * np.abs(t))\n    \n    y = term1 + term2 + term3 + term4 + params[7]\n    \n    return y\n\n",
+  "score": -0.542865557709728,
+  "mean_nmse": 0.4100193682040093,
+  "min_nmse": 0.27758493566823866,
+  "max_nmse": 0.5525698921815883,
+  "median_nmse": 0.4148009094768034,
+  "std_nmse": 0.10395126138718999,
+  "worst2_mean_nmse": 0.542865557709728,
+  "nmse_per_test": {
+    "dataset_0": 0.5525698921815883,
+    "dataset_1": 0.49247126014517567,
+    "dataset_2": 0.43932598056702626,
+    "dataset_3": 0.27758493566823866,
+    "dataset_4": 0.3902758383865806,
+    "dataset_5": 0.5331612232378677,
+    "dataset_6": 0.2985070165638748,
+    "dataset_7": 0.29625879888172235
+  },
+  "sample_time": 2.8206871151924133,
+  "evaluate_time": 3.129753828048706
+}

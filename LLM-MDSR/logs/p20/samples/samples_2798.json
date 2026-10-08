@@ -1,0 +1,23 @@
+{
+  "sample_order": 2798,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # omega_eff is a nonlinear function of omega and params\n    omega_eff = omega + params[2] * np.sin(params[3] * omega * t)\n    p = np.clip(prob, 1e-6, 1-1e-6)  # avoid log(0)\n    # Use a product/ratio structure related to probability distributions\n    term1 = params[0] * p * np.cos(omega_eff * t) * np.exp(-params[1] * t)\n    term2 = params[4] * (1 - p) * np.cos(omega_eff * t) * np.exp(-params[5] * t)\n    term3 = params[6] * np.sqrt(p * (1 - p)) * np.sin(params[7] * omega * t)\n    return term1 + term2 + term3 + params[8] * p * (1 - p) * np.cos(params[9] * omega * t)\n\n",
+  "score": -3.9267762708443876,
+  "mean_nmse": 1.8652537391843538,
+  "min_nmse": 1.131275061106725,
+  "max_nmse": 6.564997405425233,
+  "median_nmse": 1.1957182269336273,
+  "std_nmse": 1.7768605874381609,
+  "worst2_mean_nmse": 3.9267762708443876,
+  "nmse_per_test": {
+    "dataset_0": 1.2885551362635421,
+    "dataset_1": 1.2144399624659068,
+    "dataset_2": 1.1951020119593272,
+    "dataset_3": 1.131275061106725,
+    "dataset_4": 1.1963344419079271,
+    "dataset_5": 6.564997405425233,
+    "dataset_6": 1.1645715255960656,
+    "dataset_7": 1.1667543687501019
+  },
+  "sample_time": 2.567535936832428,
+  "evaluate_time": 3.733551502227783
+}

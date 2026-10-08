@@ -1,0 +1,23 @@
+{
+  "sample_order": 856,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    angle = omega * t\n    \n    # Rabi-like oscillation amplitude derived from prob: prob ~ sin^2(Ω t/2)\n    # Invert: driving strength proportional to sqrt(prob) / t when prob is small.\n    # Use a shared functional form: target = A * (sqrt(prob) * sin(angle) + B * prob * cos(angle) + C * exp(-t/tau))\n    # but simpler physically: Landau-Zener type transition probability in time-dependent fields.\n    # A common physical quantity could be the transition amplitude (sqrt of probability) oscillating with detuning.\n    # Let's hypothesize target = p0 * sqrt(prob) * sin(omega*t) + p1 * (1 - prob) * cos(omega*t) + p2 * prob * t / (t+tau)\n    \n    # More parsimonious: use probability and phase factors.\n    y = params[0] * np.sqrt(np.maximum(prob, eps)) * np.sin(angle) \\\n        + params[1] * (1 - prob) * np.cos(angle) \\\n        + params[2] * prob * t_safe / (t_safe + params[3])\n    \n    # Include a small offset and nonlinear mixing via omega/t\n    y = y + params[4] * np.arcsin(np.clip(prob, -1, 1)) * np.exp(-t_safe * omega_safe) \n    \n    # Final sum with a constant\n    return y + params[5]\n\n",
+  "score": -0.5730158608761093,
+  "mean_nmse": 0.4938177246366174,
+  "min_nmse": 0.44033700026864847,
+  "max_nmse": 0.5821512821931342,
+  "median_nmse": 0.47237652885914316,
+  "std_nmse": 0.04828372441738352,
+  "worst2_mean_nmse": 0.5730158608761093,
+  "nmse_per_test": {
+    "dataset_0": 0.5821512821931342,
+    "dataset_1": 0.49719636421806146,
+    "dataset_2": 0.4717668883778809,
+    "dataset_3": 0.44033700026864847,
+    "dataset_4": 0.4729861693404054,
+    "dataset_5": 0.5638804395590846,
+    "dataset_6": 0.4630860655266743,
+    "dataset_7": 0.4591375876090499
+  },
+  "sample_time": 4.0063453912734985,
+  "evaluate_time": 2.517373561859131
+}

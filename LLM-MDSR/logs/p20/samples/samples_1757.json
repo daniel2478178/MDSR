@@ -1,0 +1,23 @@
+{
+  "sample_order": 1757,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physically motivated Rabi-like formula with Landau-Zener-like damping\n    # target = A * [prob + (1-prob)*sin²(Omega_R*t/2)] * exp(-gamma*t/2) + B\n    # where Omega_R = sqrt((omega - omega0)² + (2*V)²) approximated via params\n    \n    # Params:\n    # params[0]: coupling strength V\n    # params[1]: detuning offset omega0\n    # params[2]: Rabi frequency scale\n    # params[3]: damping rate gamma\n    # params[4]: amplitude scale A\n    # params[5]: constant offset B\n    \n    eps = 1e-12\n    \n    # Effective Rabi frequency involving omega and detuning\n    delta = omega - params[1]\n    omega_r = np.sqrt(delta**2 + 4 * params[0]**2 + eps)\n    \n    # Transition probability driven term\n    sinc_arg = omega_r * t / 2\n    # Use sin² term which is standard Rabi oscillation\n    rabi_term = prob * np.sin(sinc_arg)**2 + (1 - prob) * np.cos(sinc_arg)**2\n    \n    # Power decay from damping\n    decay = np.exp(-params[3] * t)\n    \n    # Final combination: scale and offset\n    return params[4] * rabi_term * decay + params[5]\n\n",
+  "score": -0.8117205401174867,
+  "mean_nmse": 0.7578191797081704,
+  "min_nmse": 0.7014114437039817,
+  "max_nmse": 0.8118255296278979,
+  "median_nmse": 0.7508429758752867,
+  "std_nmse": 0.04578952490844699,
+  "worst2_mean_nmse": 0.8117205401174867,
+  "nmse_per_test": {
+    "dataset_0": 0.8100265835536414,
+    "dataset_1": 0.8116155506070756,
+    "dataset_2": 0.7704249521730114,
+    "dataset_3": 0.731260999577562,
+    "dataset_4": 0.7037081323952948,
+    "dataset_5": 0.8118255296278979,
+    "dataset_6": 0.7014114437039817,
+    "dataset_7": 0.722280246026898
+  },
+  "sample_time": 1.715564250946045,
+  "evaluate_time": 2.135525941848755
+}

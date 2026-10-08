@@ -1,0 +1,23 @@
+{
+  "sample_order": 2196,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Ground state population evolution under driving:\n    # target = p0 + a1 * sqrt(prob) * cos(detuning_phase + a2)\n    # plus damped Rabi oscillation term\n    p0 = params[0] * (1.0 - prob) + params[1] * prob\n    \n    # Frequency-modulated oscillation with damping, using prob coupling\n    osc_amp = params[2] * np.sqrt(np.maximum(prob, eps))\n    osc_phase = x + params[3] * (1.0 - prob)\n    osc = osc_amp * np.cos(osc_phase) * np.exp(-params[4] * np.abs(t))\n    \n    # Time-dependent envelope that goes to zero at long times\n    envelope = np.exp(-params[5] * t * t)\n    \n    return p0 * envelope + osc + params[6] * (1.0 - prob) * np.sin(x)\n\n",
+  "score": -0.6173646177631527,
+  "mean_nmse": 0.5162332539653179,
+  "min_nmse": 0.3645367707919993,
+  "max_nmse": 0.631589983442153,
+  "median_nmse": 0.5334206517160609,
+  "std_nmse": 0.09014262400212725,
+  "worst2_mean_nmse": 0.6173646177631527,
+  "nmse_per_test": {
+    "dataset_0": 0.6031392520841522,
+    "dataset_1": 0.5849155288390601,
+    "dataset_2": 0.5727784749222872,
+    "dataset_3": 0.3645367707919993,
+    "dataset_4": 0.4940628285098347,
+    "dataset_5": 0.631589983442153,
+    "dataset_6": 0.46095859565711383,
+    "dataset_7": 0.41788459747594314
+  },
+  "sample_time": 2.0129520893096924,
+  "evaluate_time": 2.4753010272979736
+}

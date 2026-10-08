@@ -1,0 +1,23 @@
+{
+  "sample_order": 2331,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Simplified physical model: damped oscillation amplitude modulated by probability,\n    # with a frequency shift dependent on omega\n    base = params[0] * prob * np.cos(x + params[1])\n    envelope = np.exp(-params[2] * np.abs(t))\n    freq_shift = np.cos((omega_safe + params[3]) * t)\n    \n    return base * envelope * freq_shift + params[4] * (1 - prob) * np.sin(params[5] * t) + params[6]\n\n",
+  "score": -0.6480711205306519,
+  "mean_nmse": 0.558530556787777,
+  "min_nmse": 0.35039787492800906,
+  "max_nmse": 0.6654949851294494,
+  "median_nmse": 0.5946704238490008,
+  "std_nmse": 0.0958431871519264,
+  "worst2_mean_nmse": 0.6480711205306519,
+  "nmse_per_test": {
+    "dataset_0": 0.6654949851294494,
+    "dataset_1": 0.6306472559318543,
+    "dataset_2": 0.589039131139528,
+    "dataset_3": 0.46932539330976814,
+    "dataset_4": 0.6003017165584738,
+    "dataset_5": 0.6118159634982844,
+    "dataset_6": 0.35039787492800906,
+    "dataset_7": 0.5512221338068487
+  },
+  "sample_time": 2.3938547372817993,
+  "evaluate_time": 5.378854990005493
+}

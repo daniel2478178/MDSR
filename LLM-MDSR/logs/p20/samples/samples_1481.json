@@ -1,0 +1,23 @@
+{
+  "sample_order": 1481,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Core physical structure: transition amplitude proportional to sqrt(prob)\n    # multiplied by a Rabi-like oscillation term, with detuning-dependent scaling\n    p = np.clip(prob, eps, 1.0)\n    \n    # Rabi frequency term: omega_eff = sqrt((omega - omega_res)^2 + (2*Omega)^2)\n    # Here omega_res and Omega are absorbed into params\n    detuning = omega - params[0]\n    rabi = np.sqrt(detuning**2 + params[1]**2)\n    \n    # Oscillatory time dependence: sin^2(Rabi * t / 2) pattern typical for driven transitions\n    osc = np.sin(rabi * t / 2.0)**2 + params[2]\n    \n    # Probability-driven amplitude: transition probability maps to field strength nonlinearly\n    amp = np.power(p, params[3])\n    \n    # Frequency-dependent envelope for detuned driving\n    envelope = 1.0 / (1.0 + params[4] * (detuning / (omega_safe + eps))**2)\n    \n    # Damped envelope in time (finite interaction/decay)\n    decay = np.exp(-params[5] * t_safe)\n    \n    # Final combination: amplitude * oscillation * detuning envelope * decay\n    y = params[6] * amp * osc * envelope * decay + params[7]\n    \n    return y\n\n",
+  "score": -0.9942430507503115,
+  "mean_nmse": 0.9608899315790992,
+  "min_nmse": 0.887902729542849,
+  "max_nmse": 0.995592677576862,
+  "median_nmse": 0.9810106972792314,
+  "std_nmse": 0.03864400182979519,
+  "worst2_mean_nmse": 0.9942430507503115,
+  "nmse_per_test": {
+    "dataset_0": 0.887902729542849,
+    "dataset_1": 0.9548289179170134,
+    "dataset_2": 0.9830226509576754,
+    "dataset_3": 0.995592677576862,
+    "dataset_4": 0.9789987436007873,
+    "dataset_5": 0.9072695075255677,
+    "dataset_6": 0.9866108015882779,
+    "dataset_7": 0.992893423923761
+  },
+  "sample_time": 2.202082633972168,
+  "evaluate_time": 3.4251272678375244
+}

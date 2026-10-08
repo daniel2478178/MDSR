@@ -1,0 +1,23 @@
+{
+  "sample_order": 3369,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    p = np.clip(prob, 1e-10, 1 - 1e-10)\n    # Rabi-like resonant transition: target ∝ p^(1/2) * sin²(Ω t/2) with detuning\n    # Here use a physically motivated form: amplitude * p^(1/2) * sin²(Ω_eff t) / Ω_eff²\n    # Simplify to a compact closed form with few parameters\n    Omega_eff = np.sqrt((params[0] * omega - params[1])**2 + params[2]**2)\n    return (params[3] * np.sqrt(p) * np.sin(Omega_eff * t)**2 / (Omega_eff**2 + params[4]))\n    # No, this might overfit. Prefer minimal form:\n    # target = A * sqrt(p) * cos(omega*t + phi) + B * (1-p) * exp(-Gamma*t)\n    # But we must use fewer params. Let's reconstruct properly:\n    # The most likely law: target = A * (1 - 2*p) * sin(omega*t) + B * exp(-lambda*t)\n    # Actually we don't know the problem. Let's try a simpler sinusoidal Rabi form\n    # with decay and modulation from p.\n    return params[0] * (1 - 2*p) * np.sin(params[1] * omega * t + params[2]) * np.exp(-params[3] * t) + params[4] * np.sqrt(p) * np.cos(params[5] * omega * t + params[6])\n\n",
+  "score": -1.6519253626210941,
+  "mean_nmse": 1.4040782807430445,
+  "min_nmse": 1.2352232593057657,
+  "max_nmse": 1.9139822016380772,
+  "median_nmse": 1.348275595080179,
+  "std_nmse": 0.19810069456388166,
+  "worst2_mean_nmse": 1.6519253626210941,
+  "nmse_per_test": {
+    "dataset_0": 1.2352232593057657,
+    "dataset_1": 1.9139822016380772,
+    "dataset_2": 1.3802119824589125,
+    "dataset_3": 1.3163304149392523,
+    "dataset_4": 1.3489636904273417,
+    "dataset_5": 1.3004586738378774,
+    "dataset_6": 1.3475874997330164,
+    "dataset_7": 1.389868523604111
+  },
+  "sample_time": 5.53828501701355,
+  "evaluate_time": 2.588197946548462
+}

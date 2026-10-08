@@ -1,0 +1,14 @@
+{
+  "sample_order": 669,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    # Physical form: generalized Rabi-like amplitude\n    # p = (Omega^2 / Omega_eff^2) * sin^2(Omega_eff * t / 2)\n    # with Omega_eff = sqrt(delta^2 + Omega^2)\n    # Here prob represents normalized probability; use params for offset and scaling\n    p_safe = np.maximum(prob, eps)\n    # Assume prob is sin^2 of half angle, extract effective frequency\n    # Common structure: target = a * sin(omega*t)*sqrt(p(1-p)) + b * (2p-1)\n    sin_angle = np.sin(angle)\n    cos_angle = np.cos(angle)\n    # Use a compact nonlinear combination involving prob and angle\n    term_drive = params[0] * sin_angle * np.sqrt(p_safe * (1 - p_safe))\n    term_pop = params[1] * (2 * p_safe - 1) * cos_angle\n    term_cross = params[2] * p_safe * sin_angle * np.exp(-np.abs(t) * params[3])\n    y = term_drive + term_pop + term_cross + params[4]\n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.1745124459266663,
+  "evaluate_time": 1.97584867477417
+}

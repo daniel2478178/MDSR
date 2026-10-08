@@ -1,0 +1,23 @@
+{
+  "sample_order": 2212,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Avoid division by zero in omega\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    # Normalized time variable\n    x = omega_safe * t\n    \n    # Rabi-like model: the probability oscillates over time with frequency omega\n    # The target is a non-linear function combining the oscillation amplitude and frequency\n    # Use a common structure: \n    # target = prob * (A * sin(omega*t) + B * cos(omega*t)) * exp(-C*t) + D\n    \n    # This form relates prob and omega through the Rabi frequency, and t through damping\n    # Only a few essential parameters; reduce from v2 to fewer\n    \n    # Sinusoidal oscillation with amplitude and phase\n    term1 = prob * (params[0] * np.sin(x) + params[1] * np.cos(x))\n    \n    # Exponential decay over time\n    decay = np.exp(-params[2] * np.abs(t))\n    \n    # Combine with a constant offset that may vary with pure prob\n    # Use a smooth rational function to capture possible nonlinear prob dependence\n    base = term1 * decay + params[3]\n    \n    # Add a small frequency coupling term - this preserves physical dependence\n    # but adds minimal complexity\n    coupling = params[4] * np.sin(params[5] * x) * np.exp(-params[6] * np.abs(t))\n    \n    # Overall linear drift in time that may capture non-oscillatory behavior\n    drift = params[7] * t\n    \n    return base + coupling + drift\n\n",
+  "score": -0.6011494059536633,
+  "mean_nmse": 0.49973049378511925,
+  "min_nmse": 0.3983570133414044,
+  "max_nmse": 0.6223967892779143,
+  "median_nmse": 0.491871965510351,
+  "std_nmse": 0.0687391457165577,
+  "worst2_mean_nmse": 0.6011494059536633,
+  "nmse_per_test": {
+    "dataset_0": 0.48588933813668245,
+    "dataset_1": 0.6223967892779143,
+    "dataset_2": 0.49785459288401956,
+    "dataset_3": 0.47350360529884133,
+    "dataset_4": 0.5799020226294124,
+    "dataset_5": 0.5111722323731362,
+    "dataset_6": 0.3983570133414044,
+    "dataset_7": 0.4287683563395435
+  },
+  "sample_time": 3.2509811520576477,
+  "evaluate_time": 2.578125
+}

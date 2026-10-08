@@ -1,0 +1,23 @@
+{
+  "sample_order": 1398,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical structure: damped driven oscillator with amplitude modulation\n    # The transition probability acts as a population transfer factor\n    # The time dependence includes oscillatory + damping behavior\n    # The omega dependence captures resonance effects\n    \n    # resonance-like envelope: sin^2 term with phase\n    resonance = np.sin(omega_safe * t_safe + params[0])**2\n    \n    # driven amplitude: probability controls the excitation strength\n    amplitude = prob * params[1]\n    \n    # main oscillatory term with damping\n    oscillation = amplitude * resonance * np.cos(params[2] * omega_safe * t_safe)\n    \n    # damping envelope\n    damping = np.exp(-params[3] * t_safe)\n    \n    # residual background from probability itself\n    background = prob * params[4]\n    \n    # time-dependent decay/ground-state recovery term\n    recovery = params[5] * np.exp(-params[6] * t_safe) * np.cos(params[7] * omega_safe * t_safe)\n    \n    # combine all physical contributions\n    y = oscillation * damping + background + recovery + params[8]\n    \n    return y\n\n",
+  "score": -0.529314601372463,
+  "mean_nmse": 0.44989983135843215,
+  "min_nmse": 0.41565352332307215,
+  "max_nmse": 0.6200985465259449,
+  "median_nmse": 0.42601490289031585,
+  "std_nmse": 0.06465624819027756,
+  "worst2_mean_nmse": 0.529314601372463,
+  "nmse_per_test": {
+    "dataset_0": 0.42694634240060214,
+    "dataset_1": 0.42180762391770155,
+    "dataset_2": 0.420294723860295,
+    "dataset_3": 0.4307837712408309,
+    "dataset_4": 0.4250834633800295,
+    "dataset_5": 0.41565352332307215,
+    "dataset_6": 0.4385306562189812,
+    "dataset_7": 0.6200985465259449
+  },
+  "sample_time": 5.162347793579102,
+  "evaluate_time": 3.0182557106018066
+}

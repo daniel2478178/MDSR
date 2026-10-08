@@ -1,0 +1,23 @@
+{
+  "sample_order": 1969,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener type transition with time-dependent detuning\n    # p = transition probability, t = interaction time, omega = drive frequency\n    \n    # Detuning parameter per dataset\n    detuning = params[0]\n    \n    # Effective coupling strength\n    coupling = params[1]\n    \n    # Time-dependent phase accumulation\n    phase = coupling * t * (1.0 + detuning * t)\n    \n    # pi-pulse amplitude - resonant Rabi-like solution\n    # prob = sin^2(Rabi_angle), so invert to find Rabi frequency\n    # Use prob to construct amplitude since it's in [0,1]\n    amplitude_scale = np.sqrt(np.maximum(prob, 1e-10))\n    \n    # Main physical term: oscillatory decay with prob scaling\n    # target = prob * exp(-tau)*cos(theta), where tau damping and theta phase\n    core = prob * np.cos(phase - params[2] * omega) \n    \n    # Damping that depends on time and drive\n    damping = params[3] * np.exp(-params[4] * t * omega)\n    \n    # Non-linear term involving prob and omega - for frequency dependence\n    freq_term = params[5] * np.sinc(params[6] * omega * t) * amplitude_scale\n    \n    # Combine: target proportional to probability with modulation\n    return params[7] * core * damping + freq_term * (1.0 - prob) + params[8] * prob\n\n",
+  "score": -2.3004573138729074,
+  "mean_nmse": 1.2120568002487833,
+  "min_nmse": 0.30270720264037343,
+  "max_nmse": 2.3599132966398013,
+  "median_nmse": 1.0479615488680927,
+  "std_nmse": 0.7425029367541419,
+  "worst2_mean_nmse": 2.3004573138729074,
+  "nmse_per_test": {
+    "dataset_0": 2.3599132966398013,
+    "dataset_1": 1.4612155115558219,
+    "dataset_2": 1.4862834259366327,
+    "dataset_3": 0.30270720264037343,
+    "dataset_4": 0.6347075861803636,
+    "dataset_5": 2.2410013311060135,
+    "dataset_6": 0.6190675394264723,
+    "dataset_7": 0.591558508504788
+  },
+  "sample_time": 2.2009223103523254,
+  "evaluate_time": 3.272437810897827
+}

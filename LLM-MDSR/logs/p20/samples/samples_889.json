@@ -1,0 +1,23 @@
+{
+  "sample_order": 889,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition probability inversion for Rabi-type driving\n    # target = sqrt(p * (1-p)) * f(omega, t) + p * g(omega, t)\n    # Use minimal parameters: amplitude, decay rate, phase shift, offset\n    eps = 1e-10\n    \n    # Avoid divide by zero in angular term\n    omega_safe = np.maximum(np.abs(omega), eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Common physical form: probability-modulated oscillatory term with saturation\n    # p^2 * sin(omega*t) + p*(1-p)*cos(omega*t) * exp(-t/tau) \n    # Simplify to four parameters: A, B, C, D\n    A = params[0]  # amplitude of main oscillation\n    B = params[1]  # amplitude of decay-modified term\n    C = params[2]  # decay rate (inverse time scale)\n    D = params[3]  # offset\n    \n    # Use angle factor omega*t as phase\n    phase = omega * t_safe\n    \n    # Main term: linear in p times sinc-like oscillation (Rabi oscillations)\n    # Secondary term: p(1-p) exponential decay\n    main_term = A * prob * np.sin(phase) / (1.0 + (omega_safe * t_safe)**2)\n    secondary = B * prob * (1.0 - prob) * np.exp(-C * t_safe)\n    \n    # Combine and return\n    return main_term + secondary + D\n\n",
+  "score": -0.6310144779315137,
+  "mean_nmse": 0.5604949150018211,
+  "min_nmse": 0.473769231958757,
+  "max_nmse": 0.6453315100889846,
+  "median_nmse": 0.5490984839919616,
+  "std_nmse": 0.051055515049947195,
+  "worst2_mean_nmse": 0.6310144779315137,
+  "nmse_per_test": {
+    "dataset_0": 0.6453315100889846,
+    "dataset_1": 0.5896370975123102,
+    "dataset_2": 0.5513299743813991,
+    "dataset_3": 0.473769231958757,
+    "dataset_4": 0.5468669936025241,
+    "dataset_5": 0.6166974457740427,
+    "dataset_6": 0.5330824286794941,
+    "dataset_7": 0.5272446380170575
+  },
+  "sample_time": 2.8989859223365784,
+  "evaluate_time": 2.283220052719116
+}

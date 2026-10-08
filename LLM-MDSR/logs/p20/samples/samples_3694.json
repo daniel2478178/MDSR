@@ -1,0 +1,23 @@
+{
+  "sample_order": 3694,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"Physical law: target = exp(-decay*t) * (amplitude1 * prob * cos(freq1*omega*t + phase1) + amplitude2 * (1-prob) * sin(freq2*omega*t + phase2)) + amplitude3 * (1 - 2*prob) * exp(-bare_decay*t)\"\"\"\n    x = omega * t\n    term1 = params[0] * prob * np.cos(params[1] * x + params[2])\n    term2 = params[3] * (1 - prob) * np.sin(params[4] * x + params[5])\n    term3 = params[6] * (1 - 2 * prob) * np.exp(-params[7] * t)\n    return np.exp(-params[8] * t) * (term1 + term2) + term3\n\n",
+  "score": -0.5346841862471753,
+  "mean_nmse": 0.3514894406502483,
+  "min_nmse": 0.14426597094538754,
+  "max_nmse": 0.542440860450527,
+  "median_nmse": 0.35650219225481183,
+  "std_nmse": 0.14216700458058812,
+  "worst2_mean_nmse": 0.5346841862471753,
+  "nmse_per_test": {
+    "dataset_0": 0.542440860450527,
+    "dataset_1": 0.4570982528011855,
+    "dataset_2": 0.38733361973350755,
+    "dataset_3": 0.14426597094538754,
+    "dataset_4": 0.3256707647761161,
+    "dataset_5": 0.5269275120438236,
+    "dataset_6": 0.23207380097432662,
+    "dataset_7": 0.1961047434771125
+  },
+  "sample_time": 2.974484999974569,
+  "evaluate_time": 4.491059303283691
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 770,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical form: Rabi oscillation with damping and frequency dependent amplitude\n    # target = A * prob * sin^2(omega*t/2) / omega^2 + B * t * prob + C\n    half_angle = 0.5 * omega * t\n    sin_half = np.sin(half_angle)\n    oscillation = params[0] * prob * sin_half**2 / (omega_safe**2 + eps)\n    \n    # Linear in time term\n    time_term = params[1] * t_safe * prob\n    \n    # Inverse frequency term\n    inv_freq = params[2] * prob / np.sqrt(omega_safe)\n    \n    # Exponential decay with time\n    decay = params[3] * np.exp(-t_safe * params[4])\n    \n    # Constant offset\n    y = oscillation + time_term + inv_freq + decay + params[5]\n    \n    return y\n\n",
+  "score": -0.4676823377959941,
+  "mean_nmse": 0.35142383835232793,
+  "min_nmse": 0.24725741950500946,
+  "max_nmse": 0.47336201551183743,
+  "median_nmse": 0.33561851701887646,
+  "std_nmse": 0.0860402767883642,
+  "worst2_mean_nmse": 0.4676823377959941,
+  "nmse_per_test": {
+    "dataset_0": 0.46200266008015084,
+    "dataset_1": 0.3800354526481757,
+    "dataset_2": 0.41460764525786203,
+    "dataset_3": 0.24725741950500946,
+    "dataset_4": 0.2912015813895773,
+    "dataset_5": 0.47336201551183743,
+    "dataset_6": 0.27650458487524654,
+    "dataset_7": 0.26641934755076424
+  },
+  "sample_time": 2.3232643604278564,
+  "evaluate_time": 3.860010862350464
+}

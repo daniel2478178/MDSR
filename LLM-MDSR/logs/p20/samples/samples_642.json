@@ -1,0 +1,23 @@
+{
+  "sample_order": 642,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Robust version of the Rabi/Landau-Zener type transition probability relation\n    # target ~ sqrt(prob) * (detuning / coupling) * angular dependence, or similar\n    # Use params for scaling/offset, keep simple physically motivated form\n    \n    eps = 1e-12\n    # Protect against zero/negative under sqrt\n    p_safe = np.maximum(np.abs(prob), eps)\n    \n    # Time and frequency scales — dimensionless combinations likely\n    # Common physical relation: P(t) = (Omega_R^2 / Omega_eff^2) * sin^2(Omega_eff * t / 2)\n    # but we have transition prob already given; infer relationship with t, omega.\n    # Let omega represent detuning or coupling.\n\n    # Candidate: target = A * prob * sin(omega * t + phase) + C, with amplitude depending on t\n    # Try using sqrt of time for decay envelope, or simple polynomial in dimensionless ratio omega*t\n    x = omega * t  # phase accumulated\n    \n    # Use combination of prob and x: \n    # term1 = A * prob * sin(x) — modulated by probability\n    # term2 = B * (1 - prob) * cos(x) — complementary\n    # term3 = C * t * prob — linear growth\n    # term4 = D * omega — frequency offset\n    \n    # To reduce parameters, keep only 3-4:\n    term1 = params[0] * prob * np.sin(x)\n    term2 = params[1] * (1 - prob) * np.cos(x)\n    term3 = params[2] * t * prob\n    # Add small nonlinear coupling between variables\n    term4 = params[3] * prob * np.cos(omega) * np.sin(np.sqrt(np.abs(t)))\n    \n    y = term1 + term2 + term3 + term4 + params[4]\n    return y\n\n",
+  "score": -0.5306589870735647,
+  "mean_nmse": 0.46840756202982514,
+  "min_nmse": 0.3460824133429993,
+  "max_nmse": 0.5378994296329977,
+  "median_nmse": 0.4745085270001467,
+  "std_nmse": 0.054943834733524544,
+  "worst2_mean_nmse": 0.5306589870735647,
+  "nmse_per_test": {
+    "dataset_0": 0.5378994296329977,
+    "dataset_1": 0.4902771007185638,
+    "dataset_2": 0.4821117013830451,
+    "dataset_3": 0.3460824133429993,
+    "dataset_4": 0.4669053526172482,
+    "dataset_5": 0.5234185445141318,
+    "dataset_6": 0.44848131267924074,
+    "dataset_7": 0.4520846413503747
+  },
+  "sample_time": 4.150335232416789,
+  "evaluate_time": 1.9979510307312012
+}

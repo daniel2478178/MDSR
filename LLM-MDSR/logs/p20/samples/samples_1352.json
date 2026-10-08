@@ -1,0 +1,23 @@
+{
+  "sample_order": 1352,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p1, p2, p3, p4 = params[:4]\n    x = t * omega\n    x_safe = np.where(np.abs(x) < 1e-10, 1e-10, x)\n    # Rabi-like oscillation term with time-frequency coupling\n    rabi = p1 * prob * (np.sin(0.5 * x) / (0.5 * x)) ** 2\n    # Decay modulated by prob and frequency\n    decay = p2 * np.exp(-p3 * np.abs(t * omega)) * (1 - prob)\n    # Resonant coupling term\n    resonance = p4 * prob * np.cos(x) * np.sin(x) / (1.0 + (x / np.pi) ** 2)\n    return rabi + decay + resonance\n\n",
+  "score": -2.172240936095913,
+  "mean_nmse": 1.7462079733869342,
+  "min_nmse": 1.369696681386448,
+  "max_nmse": 2.216464386974768,
+  "median_nmse": 1.6479715147789844,
+  "std_nmse": 0.3200094137471124,
+  "worst2_mean_nmse": 2.172240936095913,
+  "nmse_per_test": {
+    "dataset_0": 2.216464386974768,
+    "dataset_1": 1.554253698372255,
+    "dataset_2": 1.3764107034633282,
+    "dataset_3": 2.049282949650305,
+    "dataset_4": 1.369696681386448,
+    "dataset_5": 2.1280174852170584,
+    "dataset_6": 1.533848550845596,
+    "dataset_7": 1.7416893311857138
+  },
+  "sample_time": 2.9056169986724854,
+  "evaluate_time": 2.132498025894165
+}

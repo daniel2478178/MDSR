@@ -1,0 +1,23 @@
+{
+  "sample_order": 3624,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Based on Rabi oscillation physics: P = sin^2(Omega_R * t/2)\n    # We have prob ~ sin^2(θ/2) where θ is the pulse area\n    # target likely related to the generalized Rabi frequency or detuning\n    # Let p = prob, derive theta = 2*arcsin(sqrt(p))\n    theta = 2 * np.arcsin(np.sqrt(np.clip(prob, 0, 1)))\n    # Alternative: treat theta as -ln(1-p) for exponential decays? but let's stick with Rabi\n    # Candidate: target = amplitude * sin(theta) * cos(x) + offset\n    # Need a form that works for all datasets: maybe target = a * sqrt(p*(1-p)) * cos(x) + b * p\n    # Try: target = A * sin(theta) * cos(x) + B\n    # Since sin(theta) = 2*sqrt(p*(1-p))\n    sin_theta = np.sin(theta)\n    cos_theta = np.cos(theta)\n    # Physical: transition probability for a two-level atom driven near resonance\n    # |c_e|^2 = (Omega_R^2 / Omega^2) * sin^2(Omega*t/2)\n    # here prob is that |c_e|^2, so Omega_R = 2*arcsin(sqrt(p))/t? That's not general.\n    # Given we have t and omega as inputs, maybe target is the generalized Rabi frequency or the detuning\n    # Let's try: target = params[0] * sqrt(prob) * cos(omega*t) + params[1] * sin(omega*t) + params[2]\n    # But simpler: target = params[0] * prob / (1 + params[1]*t) + params[2]*np.cos(omega*t) + params[3]\n    # For generality: physical law could be target = a*prob*cos(omega*t) + b*sin(omega*t) + c\n    # Given the constraints, let's propose a physically motivated form:\n    # The Rabi frequency Omega_R = 2*arcsin(sqrt(prob))/t, but that would have t in denominator.\n    # target probably is the transition amplitude or something like that.\n    # Let's go with a simple linear combination of prob and oscillatory terms, but with a saturation-like term\n    # More physically: target = params[0] * np.sqrt(prob) * np.cos(params[1]*x + params[2]) + params[3] * (1-prob) * np.sin(params[4]*x) + params[5]\n    # But we need fewer params? Max 10 allowed.\n    # Let's use: target = a * sin(theta) * cos(omega*t + phi) + b * sin(omega*t) + c\n    # That has 5 params.\n    return params[0] * np.sin(theta) * np.cos(omega * t + params[1]) + params[2] * np.sin(omega * t) + params[3] * prob + params[4]\n\n",
+  "score": -0.712804108856026,
+  "mean_nmse": 0.6593443873057737,
+  "min_nmse": 0.5673040279858805,
+  "max_nmse": 0.7209383372610173,
+  "median_nmse": 0.6696352440568033,
+  "std_nmse": 0.04549377422752976,
+  "worst2_mean_nmse": 0.712804108856026,
+  "nmse_per_test": {
+    "dataset_0": 0.7209383372610173,
+    "dataset_1": 0.6774779939784089,
+    "dataset_2": 0.6783682830225481,
+    "dataset_3": 0.5673040279858805,
+    "dataset_4": 0.6617924941351977,
+    "dataset_5": 0.7046698804510346,
+    "dataset_6": 0.6374314306476613,
+    "dataset_7": 0.6267726509644412
+  },
+  "sample_time": 2.416198432445526,
+  "evaluate_time": 2.0718014240264893
+}

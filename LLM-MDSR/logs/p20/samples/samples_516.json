@@ -1,0 +1,23 @@
+{
+  "sample_order": 516,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # target = A * prob * sin(omega*t)*omega + B * prob * (1-cos(omega*t))\n    # plus decay/offset terms\n    \n    eps = 1e-10\n    # Protect against zeros\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Key physical combination: omega*t (rotation angle)\n    angle = omega_safe * t\n    \n    # Primary term: resonant Rabi oscillation\n    # sin^2(omega*t/2) * (1/prob - 1) * omega^2 type structure\n    # but express directly in prob, t, omega\n    \n    # Common Rabi formula: P(t) = (Omega_R^2 / (Omega_R^2 + Delta^2)) * sin^2(sqrt(Omega_R^2+Delta^2)*t/2)\n    # Here prob is the transition probability, t interaction time, omega driving frequency.\n    # Target could be related to amplitude or energy.\n    \n    # Suggest: target = A * sqrt(prob) * sin(omega*t) / t  (amplitude decay)\n    # or target = A * prob * omega * t (linear response)\n    \n    # Given only three variables, try: \n    # y = p0 * prob * sin(p1 * omega * t) + p2 * prob * cos(p3 * omega * t) + p4 * exp(-p5*t) * prob\n    \n    # Simplify using params[0]..params[5]\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    p4 = params[4]\n    p5 = params[5]\n    \n    # Physical form: modulated sinusoid with damping\n    y = (p0 * prob * np.sin(p1 * angle) +\n         p2 * prob * np.cos(p3 * angle) +\n         p4 * prob * np.exp(-p5 * np.abs(t)) +\n         params[6])\n    \n    return y\n\n",
+  "score": -0.6227878833628437,
+  "mean_nmse": 0.49162267034735396,
+  "min_nmse": 0.238387562914666,
+  "max_nmse": 0.6328023567750887,
+  "median_nmse": 0.527520711451842,
+  "std_nmse": 0.12163255293393482,
+  "worst2_mean_nmse": 0.6227878833628437,
+  "nmse_per_test": {
+    "dataset_0": 0.5347346072343245,
+    "dataset_1": 0.5595581579415013,
+    "dataset_2": 0.4421814821304552,
+    "dataset_3": 0.238387562914666,
+    "dataset_4": 0.39223697016283804,
+    "dataset_5": 0.5203068156693594,
+    "dataset_6": 0.6127734099505988,
+    "dataset_7": 0.6328023567750887
+  },
+  "sample_time": 6.26038920879364,
+  "evaluate_time": 4.405522108078003
+}

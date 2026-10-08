@@ -1,0 +1,23 @@
+{
+  "sample_order": 1365,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared physical law: transition probability drives a Rabi-like\n    oscillation amplitude with detuning and damping.\n\n    Structure:\n        y = a * (prob - b) * sin^2(c * omega * t) / (1 + (d * (omega - e))^2)\n        + f * sin(g * omega * t) + h\n\n    This matches common two-level system dynamics where the\n    transition probability is related to the temporal oscillation\n    pattern, with a Lorentzian frequency response.\n    \"\"\"\n    eps = 1e-12\n    \n    # Avoid division by zero and ensure positivity for safe operations\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Probability-based amplitude (shifted and scaled by params)\n    prob_factor = prob - params[0]\n    \n    # Rabi-like oscillation envelope with phase parameter\n    sin_sq = np.sin(params[1] * omega_safe * t_safe + params[2])**2\n    \n    # Lorentzian detuning response\n    detuning = omega_safe - params[3]\n    lorentzian = 1.0 / (1.0 + (params[4] * detuning)**2)\n    \n    # Time-decay term to capture possible damping effects\n    decay = np.exp(-params[5] * t_safe)\n    \n    # Frequency-modulated oscillation\n    residual = params[6] * np.sin(omega_safe * t_safe)\n    \n    # Combine all components\n    y = params[7] * prob_factor * sin_sq * lorentzian * decay + residual + params[8]\n    \n    return y\n\n",
+  "score": -0.5035253133828681,
+  "mean_nmse": 0.3149605739872949,
+  "min_nmse": 0.1696539336086438,
+  "max_nmse": 0.6835627818960459,
+  "median_nmse": 0.294972570519507,
+  "std_nmse": 0.14745358020663826,
+  "worst2_mean_nmse": 0.5035253133828681,
+  "nmse_per_test": {
+    "dataset_0": 0.32348784486969034,
+    "dataset_1": 0.3000479799783187,
+    "dataset_2": 0.29864002816964214,
+    "dataset_3": 0.1696539336086438,
+    "dataset_4": 0.2361100048751988,
+    "dataset_5": 0.6835627818960459,
+    "dataset_6": 0.21687690563144765,
+    "dataset_7": 0.2913051128693719
+  },
+  "sample_time": 3.050776958465576,
+  "evaluate_time": 5.523422479629517
+}

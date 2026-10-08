@@ -1,0 +1,23 @@
+{
+  "sample_order": 386,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Damped Rabi oscillation with resonance term\n    # target = A * (prob * sin^2(omega*t/2)) / omega + B * sin(omega*t) * exp(-gamma*t) + C\n    eps = 1e-12\n    omega_safe = omega + eps\n    angle = omega * t\n    half_angle = angle / 2.0\n    resonance = np.sin(half_angle) ** 2\n    \n    # params: [A, B, C, gamma]\n    term1 = params[0] * prob * resonance / omega_safe\n    term2 = params[1] * prob * np.sin(angle) * np.exp(-params[3] * np.abs(t))\n    y = term1 + term2 + params[2]\n    return y\n\n",
+  "score": -0.7143883103423025,
+  "mean_nmse": 0.688576755328469,
+  "min_nmse": 0.6409101759285369,
+  "max_nmse": 0.7210626223346176,
+  "median_nmse": 0.6908956433473907,
+  "std_nmse": 0.023373049016492106,
+  "worst2_mean_nmse": 0.7143883103423025,
+  "nmse_per_test": {
+    "dataset_0": 0.7210626223346176,
+    "dataset_1": 0.691069865906903,
+    "dataset_2": 0.7077139983499876,
+    "dataset_3": 0.6409101759285369,
+    "dataset_4": 0.6907214207878783,
+    "dataset_5": 0.703906856552459,
+    "dataset_6": 0.6681083446773206,
+    "dataset_7": 0.6851207580900485
+  },
+  "sample_time": 3.135028600692749,
+  "evaluate_time": 2.356656551361084
+}

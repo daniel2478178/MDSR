@@ -1,0 +1,23 @@
+{
+  "sample_order": 1218,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Gibbs factor with detuning-like form, folding t and omega into a dimensionless phase\n    eps = 1e-10\n    dt = np.maximum(np.abs(t), eps)\n    detuning = params[0] * (omega - params[1])\n    angle = omega * t\n    \n    # Power-law decay in probability and oscillatory response\n    p_term = prob ** params[2]\n    osc = np.sin(angle + params[3])\n    \n    # Exponential damping in time with frequency-dependent rate\n    damping = np.exp(-detuning**2 * dt / (1.0 + params[4] * dt))\n    \n    y = params[5] * p_term * osc * damping + params[6] * prob\n    \n    return y\n\n",
+  "score": -1.7735455138955571,
+  "mean_nmse": 1.3472437968019662,
+  "min_nmse": 0.735579577769331,
+  "max_nmse": 1.7930591701432455,
+  "median_nmse": 1.4113117865167824,
+  "std_nmse": 0.38823576280755684,
+  "worst2_mean_nmse": 1.7735455138955571,
+  "nmse_per_test": {
+    "dataset_0": 1.7397168212225014,
+    "dataset_1": 1.3240531595144338,
+    "dataset_2": 1.4985704135191311,
+    "dataset_3": 0.735579577769331,
+    "dataset_4": 0.964953216753812,
+    "dataset_5": 1.7930591701432455,
+    "dataset_6": 1.7540318576478686,
+    "dataset_7": 0.9679861578454055
+  },
+  "sample_time": 2.8636603355407715,
+  "evaluate_time": 2.912473201751709
+}

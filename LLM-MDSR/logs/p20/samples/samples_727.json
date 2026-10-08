@@ -1,0 +1,14 @@
+{
+  "sample_order": 727,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    angle = omega * t\n    \n    # Landau-Zener-like transition probability scaling with detuning and time\n    # target ~ prob * (1 - prob) * pulse_area^2 / (1 + (detuning*time)^2)\n    pulse = params[0] * np.sin(angle) + params[1] * np.cos(angle)\n    rabi = np.sqrt(prob * (1 - prob))\n    detuning_factor = 1.0 / (1.0 + (params[2] * t_safe) ** 2)\n    decay = np.exp(-params[3] * t_safe)\n    \n    y = params[4] * rabi * pulse * detuning_factor * decay + params[5] * prob * t_safe * omega_safe / (1.0 + (params[6] * omega_safe) ** 2)\n    return y + params[7] * prob\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.857597529888153,
+  "evaluate_time": 1.9467992782592773
+}

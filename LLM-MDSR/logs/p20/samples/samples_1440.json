@@ -1,0 +1,23 @@
+{
+  "sample_order": 1440,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    p = np.clip(prob, eps, 1.0 - eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Physical model: generalized Rabi-like transition probability relation\n    # target = A * prob * sinc^2(detuning * t/2) + B * sin^2(omega*t/2)\n    # detuning = params[0] * omega + params[1]\n    # Amplitude envelope with power-law dependence on prob\n    \n    detuning = params[0] * omega + params[1]\n    sinc_arg = detuning * t_safe / 2.0\n    sinc_sq = np.square(np.sin(sinc_arg) / np.maximum(sinc_arg, eps))\n    \n    omega_half = omega * t_safe / 2.0\n    sin_sq = np.square(np.sin(omega_half))\n    \n    # Interpolate between prob-linear and prob-squared response\n    prob_mix = p * (1.0 + params[2] * (1.0 - p))\n    \n    # Exponential envelope for finite interaction time\n    time_env = np.exp(-params[3] * t_safe)\n    \n    y = params[4] * prob_mix * sinc_sq * time_env + params[5] * sin_sq + params[6]\n    \n    return y\n\n",
+  "score": -0.9950840609876221,
+  "mean_nmse": 0.973341199583553,
+  "min_nmse": 0.9254787412738436,
+  "max_nmse": 0.995770099173566,
+  "median_nmse": 0.9864732805301198,
+  "std_nmse": 0.026129743474622442,
+  "worst2_mean_nmse": 0.9950840609876221,
+  "nmse_per_test": {
+    "dataset_0": 0.9254787412738436,
+    "dataset_1": 0.9729298905091521,
+    "dataset_2": 0.9913168911371801,
+    "dataset_3": 0.995770099173566,
+    "dataset_4": 0.9867932109540223,
+    "dataset_5": 0.933889390712765,
+    "dataset_6": 0.9861533501062174,
+    "dataset_7": 0.9943980228016782
+  },
+  "sample_time": 2.6847599744796753,
+  "evaluate_time": 3.1605684757232666
+}

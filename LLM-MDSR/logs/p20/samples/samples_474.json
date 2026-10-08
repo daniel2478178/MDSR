@@ -1,0 +1,23 @@
+{
+  "sample_order": 474,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    # Simple resonant Rabi-like formula: target = A * prob * sin^2(theta/2)\n    # where theta = omega * t, scaled by params\n    theta = np.abs(angle) + eps\n    sin_half = np.sin(0.5 * theta)\n    sin_half_sq = sin_half * sin_half\n    # Combine with prob dependence and an offset\n    term1 = params[0] * prob * sin_half_sq\n    term2 = params[1] * prob * np.cos(angle)\n    y = term1 + term2 * np.exp(-params[2] * np.abs(t)) + params[3]\n    return y\n\n",
+  "score": -0.7048644679314453,
+  "mean_nmse": 0.6299381545252969,
+  "min_nmse": 0.5157558394165103,
+  "max_nmse": 0.7066130687098218,
+  "median_nmse": 0.6254269647075088,
+  "std_nmse": 0.058636331198287275,
+  "worst2_mean_nmse": 0.7048644679314453,
+  "nmse_per_test": {
+    "dataset_0": 0.7031158671530687,
+    "dataset_1": 0.6631430441076385,
+    "dataset_2": 0.6376673720328222,
+    "dataset_3": 0.5157558394165103,
+    "dataset_4": 0.6131865573821954,
+    "dataset_5": 0.7066130687098218,
+    "dataset_6": 0.5998854803365868,
+    "dataset_7": 0.6001380070637324
+  },
+  "sample_time": 1.9866822361946106,
+  "evaluate_time": 2.038954019546509
+}

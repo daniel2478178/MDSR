@@ -1,0 +1,23 @@
+{
+  "sample_order": 252,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Rabi-like transition probability in driven systems\n    # target ~ (prob * sin^2(omega*t/2)) / (1 + (delta/omega)^2)-type structure\n    # Simplifying to a Lorentzian resonance form dependent on omega and t\n    \n    # Key physical relationship: for sinusoidal driving, transition probability \n    # relates to detuning and coupling. We model target as a generalized \n    # Rabi frequency-dependent quantity.\n    \n    eps = 1e-10\n    # Use normalized variables to capture resonance behavior\n    delta_omega = params[0]  # detuning parameter\n    coupling = params[1]      # coupling strength\n    \n    # Effective Rabi frequency\n    omega_eff = np.sqrt(coupling**2 + delta_omega**2)\n    \n    # Driven transition probability amplitude\n    # For time-dependent Rabi oscillations: P(t) = (Omega^2/(omega_eff^2)) * sin^2(omega_eff*t/2)\n    # We observe prob, so infer target as the generalized Rabi frequency\n    # or energy splitting\n    \n    # Target related to generalized Rabi frequency scaled by driving frequency\n    # Since prob = (Omega^2/omega_eff^2) * sin^2(omega_eff*t/2), \n    # we can solve for omega_eff from prob, but here we use a functional form\n    # combining prob, omega, and t in a physically motivated way\n    \n    angle = omega * t\n    sin_term = np.sin(angle/2)**2\n    \n    # Generalized Rabi-like behavior\n    rabi_like = params[2] * np.sqrt(np.maximum(prob * omega**2, eps))\n    \n    # Frequency-dependent response\n    resonance = 1.0 / (1.0 + params[3] * (omega - delta_omega)**2)\n    \n    # Time decay factor\n    damping = np.exp(-params[4] * np.abs(t))\n    \n    # Combine physical effects\n    y = rabi_like * resonance * damping + params[5] * sin_term * prob\n    \n    return y\n\n",
+  "score": -0.7431861779834893,
+  "mean_nmse": 0.5150926958710028,
+  "min_nmse": 0.31607346835359645,
+  "max_nmse": 0.7607726700225007,
+  "median_nmse": 0.48397594761842183,
+  "std_nmse": 0.16249396362749724,
+  "worst2_mean_nmse": 0.7431861779834893,
+  "nmse_per_test": {
+    "dataset_0": 0.7607726700225007,
+    "dataset_1": 0.6262776207014232,
+    "dataset_2": 0.5377845244825958,
+    "dataset_3": 0.31607346835359645,
+    "dataset_4": 0.4301673707542478,
+    "dataset_5": 0.7255996859444779,
+    "dataset_6": 0.36427154928482586,
+    "dataset_7": 0.3597946774243548
+  },
+  "sample_time": 4.2213170528411865,
+  "evaluate_time": 2.4104714393615723
+}

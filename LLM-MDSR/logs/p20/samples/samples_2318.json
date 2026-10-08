@@ -1,0 +1,23 @@
+{
+  "sample_order": 2318,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared equation for Landau-Zener transition with interference.\n    Uses prob-driven oscillatory response with frequency detuning.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Effective frequency detuning parameter\n    detune = params[0] * (omega_safe / (omega_safe + params[1]))\n    \n    # Phase accumulated from probability-dependent transition\n    phase = detune * t * (1.0 + params[2] * (1.0 - prob))\n    \n    # Amplitude from transition probability, damped by time\n    amplitude = prob * np.exp(-params[3] * np.abs(t) * (1.0 - prob))\n    \n    # Nonlinear response combining sine and cosine terms\n    response = amplitude * (np.sin(phase) + params[4] * np.cos(phase))\n    \n    # Add small probability-dependent offset\n    offset = params[5] * prob * (1.0 - prob) * t\n    \n    return response + offset\n\n",
+  "score": -98006.11045385664,
+  "mean_nmse": 28418.00511202716,
+  "min_nmse": 4.0436092604161695,
+  "max_nmse": 127865.12794197822,
+  "median_nmse": 4978.19486015433,
+  "std_nmse": 43206.93838791476,
+  "worst2_mean_nmse": 98006.11045385664,
+  "nmse_per_test": {
+    "dataset_0": 676.9767200503851,
+    "dataset_1": 3538.165615794349,
+    "dataset_2": 18519.20778897756,
+    "dataset_3": 68147.09296573508,
+    "dataset_4": 6418.224104514312,
+    "dataset_5": 2175.20214990696,
+    "dataset_6": 127865.12794197822,
+    "dataset_7": 4.0436092604161695
+  },
+  "sample_time": 1.9276525378227234,
+  "evaluate_time": 2.2058122158050537
+}

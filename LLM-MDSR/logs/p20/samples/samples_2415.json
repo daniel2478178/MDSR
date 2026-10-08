@@ -1,0 +1,23 @@
+{
+  "sample_order": 2415,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Shared structure: prob-scaled sinc-like envelope convolved with sinusoidal modulation\n    # and exponential decay in time\n    sinc_arg = np.where(np.abs(x) < 1e-10, 1.0, np.sin(x) / np.where(np.abs(x) < 1e-10, 1.0, x))\n    envelope = params[0] * prob * sinc_arg * np.sin(params[1] * x + params[2])\n    decay = np.exp(-params[3] * t)\n    return envelope * decay + params[4] * prob + params[5] * np.sin(params[6] * omega) + params[7] * np.cos(params[8] * t)\n\n",
+  "score": -0.34417197836197516,
+  "mean_nmse": 0.23396292692389212,
+  "min_nmse": 0.14723031256586072,
+  "max_nmse": 0.3514553868030431,
+  "median_nmse": 0.20614026125672105,
+  "std_nmse": 0.06905193542415766,
+  "worst2_mean_nmse": 0.34417197836197516,
+  "nmse_per_test": {
+    "dataset_0": 0.3368885699209072,
+    "dataset_1": 0.24723352200992663,
+    "dataset_2": 0.21883299608575973,
+    "dataset_3": 0.14723031256586072,
+    "dataset_4": 0.19344752642768237,
+    "dataset_5": 0.3514553868030431,
+    "dataset_6": 0.18615141305206115,
+    "dataset_7": 0.19046368852589587
+  },
+  "sample_time": 2.393544316291809,
+  "evaluate_time": 6.506016492843628
+}

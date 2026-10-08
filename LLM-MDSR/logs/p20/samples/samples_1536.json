@@ -1,0 +1,23 @@
+{
+  "sample_order": 1536,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Parameters: \n    # params[0] - amplitude factor\n    # params[1] - generalized Rabi frequency offset  \n    # params[2] - probability exponent\n    # params[3] - damping rate\n    # params[4] - asymptotic scaling exponent\n    # params[5] - phase offset\n    # params[6] - baseline offset\n    eps = 1e-12\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Use a Rabi-like formula with generalized detuning: \n    # sin^2(Θ) / (Δ²+Ω²) type structure, but expressed via prob\n    # prob ≈ sin²(Ω_eff*t) where Ω_eff = sqrt(Ω²+Δ²)\n    \n    # Reconstruct effective coupling from prob, then apply power-law time scaling\n    argg = np.maximum(np.minimum(prob, 1-eps), eps)\n    theta = np.arcsin(np.sqrt(argg))  # 0..π/2\n    \n    # Combine time-frequency oscillations with generalized detuning\n    oscillation = np.sin(params[0] * omega_safe * t_safe + params[5]) ** 2\n    \n    # Heavy-tailed decay and probability power-law \n    envelope = np.exp(-params[3] * t_safe**params[4])\n    \n    # Probability enters both as argument and as power factor\n    y = params[0] * (prob**params[2]) * (1 + params[1]*oscillation) * envelope + params[6]\n    \n    # Ensure positive outputs if needed (uncomment if target physical quantity is positive)\n    # y = np.maximum(y, 0)\n    \n    return y\n\n",
+  "score": -0.5626980754011224,
+  "mean_nmse": 0.4740118071411754,
+  "min_nmse": 0.40236051771773956,
+  "max_nmse": 0.5738399753426866,
+  "median_nmse": 0.4560078623176842,
+  "std_nmse": 0.054941674524014515,
+  "worst2_mean_nmse": 0.5626980754011224,
+  "nmse_per_test": {
+    "dataset_0": 0.5738399753426866,
+    "dataset_1": 0.47246045407066434,
+    "dataset_2": 0.45294429793540836,
+    "dataset_3": 0.40236051771773956,
+    "dataset_4": 0.4590714266999601,
+    "dataset_5": 0.5515561754595583,
+    "dataset_6": 0.4352665650927743,
+    "dataset_7": 0.4445950448106118
+  },
+  "sample_time": 2.9058545231819153,
+  "evaluate_time": 2.5289011001586914
+}

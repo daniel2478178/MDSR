@@ -1,0 +1,23 @@
+{
+  "sample_order": 1141,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-12\n    # Physical form inspired by Landau-Zener-like transition dynamics:\n    # target = A * prob * exp(-Gamma * t) * sin(omega*t + phase) + C\n    # Simplify: keep only two amplitude/phase parameters plus decay and offset\n    angle = omega * t\n    # Main oscillatory term with prob modulation and exponential decay\n    osc = params[0] * np.sin(angle + params[1]) * prob * np.exp(-params[2] * np.abs(t))\n    # Additional contribution from prob alone (survival)\n    base = params[3] * prob\n    # Final output\n    y = osc + base + params[4]\n    # Ensure numerical stability\n    y = np.nan_to_num(y, nan=0.0, posinf=0.0, neginf=0.0)\n    return y\n\n",
+  "score": -0.6937444748838838,
+  "mean_nmse": 0.6286907118236129,
+  "min_nmse": 0.5166459507513717,
+  "max_nmse": 0.7118875015556856,
+  "median_nmse": 0.6298344996297338,
+  "std_nmse": 0.05359370666576062,
+  "worst2_mean_nmse": 0.6937444748838838,
+  "nmse_per_test": {
+    "dataset_0": 0.6220188954723166,
+    "dataset_1": 0.6331701262783612,
+    "dataset_2": 0.6264988729811065,
+    "dataset_3": 0.5166459507513717,
+    "dataset_4": 0.7118875015556856,
+    "dataset_5": 0.5979872693876113,
+    "dataset_6": 0.675601448212082,
+    "dataset_7": 0.645715629950369
+  },
+  "sample_time": 2.3268561363220215,
+  "evaluate_time": 2.092332124710083
+}

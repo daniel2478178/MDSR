@@ -1,0 +1,23 @@
+{
+  "sample_order": 317,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Use rotation angle and probability with a damped oscillation pattern\n    angle = omega * t\n    # Generalized Rabi-like formula: sin^2(Ωt) dependence scaled by prob\n    # Ω = sqrt(prob*omega^2 + params[3]^2) type effective coupling\n    omega_eff = np.sqrt(np.abs(prob * omega**2) + params[3]**2 + eps)\n    y = params[0] * prob * np.sin(omega_eff * t)**2\n    y += params[1] * prob * np.cos(omega_eff * t) * np.sin(angle)\n    y += params[2] * np.exp(-params[4] * np.abs(t)) * prob\n    return y\n\n",
+  "score": -1.3047773409731824,
+  "mean_nmse": 1.1565679860033966,
+  "min_nmse": 1.0450599995041907,
+  "max_nmse": 1.3706967125622815,
+  "median_nmse": 1.113986393919558,
+  "std_nmse": 0.09957628023219767,
+  "worst2_mean_nmse": 1.3047773409731824,
+  "nmse_per_test": {
+    "dataset_0": 1.3706967125622815,
+    "dataset_1": 1.1068275923843076,
+    "dataset_2": 1.0999490179364355,
+    "dataset_3": 1.0450599995041907,
+    "dataset_4": 1.078425986132031,
+    "dataset_5": 1.2388579693840833,
+    "dataset_6": 1.1915814146690338,
+    "dataset_7": 1.1211451954548084
+  },
+  "sample_time": 4.371209979057312,
+  "evaluate_time": 2.2233500480651855
+}

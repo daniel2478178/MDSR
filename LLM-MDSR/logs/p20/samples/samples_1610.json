@@ -1,0 +1,14 @@
+{
+  "sample_order": 1610,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Core physical structure: transition probability drives the target amplitude, \n    # with Rabi-like oscillation envelope and detuning-dependent modulation.\n    # params: \n    # params[0] - global amplitude scaling\n    # params[1] - Rabi frequency factor (proportional to omega)\n    # params[2] - phase offset\n    # params[3] - probability exponent for nonlinear dependence\n    # params[4] - decay rate constant\n    \n    # Rabi oscillation envelope with probability weighting\n    rabi_envelope = (np.sin(params[1] * omega * t + params[2]) ** 2 + eps)\n    \n    # Nonlinear probability transformation (handles saturation effects)\n    prob_transformed = np.power(np.maximum(prob, eps), params[3])\n    \n    # Time-decay factor (exponential damping)\n    decay_factor = np.exp(-np.abs(t) * params[4])\n    \n    # Combined physical model: \n    # target = amplitude * probability * Rabi envelope * decay\n    y = params[0] * prob_transformed * rabi_envelope * decay_factor\n    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.0926939845085144,
+  "evaluate_time": 1.9480681419372559
+}

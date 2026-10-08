@@ -1,0 +1,23 @@
+{
+  "sample_order": 1246,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    p = np.clip(prob, eps, 1 - eps)\n    \n    # Rabi-like oscillations: population transfer amplitude sqrt(p*(1-p))\n    rabi = params[0] * np.sqrt(p * (1 - p)) * np.sin(params[1] * angle + params[2])\n    \n    # Damping/loss term proportional to population and time\n    damping = params[3] * p * np.exp(-params[4] * np.abs(t))\n    \n    # Static offset\n    baseline = params[5]\n    \n    y = rabi + damping + baseline\n    \n    return y\n\n",
+  "score": -0.9944996240315715,
+  "mean_nmse": 0.9664898079998627,
+  "min_nmse": 0.8990767849247903,
+  "max_nmse": 0.995697830382242,
+  "median_nmse": 0.9875365435164327,
+  "std_nmse": 0.03572334420766478,
+  "worst2_mean_nmse": 0.9944996240315715,
+  "nmse_per_test": {
+    "dataset_0": 0.8990767849247903,
+    "dataset_1": 0.9612782366511495,
+    "dataset_2": 0.9875614862393968,
+    "dataset_3": 0.995697830382242,
+    "dataset_4": 0.9875116007934688,
+    "dataset_5": 0.9159642884878321,
+    "dataset_6": 0.9915268188391207,
+    "dataset_7": 0.9933014176809011
+  },
+  "sample_time": 2.5284565687179565,
+  "evaluate_time": 2.410797119140625
+}

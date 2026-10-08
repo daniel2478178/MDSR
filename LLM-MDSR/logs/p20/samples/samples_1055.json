@@ -1,0 +1,23 @@
+{
+  "sample_order": 1055,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical form: target related to Rabi oscillation and resonance envelope\n    # prob captures transition amplitude, omega*t is accumulated phase\n    angle = omega * t_safe\n    \n    # Rabi-like oscillation: sin^2(Omega*t/2) * prob\n    # Omega effective = params[0] * sqrt(prob + eps) (depends on transition amplitude)\n    Omega_eff = params[0] * np.sqrt(prob + eps)\n    \n    # Main oscillation term: square of sine with detuning corrections\n    oscillation = np.sin(Omega_eff * t_safe / 2) ** 2 * prob\n    \n    # Detuning correction from omega relative to natural frequency\n    detune = (omega_safe - params[1]) / (params[2] + eps)\n    \n    # Lorentzian resonance envelope in omega\n    resonance = 1.0 / (1.0 + detune ** 2)\n    \n    # Time decay term (finite interaction/decoherence)\n    decay = params[3] * np.exp(-t_safe * params[4]) * np.cos(angle * 0.5)\n    \n    # Combine: amplitude * oscillation * resonance + decay + offset\n    y = params[5] * oscillation * resonance + decay + params[6] * prob\n    \n    # Add small linear in t term for completeness\n    y = y + params[7] * prob * t_safe * np.cos(angle)\n    \n    return y\n\n",
+  "score": -1.6546236414172641,
+  "mean_nmse": 1.199648583417045,
+  "min_nmse": 0.7747917432799986,
+  "max_nmse": 1.6687438136233421,
+  "median_nmse": 1.139821864774802,
+  "std_nmse": 0.3806156270916572,
+  "worst2_mean_nmse": 1.6546236414172641,
+  "nmse_per_test": {
+    "dataset_0": 1.6687438136233421,
+    "dataset_1": 1.3795827377422822,
+    "dataset_2": 1.640503469211186,
+    "dataset_3": 0.8185312360132024,
+    "dataset_4": 0.9000609918073218,
+    "dataset_5": 1.592543824059801,
+    "dataset_6": 0.8224308515992249,
+    "dataset_7": 0.7747917432799986
+  },
+  "sample_time": 2.4125366806983948,
+  "evaluate_time": 2.7946248054504395
+}

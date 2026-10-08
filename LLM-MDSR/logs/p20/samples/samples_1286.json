@@ -1,0 +1,23 @@
+{
+  "sample_order": 1286,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Protect against bad inputs\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Rotation angle\n    theta = omega * t\n    \n    # Rabi-like oscillation amplitude from transition probability\n    # Standard two-level system: P = sin^2(Omega_R * t / 2)\n    # Here we invert to find effective Rabi frequency and then construct\n    # a physical observable (e.g., population difference or energy)\n    \n    # Model: target = A * cos(theta) * prob_effect + B * prob_effect^2 + C\n    # where prob_effect relates via arcsin for physical consistency\n    sqrt_prob = np.sqrt(np.maximum(prob, 0.0))\n    angle_part = np.arcsin(np.clip(sqrt_prob, 0.0, 1.0))\n    \n    # Effective interaction strength: angle_part / t (if t != 0)\n    eff_omega = angle_part / t_safe\n    \n    # Combine with external driving frequency in a resonance-like manner\n    detuning = omega_safe - params[0] * eff_omega\n    lorentzian = 1.0 / (1.0 + (detuning * t_safe / params[1])**2)\n    \n    # Main physical expression with few parameters\n    y = params[2] * prob * np.sin(theta) * lorentzian + \\\n        params[3] * np.cos(theta) * np.sin(angle_part) + \\\n        params[4] * np.exp(-t_safe / params[5])\n    \n    # Add small offset\n    y += params[6]\n    \n    return y\n\n",
+  "score": -0.6844655611220929,
+  "mean_nmse": 0.5809565249336477,
+  "min_nmse": 0.512160167614996,
+  "max_nmse": 0.7432056635454499,
+  "median_nmse": 0.5571151333083642,
+  "std_nmse": 0.07192684047531529,
+  "worst2_mean_nmse": 0.6844655611220929,
+  "nmse_per_test": {
+    "dataset_0": 0.5451341819925749,
+    "dataset_1": 0.512160167614996,
+    "dataset_2": 0.5232933285260264,
+    "dataset_3": 0.7432056635454499,
+    "dataset_4": 0.5255544278178651,
+    "dataset_5": 0.5690960846241535,
+    "dataset_6": 0.6034828866493787,
+    "dataset_7": 0.625725458698736
+  },
+  "sample_time": 4.003638446331024,
+  "evaluate_time": 4.86470627784729
+}

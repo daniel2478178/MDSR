@@ -1,0 +1,23 @@
+{
+  "sample_order": 2708,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Physical law: Rabi oscillation with detuning-dependent amplitude and frequency\n    # target = A * prob * sin(sqrt(delta^2 + omega_R^2) * t) / sqrt(delta^2 + omega_R^2)\n    # where omega_R is Rabi frequency proportional to prob, delta is detuning\n    # Simplify to: params[0] * sin(params[1] * t * sqrt(1 + (params[2] * (prob - 0.5))^2)) * exp(-params[3] * t) / (1 + (params[4] * (omega - params[5]))^2)\n    delta_eff = params[1] * np.sqrt(1.0 + params[2] * (prob - 0.5)**2)\n    lorentzian = 1.0 / (1.0 + params[3] * (omega - params[4])**2)\n    return params[0] * np.sin(delta_eff * t) * np.exp(-params[5] * t) * lorentzian * prob\n\n",
+  "score": -12.989727411817118,
+  "mean_nmse": 9.432585619965248,
+  "min_nmse": 5.120128225298003,
+  "max_nmse": 13.020284003484958,
+  "median_nmse": 10.157807256649422,
+  "std_nmse": 3.2955778518546897,
+  "worst2_mean_nmse": 12.989727411817118,
+  "nmse_per_test": {
+    "dataset_0": 5.816561164619785,
+    "dataset_1": 12.648401237899536,
+    "dataset_2": 13.020284003484958,
+    "dataset_3": 12.959170820149277,
+    "dataset_4": 11.513098465491902,
+    "dataset_5": 5.580524994971595,
+    "dataset_6": 8.802516047806941,
+    "dataset_7": 5.120128225298003
+  },
+  "sample_time": 2.019631862640381,
+  "evaluate_time": 3.2767913341522217
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 2568,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Simplify to a Rabi-type oscillation modulated by detuning, with prob as amplitude\n    # Use fewer params: p0 scales, p1 is frequency, p2 is phase, p3 is damping\n    # However, since prob is independent, use it directly; omega and t enter through x\n    # This captures the physical Rabi model: P ~ (Omega/Omega_eff)^2 * sin^2(Omega_eff * t / 2)\n    # But we need to adapt: use prob as the driving strength ratio and omega as input\n    # Try: target = p0 * prob * sin(p1 * omega * t + p2) * exp(-p3 * t) + p4 * prob\n    # Use only 5 params: p0, p1, p2, p3, p4\n    # Actually, we can include omega as a frequency factor: sin(p1 * omega * t)\n    # and a detuning term: cos(p5 * omega) but keep it simple.\n    # Let's design: target = p0 * (prob/(1 + p1 * omega**2)) * sin(p2 * omega * t) * exp(-p3 * t) + p4 * prob * (1 - prob)\n    # that's too many. Since MAX=10, but prefer ≤4 params. Use 4 params.\n    # Simpler: target = p0 * prob * sin(p1 * x) * exp(-p2 * t) + p3 * prob * (1 - prob)\n    # But need to include omega explicitly. Let's use: target = p0 * prob * sin(p1 * omega * t) * exp(-p2 * t) + p3 * prob * cos(p4 * omega)  # that's 5\n    # Actually, we can use 4: p0, p1, p2, p3\n    # target = p0 * prob * sin(p1 * x) * exp(-p2 * t) + p3 * (1 - 2*prob)  # a baseline\n    # But maybe the law is target = p0 * prob * (1 - prob) * sin(p1 * x) / (1 + p2 * x) + p3\n    # Given we have no data, we must use a common simple form. Let's pick:\n    # target = p0 * prob * np.sin(p1 * x + p2) * np.exp(-p3 * t)\n    # That's 4 params and matches Rabi with envelope.\n    # But the original v0 had many terms. We'll reduce.\n    return params[0] * prob * np.sin(params[1] * x + params[2]) * np.exp(-params[3] * t)\n\n",
+  "score": -1.5427435753365222,
+  "mean_nmse": 1.1164157759771822,
+  "min_nmse": 0.7194140912218024,
+  "max_nmse": 1.5861209997023906,
+  "median_nmse": 1.0339313525657383,
+  "std_nmse": 0.2909866158393871,
+  "worst2_mean_nmse": 1.5427435753365222,
+  "nmse_per_test": {
+    "dataset_0": 1.5861209997023906,
+    "dataset_1": 1.2653975737290843,
+    "dataset_2": 1.1333004478910271,
+    "dataset_3": 0.7194140912218024,
+    "dataset_4": 0.9345622572404496,
+    "dataset_5": 1.499366150970654,
+    "dataset_6": 0.884406267517031,
+    "dataset_7": 0.9087584195450181
+  },
+  "sample_time": 2.9580296874046326,
+  "evaluate_time": 3.713792562484741
+}

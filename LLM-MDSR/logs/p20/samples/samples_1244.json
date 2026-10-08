@@ -1,0 +1,23 @@
+{
+  "sample_order": 1244,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Safe computations with small epsilon to avoid division by zero\n    eps = 1e-10\n    angle = omega * t\n    prob_safe = np.clip(prob, eps, 1 - eps)\n    \n    # Landau-Zener-like transition physics: prob = exp(-2*pi*Omega^2/(2*v))\n    # Invert to infer detuning or coupling strength from prob\n    # General form: target ~ sqrt(-log(1-prob)) * trigonometric(angle)\n    \n    # Main term: probability drives amplitude, oscillatory in interaction time\n    ln_term = np.log(1 / (1 - prob_safe) + eps)\n    \n    # Physical: transition amplitude related to sqrt of -ln(1-p)\n    amplitude = np.sqrt(np.maximum(ln_term, 0))\n    \n    # Oscillation between driving frequency and time, with phase from params[0]\n    osc = np.sin(angle + params[0]) + params[1] * np.cos(angle * params[2])\n    \n    # Decay with time, probability-modulated\n    decay = np.exp(-t * params[3] / (1 + prob_safe))\n    \n    # Combine: amplitude times oscillatory envelope, plus weak damping\n    y = params[4] * amplitude * osc * decay + params[5] * prob_safe * np.cos(angle * 0.5) + params[6] * t / (1 + omega * t)\n    \n    return y\n\n",
+  "score": -1.0341559606321928,
+  "mean_nmse": 0.9928034806066179,
+  "min_nmse": 0.9436030286775433,
+  "max_nmse": 1.0654100100249626,
+  "median_nmse": 0.9943499157237796,
+  "std_nmse": 0.03360911642131572,
+  "worst2_mean_nmse": 1.0341559606321928,
+  "nmse_per_test": {
+    "dataset_0": 0.9436030286775433,
+    "dataset_1": 1.0654100100249626,
+    "dataset_2": 0.9994828817478218,
+    "dataset_3": 1.002901911239423,
+    "dataset_4": 0.9809713540944367,
+    "dataset_5": 0.9612105046523056,
+    "dataset_6": 0.9892169496997373,
+    "dataset_7": 0.9996312047167132
+  },
+  "sample_time": 2.5284565687179565,
+  "evaluate_time": 4.840870141983032
+}

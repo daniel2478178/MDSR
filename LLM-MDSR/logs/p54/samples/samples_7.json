@@ -1,0 +1,23 @@
+{
+  "sample_order": 7,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Use a sinusoidal model with damping to capture a broader range of physical behaviors\n    # while maintaining the simplest possible shared structure.\n    # Parameters: [amplitude, damping, frequency, phase, offset]\n    y = params[0] * np.exp(-params[1] * t) * np.sin(params[2] * t + params[3]) + params[4]\n    return y\n\n",
+  "score": -0.00035861573221764194,
+  "mean_nmse": 9.217101643384367e-05,
+  "min_nmse": 9.613375519611715e-09,
+  "max_nmse": 0.0006886360621265249,
+  "median_nmse": 5.120963342658917e-07,
+  "std_nmse": 0.0002256701243874051,
+  "worst2_mean_nmse": 0.00035861573221764194,
+  "nmse_per_test": {
+    "dataset_0": 1.8491875538052448e-05,
+    "dataset_1": 4.260586234898885e-07,
+    "dataset_2": 5.981340450418949e-07,
+    "dataset_3": 3.8263623233875726e-07,
+    "dataset_4": 2.859540230875901e-05,
+    "dataset_5": 0.0006886360621265249,
+    "dataset_6": 9.613375519611715e-09,
+    "dataset_7": 2.2834922102292729e-07
+  },
+  "sample_time": 1.1830874681472778,
+  "evaluate_time": 2.998779535293579
+}

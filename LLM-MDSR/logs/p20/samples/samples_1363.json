@@ -1,0 +1,23 @@
+{
+  "sample_order": 1363,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    p = np.clip(prob, eps, 1 - eps)\n    w = np.abs(omega) + eps\n    t_safe = np.abs(t) + eps\n    \n    # Generalized Rabi formula: coherent transition probability modulated by time and detuning\n    rabi_rate = params[0] * w + params[1]\n    generalized_rabi = np.sqrt(rabi_rate**2 + (params[2] * w + params[3])**2)\n    \n    # Main physical term: Landau-Zener-Stückelberg interference pattern\n    main_term = p * (np.sin(0.5 * generalized_rabi * t_safe))**2 / generalized_rabi**2\n    \n    # Probability-dependent phase accumulation / geometric phase correction\n    phase_factor = np.cos(params[4] * w * t_safe + params[5] * (1 - 2*p))\n    \n    # Detuning-dependent amplitude envelope\n    envelope = np.exp(-params[6] * t_safe * (w - params[7])**2)\n    \n    y = params[8] * main_term * phase_factor * envelope + params[9] * p * np.sin(w * t_safe) / np.sqrt(w)\n    return y\n\n",
+  "score": -2.3787574699674616,
+  "mean_nmse": 1.519822105997494,
+  "min_nmse": 1.0455826437466813,
+  "max_nmse": 2.579236130612456,
+  "median_nmse": 1.102604068913334,
+  "std_nmse": 0.5813095645632678,
+  "worst2_mean_nmse": 2.3787574699674616,
+  "nmse_per_test": {
+    "dataset_0": 2.1782788093224674,
+    "dataset_1": 1.0969891676869514,
+    "dataset_2": 1.9713351014635943,
+    "dataset_3": 1.0455826437466813,
+    "dataset_4": 1.1082189701397167,
+    "dataset_5": 2.579236130612456,
+    "dataset_6": 1.0839005289930432,
+    "dataset_7": 1.0950354960150424
+  },
+  "sample_time": 3.4481696486473083,
+  "evaluate_time": 3.108520030975342
+}

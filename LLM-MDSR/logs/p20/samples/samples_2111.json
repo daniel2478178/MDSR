@@ -1,0 +1,23 @@
+{
+  "sample_order": 2111,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Physical model: target = amplitude * sin^2(omega*t/2) * prob + offset\n    # where amplitude and offset are dataset-specific parameters\n    rabbit_amplitude = params[0] * prob\n    oscillation = np.sin(omega_safe * t / 2.0) ** 2\n    frequency_factor = 1.0 + params[1] * omega_safe\n    \n    result = rabbit_amplitude * oscillation * frequency_factor + params[2] * t + params[3]\n    \n    return result\n\n",
+  "score": -0.5988205329059477,
+  "mean_nmse": 0.5120122430687094,
+  "min_nmse": 0.43872911918101326,
+  "max_nmse": 0.6051444225074906,
+  "median_nmse": 0.5006431483826117,
+  "std_nmse": 0.05616818962457679,
+  "worst2_mean_nmse": 0.5988205329059477,
+  "nmse_per_test": {
+    "dataset_0": 0.5924966433044049,
+    "dataset_1": 0.518693539017969,
+    "dataset_2": 0.4746987641443972,
+    "dataset_3": 0.5201857775120532,
+    "dataset_4": 0.43872911918101326,
+    "dataset_5": 0.6051444225074906,
+    "dataset_6": 0.4635569211350926,
+    "dataset_7": 0.48259275774725446
+  },
+  "sample_time": 2.140749514102936,
+  "evaluate_time": 2.06447696685791
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 1092,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Protect against singular behavior near t=0 or omega=0.\n    # For small angles, use the series / limiting behavior:\n    # y ≈ params[0] * prob * (1 - cos(theta))/theta^2  where theta=omega*t\n    theta = omega * t\n    theta_safe = np.where(np.abs(theta) < eps, eps, theta)\n    # This combination [1-cos(theta)]/theta^2 approaches 0.5 for theta->0\n    sinc_sq = np.where(np.abs(theta) < eps, 0.5, (1 - np.cos(theta)) / (theta_safe**2))\n    # Another common quantity: sin(theta)/theta approaches 1 for small theta\n    sinc = np.where(np.abs(theta) < eps, 1.0, np.sin(theta) / theta_safe)\n    \n    # Proposed shared physical law:\n    # target = A * prob * (1-cos(theta))/theta^2  (main term) \n    #         + B * prob * sin(theta)/theta        (linear correction)\n    #         + C * t * omega * sqrt(prob)         (cross term)  \n    #         + D\n    # where A, B, C, D are dataset parameters.\n    #\n    # Optional more flexible but still structured form, using params[0]..params[3]\n    y = params[0] * prob * sinc_sq + params[1] * prob * sinc + params[2] * prob * np.sqrt(np.abs(t) * np.abs(omega)) + params[3]\n    return y\n\n",
+  "score": -0.7492661257467382,
+  "mean_nmse": 0.6692456852739007,
+  "min_nmse": 0.5501012229529844,
+  "max_nmse": 0.7639381204402294,
+  "median_nmse": 0.6761528623936496,
+  "std_nmse": 0.06217923468721564,
+  "worst2_mean_nmse": 0.7492661257467382,
+  "nmse_per_test": {
+    "dataset_0": 0.7639381204402294,
+    "dataset_1": 0.6903124720382563,
+    "dataset_2": 0.6805986125568911,
+    "dataset_3": 0.5501012229529844,
+    "dataset_4": 0.671707112230408,
+    "dataset_5": 0.7345941310532471,
+    "dataset_6": 0.6362406493253779,
+    "dataset_7": 0.6264731615938121
+  },
+  "sample_time": 2.827565371990204,
+  "evaluate_time": 1.9966785907745361
+}

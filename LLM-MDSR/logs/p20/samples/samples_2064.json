@@ -1,0 +1,23 @@
+{
+  "sample_order": 2064,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    p4 = params[4]\n    p5 = params[5]\n    p6 = params[6]\n    p7 = params[7]\n    \n    # Shared physical structure: damped harmonic-like response modulated by prob\n    # target = p0 * prob * exp(-|t|/p1) * cos(p2 * omega * t + p3) + p4 * sin(p5 * omega * t) * prob + p6 * t + p7\n    return p0 * prob * np.exp(-np.abs(t) / (p1 + 1e-10)) * np.cos(p2 * omega * t + p3) + p4 * prob * np.sin(p5 * omega * t) + p6 * t + p7\n\n",
+  "score": -0.9400513641396094,
+  "mean_nmse": 0.5071405914365521,
+  "min_nmse": 0.17771635486335627,
+  "max_nmse": 1.3246033327318483,
+  "median_nmse": 0.4644793721319864,
+  "std_nmse": 0.33607507481753035,
+  "worst2_mean_nmse": 0.9400513641396094,
+  "nmse_per_test": {
+    "dataset_0": 0.5220936873336375,
+    "dataset_1": 0.5554993955473706,
+    "dataset_2": 1.3246033327318483,
+    "dataset_3": 0.17771635486335627,
+    "dataset_4": 0.40837198380148026,
+    "dataset_5": 0.5205867604624926,
+    "dataset_6": 0.22066284807974287,
+    "dataset_7": 0.32759036867248803
+  },
+  "sample_time": 2.9941378235816956,
+  "evaluate_time": 4.7446839809417725
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 2637,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Shared structure: damped Rabi oscillation with explicit detuning and time dependence\n    x = omega * t\n    # Physical form: P = p0 * prob * sin^2(delta * x) * exp(-gamma * t) + offset\n    # Use only 4 essential params: amplitude, oscillation scale, damping, offset\n    amplitude = params[0]\n    delta = params[1]\n    gamma = params[2]\n    offset = params[3]\n    # Standard Rabi formula with sin^2(pi * detuning * x) pattern\n    return amplitude * prob * np.sin(delta * x)**2 * np.exp(-gamma * t) + offset\n\n",
+  "score": -0.88193064246149,
+  "mean_nmse": 0.779800969530997,
+  "min_nmse": 0.7210072565734995,
+  "max_nmse": 0.8821373886355975,
+  "median_nmse": 0.7504846626640966,
+  "std_nmse": 0.06018265874150985,
+  "worst2_mean_nmse": 0.88193064246149,
+  "nmse_per_test": {
+    "dataset_0": 0.766141723919319,
+    "dataset_1": 0.749343286139347,
+    "dataset_2": 0.737084879364637,
+    "dataset_3": 0.8817238962873825,
+    "dataset_4": 0.7210072565734995,
+    "dataset_5": 0.7502708584166997,
+    "dataset_6": 0.8821373886355975,
+    "dataset_7": 0.7506984669114937
+  },
+  "sample_time": 2.163284480571747,
+  "evaluate_time": 2.1613786220550537
+}

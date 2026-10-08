@@ -1,0 +1,23 @@
+{
+  "sample_order": 4597,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"Shared equation with common symbolic structure for all datasets.\"\"\"\n    x = omega * t\n    # Simplify: target is a damped sinusoidal response scaled by transition probability\n    # and a Rabi-like frequency term\n    term1 = params[0] * np.sin(x * params[1]) * np.exp(-params[2] * t)\n    term2 = params[3] * (1 - 2 * prob) * np.cos(x * params[4])\n    return term1 + term2\n\n",
+  "score": -1.7600113946373739,
+  "mean_nmse": 0.951942961479864,
+  "min_nmse": 0.4222801340313216,
+  "max_nmse": 2.4989385646160334,
+  "median_nmse": 0.8019853905151516,
+  "std_nmse": 0.6298001364643452,
+  "worst2_mean_nmse": 1.7600113946373739,
+  "nmse_per_test": {
+    "dataset_0": 1.0210842246587144,
+    "dataset_1": 1.0043822767021535,
+    "dataset_2": 2.4989385646160334,
+    "dataset_3": 0.4222801340313216,
+    "dataset_4": 0.5995885043281497,
+    "dataset_5": 1.0171730881854475,
+    "dataset_6": 0.5452355398749452,
+    "dataset_7": 0.5068613594421474
+  },
+  "sample_time": 1.704361915588379,
+  "evaluate_time": 2.375976800918579
+}

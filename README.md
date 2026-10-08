@@ -11,11 +11,11 @@ pinned as Git submodules; `LLM-MDSR/` is a regular directory.
 
 ## Components
 
-| Component | Status | Purpose |
-| --- | --- | --- |
-| [`MSSR`](MSSR/) | Supported | Modular data preparation, PySR discovery, shared-formula evaluation, robustness analysis, and reporting. |
-| [`LLM-MDSR`](LLM-MDSR/README.md) | Experimental | LLM-generated equation functions, multi-dataset fitting, checkpoint recovery, and noise/distribution-shift analysis. |
-| [`Multi-stage-Selection-Symbolic-Regression`](Multi-stage-Selection-Symbolic-Regression/) | Legacy/reference | Original MSSR experiments and datasets. Its current script contains Windows-specific paths and is not launched by the root runner. |
+| Component |  Purpose |
+| --- | --- |
+| [`MSSR`](MSSR/) | Modular data preparation, PySR discovery, shared-formula evaluation, robustness analysis, and reporting. |
+| [`LLM-MDSR`](LLM-MDSR/README.md) | LLM-generated equation functions, multi-dataset fitting, checkpoint recovery, and noise/distribution-shift analysis. |
+| [`Multi-stage-Selection-Symbolic-Regression`](Multi-stage-Selection-Symbolic-Regression/) | Original MSSR experiments and datasets. Its current script contains Windows-specific paths and is not launched by the root runner. |
 
 **LLM-MDSR is adapted from
 [LLM-SR](https://github.com/deep-symbolic-mathematics/LLM-SR)**, the official

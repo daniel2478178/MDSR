@@ -1,0 +1,23 @@
+{
+  "sample_order": 1579,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    p = np.maximum(prob, eps)\n    \n    # Physical model: Landau-Zener-like transition with Rabi oscillation and detuning\n    # target = A * p * (sin^2(omega*t) / (1 + (delta^2))) + B*t*cos(omega*t)\n    # where delta ~ (omega - omega0) and envelope decays with time\n    \n    sin_ot = np.sin(omega * t)\n    cos_ot = np.cos(omega * t)\n    \n    # Resonance detuning factor (Lorentzian shape)\n    detuning = 1.0 / (1.0 + params[0] * (omega - params[1])**2)\n    \n    # Rabi oscillation with phase and damping\n    rabi = np.sin(params[2] * omega * t + params[3])**2\n    \n    # Time-dependent damping envelope\n    damp = np.exp(-params[4] * np.abs(t))\n    \n    # Probability power-law modulation\n    p_power = np.power(p, params[5])\n    \n    # Primary term: amplitude * probability^alpha * resonant Rabi * Lorentzian * damping\n    primary = params[6] * p_power * rabi * detuning * damp\n    \n    # Secondary coherence term: oscillatory interference with linear time dependence\n    secondary = params[7] * p * np.cos(params[8] * omega * t) * np.sin(params[2] * omega * t)\n    \n    # Combined prediction (small offset for numerical stability)\n    y = primary + secondary + params[9]\n    \n    return y\n\n",
+  "score": -0.46518590636819834,
+  "mean_nmse": 0.36370314199439896,
+  "min_nmse": 0.2861746717698011,
+  "max_nmse": 0.47607540583625524,
+  "median_nmse": 0.33926666402867367,
+  "std_nmse": 0.07076576915271897,
+  "worst2_mean_nmse": 0.46518590636819834,
+  "nmse_per_test": {
+    "dataset_0": 0.47607540583625524,
+    "dataset_1": 0.34417288487940345,
+    "dataset_2": 0.3035067759843804,
+    "dataset_3": 0.4196170304880589,
+    "dataset_4": 0.3343604431779439,
+    "dataset_5": 0.4542964069001414,
+    "dataset_6": 0.2861746717698011,
+    "dataset_7": 0.29142151691920737
+  },
+  "sample_time": 3.3861191272735596,
+  "evaluate_time": 8.59072732925415
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 1645,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared equation: target = params[0] * prob * (1/(params[1] + (omega - params[2])**2)) * (1 - np.exp(-params[3] * t)) * np.cos(params[4] * t) + params[5] * np.sin(params[6] * t) * omega + params[7]\n    \"\"\"\n    # Lorentzian-like resonance term in omega\n    resonance_profile = 1.0 / (params[1] + (omega - params[2])**2)\n    # Time dynamics: saturating onset with damped oscillation\n    time_factor = (1.0 - np.exp(-params[3] * t)) * np.cos(params[4] * t)\n    # Non-linear coupling between prob and the dynamics\n    coupling = prob * np.power(1.0 - prob + 1e-10, params[5])\n    # Main term\n    main = params[0] * coupling * resonance_profile * time_factor\n    # Small sinusoidal correction in t\n    correction = params[6] * np.sin(params[7] * t) * omega\n    return main + correction + params[8]\n\n",
+  "score": -545.7939269311348,
+  "mean_nmse": 215.49421523754953,
+  "min_nmse": 12.909783922153652,
+  "max_nmse": 685.6116117171268,
+  "median_nmse": 94.91322041225816,
+  "std_nmse": 224.1097323981318,
+  "worst2_mean_nmse": 545.7939269311348,
+  "nmse_per_test": {
+    "dataset_0": 12.909783922153652,
+    "dataset_1": 60.55858258384166,
+    "dataset_2": 336.5463099147105,
+    "dataset_3": 685.6116117171268,
+    "dataset_4": 58.44932243048286,
+    "dataset_5": 34.63401094626313,
+    "dataset_6": 129.26785824067466,
+    "dataset_7": 405.9762421451428
+  },
+  "sample_time": 1.7628520727157593,
+  "evaluate_time": 1.9911162853240967
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 1142,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Avoid singularities\n    eps = 1e-10\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical model: Landau-Zener-type transition with Rabi oscillations\n    # target amplitude ∝ prob^(params[2]) * sin²(params[0]*omega*t/2)\n    # simplified using prob directly and interaction time\n    \n    # params[0]: coupling strength scaling\n    # params[1]: frequency detuning parameter\n    # params[2]: power law exponent for prob\n    # params[3]: phase offset / baseline\n    \n    angle = params[0] * omega * t + params[1]\n    y = params[2] * prob * np.sin(angle)**2 + params[3] * prob\n    \n    # Ensure finite output for all realistic inputs\n    y = np.where(np.isfinite(y), y, params[3] * prob + params[2] * prob)\n    \n    return y\n\n",
+  "score": -2.001003287080546,
+  "mean_nmse": 1.7598606575713354,
+  "min_nmse": 1.1318794204102796,
+  "max_nmse": 2.063986827545354,
+  "median_nmse": 1.8300779099679483,
+  "std_nmse": 0.26573162737077194,
+  "worst2_mean_nmse": 2.001003287080546,
+  "nmse_per_test": {
+    "dataset_0": 2.063986827545354,
+    "dataset_1": 1.8041136188297806,
+    "dataset_2": 1.8560422011061157,
+    "dataset_3": 1.1318794204102796,
+    "dataset_4": 1.938019746615738,
+    "dataset_5": 1.9108052702851097,
+    "dataset_6": 1.7162362166898155,
+    "dataset_7": 1.65780195908849
+  },
+  "sample_time": 2.3268561363220215,
+  "evaluate_time": 2.984142541885376
+}

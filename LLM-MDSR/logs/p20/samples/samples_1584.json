@@ -1,0 +1,14 @@
+{
+  "sample_order": 1584,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Simplify: use Landau-Zener-like transition probability formula    # target = C * prob * sin(omega*t) / (1 + gamma^2), but with nonlinear prob dependence    # Frequency and time enter via an oscillatory detuning factor    \n    # Use prob directly with a rational function of (omega*t)    x = omega_safe * t_safe    # Angle-modulated by prob via sine    sin_term = np.sin(params[0] * x + params[1] * prob)    cos_term = np.cos(params[2] * x)    \n    # Envelope: prob drives amplitude, with saturation    p_scaled = prob / (1.0 + params[3] * (1.0 - prob))    \n    # For small prob, amplitude scales linearly; for high prob, saturates    amplitude = params[4] * p_scaled    \n    # Time decay (damping)    decay = np.exp(-params[5] * t_safe)    \n    # Frequency cutoff: suppress high omega    freq_factor = 1.0 / (1.0 + params[6] * omega_safe**2)    \n    # Combine: target = amplitude * sin_term * cos_term * decay * freq_factor + offset    y = amplitude * sin_term * cos_term * decay * freq_factor + params[7] * prob * np.cos(omega * t)    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.0926199555397034,
+  "evaluate_time": 1.9491755962371826
+}

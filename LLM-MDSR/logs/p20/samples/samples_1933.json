@@ -1,0 +1,23 @@
+{
+  "sample_order": 1933,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    theta = params[0] * omega * t + params[1]\n    cos_theta = np.cos(theta)\n    sin_theta = np.sin(theta)\n    cot_term = params[2] * cos_theta * sin_theta\n    linear_term = params[3] * prob * omega\n    exp_decay = params[4] * np.exp(-params[5] * np.abs(t))\n    osc_correction = params[6] * np.sin(omega * t + params[7]) / (omega + eps)\n    base = prob * (params[8] * cos_theta**2 + params[9] * sin_theta**2)\n    return base + cot_term + linear_term + exp_decay + osc_correction\n\n",
+  "score": -0.48348648961673796,
+  "mean_nmse": 0.2994517259623155,
+  "min_nmse": 0.10831047128312377,
+  "max_nmse": 0.5103813902096427,
+  "median_nmse": 0.2863712323535355,
+  "std_nmse": 0.12576447880444155,
+  "worst2_mean_nmse": 0.48348648961673796,
+  "nmse_per_test": {
+    "dataset_0": 0.5103813902096427,
+    "dataset_1": 0.3338445599405111,
+    "dataset_2": 0.31817347087891223,
+    "dataset_3": 0.10831047128312377,
+    "dataset_4": 0.2545689938281588,
+    "dataset_5": 0.45659158902383323,
+    "dataset_6": 0.21475927226934488,
+    "dataset_7": 0.1989840602649976
+  },
+  "sample_time": 1.652539074420929,
+  "evaluate_time": 4.802920579910278
+}

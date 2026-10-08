@@ -1,0 +1,23 @@
+{
+  "sample_order": 307,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    # Since prob is a transition probability, likely related to sin^2 of half-angle\n    # target ~ amplitude * sin^2(omega*t/2) * prob, with additional decay terms\n    half_angle = angle / 2.0\n    sin_half_sq = np.sin(half_angle) ** 2\n    # Exponential decay over time\n    decay = np.exp(-np.abs(t) * params[2])\n    # Combine: Rabi-like oscillation amplitude times probability\n    y = params[0] * sin_half_sq * prob * decay + params[1] * prob\n    return y\n\n",
+  "score": -1.3126560927722801,
+  "mean_nmse": 1.162193150060921,
+  "min_nmse": 0.9095425506214398,
+  "max_nmse": 1.33882028341957,
+  "median_nmse": 1.189641849848619,
+  "std_nmse": 0.13531120738332864,
+  "worst2_mean_nmse": 1.3126560927722801,
+  "nmse_per_test": {
+    "dataset_0": 1.33882028341957,
+    "dataset_1": 1.2864919021249903,
+    "dataset_2": 1.2591367894986625,
+    "dataset_3": 0.9095425506214398,
+    "dataset_4": 1.1393297501315018,
+    "dataset_5": 1.239953949565736,
+    "dataset_6": 1.063256450790555,
+    "dataset_7": 1.0610135243349132
+  },
+  "sample_time": 2.9266823530197144,
+  "evaluate_time": 2.0214803218841553
+}

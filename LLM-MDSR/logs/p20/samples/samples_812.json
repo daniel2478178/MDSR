@@ -1,0 +1,23 @@
+{
+  "sample_order": 812,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Guard against division by zero / log of zero\n    eps = 1e-12\n    omega_safe = np.maximum(np.abs(omega), eps)\n    prob_safe = np.clip(prob, eps, 1 - eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Physical model: target = A * prob * sin^2(ωt/2) / (ωt)^2  \n    #             + B * prob * log(ωt+1)/ (ωt) + C\n    # This reflects Rabi oscillations with decay-like corrections\n    phase = omega * t\n    phase_safe = phase + eps  # keep sign for oscillation\n    \n    # Main Rabi-like term: amplitude * prob * sinc^2(phase/2) \n    sinc_sq = np.where(np.abs(phase) > eps,\n                       (np.sin(0.5 * phase) / (0.5 * phase)) ** 2,\n                       np.ones_like(phase))\n    \n    main_term = params[0] * prob * sinc_sq\n    \n    # Logarithmic correction: L * prob * log(1 + |ωt|) / |ωt|\n    log_corr = np.log(1 + np.abs(phase)) / np.maximum(np.abs(phase), eps)\n    log_term = params[1] * prob * log_corr\n    \n    # Exponential decay in time with parameter 2\n    decay = np.exp(-params[2] * t_safe)\n    \n    # Linear-in-prob small term\n    small_term = params[3] * prob * np.sin(phase) * decay\n    \n    # Offset and final\n    y = main_term * decay + log_term + small_term + params[4]\n    \n    return y\n\n",
+  "score": -0.69740655720004,
+  "mean_nmse": 0.6391111764970784,
+  "min_nmse": 0.499216188542515,
+  "max_nmse": 0.7023285128108746,
+  "median_nmse": 0.6604001860565559,
+  "std_nmse": 0.061887111554761134,
+  "worst2_mean_nmse": 0.69740655720004,
+  "nmse_per_test": {
+    "dataset_0": 0.7023285128108746,
+    "dataset_1": 0.6924846015892053,
+    "dataset_2": 0.6740545874293351,
+    "dataset_3": 0.499216188542515,
+    "dataset_4": 0.6467457846837767,
+    "dataset_5": 0.675486585472106,
+    "dataset_6": 0.6052269372415815,
+    "dataset_7": 0.6173462142072326
+  },
+  "sample_time": 2.643596887588501,
+  "evaluate_time": 2.194999933242798
+}

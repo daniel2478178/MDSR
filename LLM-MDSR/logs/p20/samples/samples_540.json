@@ -1,0 +1,14 @@
+{
+  "sample_order": 540,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Extract parameters\n    a0, a1, a2, a3, a4, a5, a6, a7 = params\n    \n    # Compute physical quantities\n    angle = omega * t\n    prob_safe = np.clip(prob, 1e-10, 1 - 1e-10)\n    \n    # Physical model: Landau-Zener-like transition probability with oscillatory corrections\n    # target = a0 * (omega*t*prob)^(1/3) + a1 * sin^2(angle) * prob + a2 * ... \n    y1 = a0 * np.power(angle * prob_safe, 1/3)\n    y2 = a1 * np.sin(angle)**2 * prob_safe\n    y3 = a2 * np.cos(angle) * prob_safe * np.abs(t)\n    y4 = a3 * np.sqrt(prob_safe) * np.sin(angle/2)\n    y5 = a4 * np.exp(-a5 * np.abs(t)) * prob_safe\n    y = y1 + y2 + y3 + y4 + y5 + a6\n    \n    # Use a7 to control amplitude scaling if needed\n    y = y * (1 + a7 * prob_safe * np.sin(angle))\n    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.3195728063583374,
+  "evaluate_time": 1.9595584869384766
+}

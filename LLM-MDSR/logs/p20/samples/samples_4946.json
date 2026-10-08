@@ -1,0 +1,23 @@
+{
+  "sample_order": 4946,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical law: target = A * (1 - prob) * exp(-t/tau) * sin^2(omega*t/2) + B * sqrt(prob) * cos(omega*t)\n    # This represents a driven two-level system with damping\n    amp = params[0]\n    tau = params[1]\n    phase = params[2]\n    bias = params[3]\n    \n    # sin^2(omega*t/2) = (1 - cos(omega*t))/2\n    rabi_factor = np.sin(omega * t / 2) ** 2\n    \n    # Main physical response\n    y = amp * (1 - prob) * np.exp(-t / tau) * rabi_factor\n    y += bias * np.sqrt(prob) * np.cos(phase + omega * t)\n    \n    return y\n\n",
+  "score": -6.821907464495291,
+  "mean_nmse": 4.286161338401875,
+  "min_nmse": 2.8709198107753546,
+  "max_nmse": 9.033605152577087,
+  "median_nmse": 3.7266812149945934,
+  "std_nmse": 1.8970801274421951,
+  "worst2_mean_nmse": 6.821907464495291,
+  "nmse_per_test": {
+    "dataset_0": 4.3548720654668855,
+    "dataset_1": 3.0276892012628425,
+    "dataset_2": 2.8709198107753546,
+    "dataset_3": 9.033605152577087,
+    "dataset_4": 2.938632270730149,
+    "dataset_5": 4.610209776413495,
+    "dataset_6": 3.4870758625117078,
+    "dataset_7": 3.966286567477479
+  },
+  "sample_time": 2.5015528202056885,
+  "evaluate_time": 2.112196683883667
+}

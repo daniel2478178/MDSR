@@ -1,0 +1,23 @@
+{
+  "sample_order": 967,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Physical model: transition probability resembles a Rabi-like oscillation\n    # combined with time and frequency dependence. Use minimal parameters.\n    angle = omega * t\n    # Avoid singularities\n    denom = 1.0 + (params[0] * prob * t) ** 2\n    # Core expression: product of sin(angle) and prob, scaled by polynomial in t and prob\n    core = (np.sin(angle) * prob) / denom\n    # Add frequency-modulated term with decay\n    decay = np.exp(-params[1] * np.abs(t))\n    y = params[2] * core + params[3] * prob * decay * np.cos(angle) + params[4] * prob\n    return y\n\n",
+  "score": -2.7269550523987784,
+  "mean_nmse": 1.8762443680232643,
+  "min_nmse": 0.9933826226742266,
+  "max_nmse": 2.755303674762903,
+  "median_nmse": 1.8117518846025122,
+  "std_nmse": 0.6029198917362703,
+  "worst2_mean_nmse": 2.7269550523987784,
+  "nmse_per_test": {
+    "dataset_0": 2.755303674762903,
+    "dataset_1": 2.19692489350256,
+    "dataset_2": 1.9822910268966751,
+    "dataset_3": 0.9933826226742266,
+    "dataset_4": 1.6412127423083491,
+    "dataset_5": 2.698606430034654,
+    "dataset_6": 1.371395006275391,
+    "dataset_7": 1.3708385477313556
+  },
+  "sample_time": 2.2661746740341187,
+  "evaluate_time": 2.5265953540802
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 868,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target = A * prob * sin(omega*t) + B * prob * cos(omega*t) + C * prob * t + D\n    # This resembles Rabi oscillation amplitude or related phenomena where the\n    # transition probability modulates oscillation terms.\n    eps = 1e-12\n    theta = omega * t\n    # Use only physically-motivated terms, with 4 parameters\n    term1 = params[0] * np.sin(theta) * prob\n    term2 = params[1] * np.cos(theta) * prob\n    term3 = params[2] * prob * t\n    y = term1 + term2 + term3 + params[3]\n    return y\n\n",
+  "score": -0.5901308890583886,
+  "mean_nmse": 0.525496415382752,
+  "min_nmse": 0.4218141760582399,
+  "max_nmse": 0.6031112264604379,
+  "median_nmse": 0.5296240646870525,
+  "std_nmse": 0.05030025919010491,
+  "worst2_mean_nmse": 0.5901308890583886,
+  "nmse_per_test": {
+    "dataset_0": 0.6031112264604379,
+    "dataset_1": 0.5299641292585112,
+    "dataset_2": 0.5292840001155937,
+    "dataset_3": 0.4218141760582399,
+    "dataset_4": 0.5301722712456658,
+    "dataset_5": 0.5771505516563393,
+    "dataset_6": 0.506841799217144,
+    "dataset_7": 0.5056331690500842
+  },
+  "sample_time": 3.3819445967674255,
+  "evaluate_time": 1.991994857788086
+}

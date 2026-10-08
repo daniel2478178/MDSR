@@ -1,0 +1,23 @@
+{
+  "sample_order": 607,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target is related to resonant transition probability\n    # with a Lorentzian-like dependence on detuning, scaled by interaction time\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Landau-Zener / Rabi-type formula: P ~ sin^2(Omega_eff * t/2)\n    # where Omega_eff depends on omega and prob\n    \n    # Core structure: target = A * prob * sin^2(omega*t/2 + phi) / (1 + B*(omega*t)^2)\n    angle = omega * t_safe\n    resonance = np.sin(angle * 0.5) ** 2\n    \n    # Amplitude modulation by prob, with possible nonlinearity\n    prob_mod = np.power(prob, params[0])\n    \n    # Frequency-dependent denominator for broadened resonance\n    denominator = 1.0 + params[1] * (angle) ** 2\n    \n    # Exponential decay in time for finite interaction effects\n    decay = np.exp(-params[2] * t_safe)\n    \n    # Combine: amplitude * resonance * prob-modulation / (denominator) * decay + offset\n    y = params[3] * resonance * prob_mod * decay / denominator + params[4]\n    \n    return y\n\n",
+  "score": -0.6292868731990955,
+  "mean_nmse": 0.5370076374143877,
+  "min_nmse": 0.4490887188445442,
+  "max_nmse": 0.6314207264328737,
+  "median_nmse": 0.5242398932167229,
+  "std_nmse": 0.06569012410805401,
+  "worst2_mean_nmse": 0.6292868731990955,
+  "nmse_per_test": {
+    "dataset_0": 0.6314207264328737,
+    "dataset_1": 0.5787811988031817,
+    "dataset_2": 0.548000764776215,
+    "dataset_3": 0.4490887188445442,
+    "dataset_4": 0.5004790216572309,
+    "dataset_5": 0.6271530199653171,
+    "dataset_6": 0.4710587415435461,
+    "dataset_7": 0.49007890729219333
+  },
+  "sample_time": 2.4878533482551575,
+  "evaluate_time": 2.502215623855591
+}

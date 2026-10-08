@@ -1,0 +1,23 @@
+{
+  "sample_order": 3416,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared equation:\n        target = f(prob, t, omega, params)\n    \n    Args:\n        prob: Transition probability\n        t: Interaction time  \n        omega: Driving angular frequency\n        params: Dataset-specific parameters\n    \n    Returns:\n        Predicted target quantity\n    \"\"\"\n    # Use tanh transformation of prob for bounded response\n    p = np.clip(prob, -0.999, 0.999)  # avoid singularities in asinh/atanh\n    \n    # Multiplicative coupling between variables with physically motivated structure\n    # params[0]: amplitude scaling\n    # params[1]: coupling coefficient for prob-term\n    # params[2]: frequency modulation  \n    # params[3]: exponential decay rate\n    # params[4]: phase offset\n    \n    x = omega * t\n    \n    # Main contribution: amplitude exponentially decaying with time, modulated by prob\n    main_term = params[0] * np.exp(-params[3] * t) * np.tanh(params[1] * p) * np.cos(x + params[4])\n    \n    # Secondary term: probability-driven energy coupling\n    sec_term = params[2] * (1 - p) * np.sin(x) * np.exp(-t)\n    \n    # Combine with minimal additional terms\n    result = main_term + sec_term + params[5] * np.tanh(x)\n    \n    return result\n\n",
+  "score": -1.002521744028453,
+  "mean_nmse": 1.001781701060925,
+  "min_nmse": 1.0004983896913413,
+  "max_nmse": 1.0025587919095327,
+  "median_nmse": 1.001834668978314,
+  "std_nmse": 0.0006343379366009597,
+  "worst2_mean_nmse": 1.002521744028453,
+  "nmse_per_test": {
+    "dataset_0": 1.0017875764443869,
+    "dataset_1": 1.0024846961473735,
+    "dataset_2": 1.0012876458194226,
+    "dataset_3": 1.001881761512241,
+    "dataset_4": 1.0025587919095327,
+    "dataset_5": 1.0021949210943466,
+    "dataset_6": 1.0015598258687544,
+    "dataset_7": 1.0004983896913413
+  },
+  "sample_time": 3.054902672767639,
+  "evaluate_time": 2.9089319705963135
+}

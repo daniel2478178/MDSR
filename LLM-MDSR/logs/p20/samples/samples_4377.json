@@ -1,0 +1,23 @@
+{
+  "sample_order": 4377,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # This form is consistent with the Landau-Zener-Stückelberg-Majorana\n    # formula for transition probability: prob = exp(-2πΔ²/(ħv))\n    # but expressed inversely: target ∝ (1-prob) * sin(omega*t + δ)\n    x = omega * t\n    # Simplified physically motivated structure:\n    # target = A * (1 - prob) * sin(omega*t + phi)\n    # where A and phi are dataset-specific params\n    A = params[0]\n    phi = params[1]\n    return A * (1.0 - prob) * np.sin(x + phi)\n\n",
+  "score": -6.509087539597118,
+  "mean_nmse": 5.051778586415476,
+  "min_nmse": 4.226884990302872,
+  "max_nmse": 6.603909441448732,
+  "median_nmse": 4.611029955655116,
+  "std_nmse": 0.9132532045884812,
+  "worst2_mean_nmse": 6.509087539597118,
+  "nmse_per_test": {
+    "dataset_0": 6.603909441448732,
+    "dataset_1": 4.697449935879737,
+    "dataset_2": 4.245352435323988,
+    "dataset_3": 5.394854271998802,
+    "dataset_4": 4.226884990302872,
+    "dataset_5": 6.414265637745506,
+    "dataset_6": 4.3069020031936756,
+    "dataset_7": 4.524609975430495
+  },
+  "sample_time": 2.9937025705973306,
+  "evaluate_time": 1.9349102973937988
+}

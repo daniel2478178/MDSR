@@ -1,0 +1,23 @@
+{
+  "sample_order": 1910,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared equation:\n        target = f(prob, t, omega, params)\n    \"\"\"\n    # Using parameters to represent physical constants:\n    # params[0] = Rabi frequency scale\n    # params[1] = detuning-related offset\n    # params[2] = decay exponent\n    # params[3] = amplitude scale\n    # params[4] = phase offset\n    # params[5] = damping rate\n    # params[6] = anharmonicity term\n\n    eps = 1e-12\n    # Simple coupled harmonic-oscillator-like behavior with detuning\n    det = params[1] - omega*params[0]\n    rabi = np.sqrt(det**2 + params[0]**2 + eps)\n    \n    # Physical probability amplitude dynamics:\n    # target = sinusoidal response modulated by probability and a Gaussian decay\n    envelope = params[3] * np.exp(-params[5] * t**2)\n    oscill = np.sin(rabi * t / (1.0 + params[2]*omega) + params[4])\n    \n    # Combine with probability dependence and a constant term\n    base = prob * oscill * envelope\n    correction = params[6] * (1.0 - prob) * np.cos(omega * t)\n    \n    return base + correction + params[7] * (1.0 - np.exp(-params[8] * t))\n\n",
+  "score": -0.42687698304603705,
+  "mean_nmse": 0.34010255258858907,
+  "min_nmse": 0.277180193494344,
+  "max_nmse": 0.438370017100061,
+  "median_nmse": 0.31400204233554463,
+  "std_nmse": 0.058783593509091105,
+  "worst2_mean_nmse": 0.42687698304603705,
+  "nmse_per_test": {
+    "dataset_0": 0.438370017100061,
+    "dataset_1": 0.3803020399206007,
+    "dataset_2": 0.3299491403765439,
+    "dataset_3": 0.277180193494344,
+    "dataset_4": 0.2980549442945454,
+    "dataset_5": 0.41538394899201314,
+    "dataset_6": 0.2884937361937116,
+    "dataset_7": 0.29308640033689276
+  },
+  "sample_time": 1.9179925322532654,
+  "evaluate_time": 4.903741836547852
+}

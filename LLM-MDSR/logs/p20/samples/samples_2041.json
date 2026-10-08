@@ -1,0 +1,23 @@
+{
+  "sample_order": 2041,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Physical model: generalized Rabi oscillation with damping\n    # For a driven two-level system, the transition probability follows:\n    # P(t) = (Omega_R^2 / (Omega_R^2 + delta^2)) * sin^2(sqrt(Omega_R^2 + delta^2) * t / 2)\n    # Here we solve for the generalized Rabi frequency given prob, t, and omega\n    \n    # The key relation: prob = (Omega_R^2 / (Omega_R^2 + delta^2)) * sin^2(sqrt(Omega_R^2 + delta^2) * t / 2)\n    # with delta = omega - omega_0 (detuning)\n    \n    # We express the target as related to the generalized Rabi frequency\n    \n    # Use omega as the driving frequency, and prob to infer the effective Rabi frequency\n    # Target likely = generalized Rabi frequency or related quantity\n    \n    # Simplify: For near-resonance (delta ≈ 0), sin^2(Omega_R * t / 2) = prob\n    # Then Omega_R ≈ (2/t) * arcsin(sqrt(prob))\n    \n    # More general: include detuning proportional to omega\n    \n    x = np.sqrt(prob + eps)\n    arc_term = np.arcsin(np.clip(x, -1, 1))\n    \n    # Generalized Rabi frequency from formula\n    Omega_g = 2 * arc_term / (t + eps)\n    \n    # Add corrections for finite detuning and driving frequency effects\n    # Detuning delta = omega_0 - omega, with omega_0 as parameter\n    \n    delta = params[0] * omega - params[1]\n    \n    # The actual Rabi frequency Omega_R relates to Omega_g via:\n    # Omega_g^2 = Omega_R^2 + delta^2\n    \n    Omega_R = np.sqrt(np.maximum(Omega_g**2 - delta**2, eps))\n    \n    # Target may be the on-resonance Rabi frequency or a combination\n    # Physical candidate: target = Omega_R * (some function of prob)\n    \n    # Combine with periodic modulation from driving\n    result = params[2] * Omega_R * np.sin(params[3] * omega_safe * t + params[4])\n    \n    # Add damping and baseline\n    result = result * np.exp(-params[5] * t) + params[6] * np.sin(omega_safe * t) * prob\n    \n    return result\n\n",
+  "score": -4.706229230853091,
+  "mean_nmse": 1.8636541479924293,
+  "min_nmse": 0.8467280338130867,
+  "max_nmse": 8.350283232224461,
+  "median_nmse": 0.9492630291230408,
+  "std_nmse": 2.452689040258645,
+  "worst2_mean_nmse": 4.706229230853091,
+  "nmse_per_test": {
+    "dataset_0": 1.0621752294817208,
+    "dataset_1": 0.9205826802632998,
+    "dataset_2": 0.8844528363283355,
+    "dataset_3": 0.9779433779827819,
+    "dataset_4": 0.8467280338130867,
+    "dataset_5": 1.0030113670019907,
+    "dataset_6": 0.8640564268437578,
+    "dataset_7": 8.350283232224461
+  },
+  "sample_time": 2.8497822880744934,
+  "evaluate_time": 3.584672212600708
+}

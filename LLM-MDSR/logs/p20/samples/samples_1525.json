@@ -1,0 +1,23 @@
+{
+  "sample_order": 1525,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Rabi-like oscillation: P(t) = A * sin^2(Omega_R t) with Omega_R ~ sqrt(omega^2 + Delta^2)\n    # Here prob is transition probability, so relate target to prob with time and frequency dependence\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Rabi frequency component: sqrt(omega^2 + detuning^2)\n    omega_eff = np.sqrt(omega_safe**2 + params[0]**2)\n    \n    # Time-dependent phase from Rabi oscillation\n    phase = omega_eff * t_safe\n    \n    # Core relationship: prob should follow sin^2(phase/2) in ideal Rabi, so invert\n    # amplitude times sqrt(prob/(1-prob)) gives tan-like response but avoid singularities\n    prob_safe = np.clip(prob, eps, 1-eps)\n    \n    # Physical: target often relates to detuning or amplitude via tan(phase/2) = sqrt(prob/(1-prob))\n    ratio = np.sqrt(prob_safe / (1 - prob_safe))\n    \n    # Frequency-resonance term: 1/(1 + (2*delta/omega)^2)\n    delta = params[1] * omega_safe\n    resonance = 1.0 / (1.0 + (2*delta/(omega_safe+eps))**2)\n    \n    # Time envelope: exponential damping\n    damping = params[2] * np.exp(-params[3] * t_safe)\n    \n    # Combine: amplitude * tan(phase/2) with resonance correction\n    y = params[4] * ratio * resonance * np.tanh(params[5] * phase) + params[6] * damping\n    \n    return y\n\n",
+  "score": -2.448630545849831,
+  "mean_nmse": 1.4673088871713151,
+  "min_nmse": 0.983430211671871,
+  "max_nmse": 2.8326953147918874,
+  "median_nmse": 0.9942057079027258,
+  "std_nmse": 0.6657591241741779,
+  "worst2_mean_nmse": 2.448630545849831,
+  "nmse_per_test": {
+    "dataset_0": 2.8326953147918874,
+    "dataset_1": 1.8945151553299624,
+    "dataset_2": 0.9851355557335381,
+    "dataset_3": 0.9956724501530695,
+    "dataset_4": 0.983430211671871,
+    "dataset_5": 2.064565776907775,
+    "dataset_6": 0.989717667130035,
+    "dataset_7": 0.992738965652382
+  },
+  "sample_time": 3.038078546524048,
+  "evaluate_time": 2.347867727279663
+}

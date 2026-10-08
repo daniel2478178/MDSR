@@ -1,0 +1,23 @@
+{
+  "sample_order": 1667,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Rabi-type oscillations with detuning-dependent amplitude\n    rabi = params[0] * prob + params[1]\n    # Generalized resonance factor capturing sine/cosine mixtures\n    phase = params[2] * omega * t + params[3]\n    resonance_amp = np.sqrt(params[4]**2 + (params[5]*omega - params[6])**2)\n    oscill = rabi * np.sin(phase)**2 / (resonance_amp**2 + params[7])\n    # Decay envelope to account for finite-time effects\n    envelope = np.exp(-params[8] * np.abs(t))\n    return params[9] * oscill * envelope\n\n",
+  "score": -0.47114086092131513,
+  "mean_nmse": 0.3414761732079604,
+  "min_nmse": 0.22362689650635367,
+  "max_nmse": 0.47364888773392416,
+  "median_nmse": 0.32270496085332157,
+  "std_nmse": 0.09138063132058788,
+  "worst2_mean_nmse": 0.47114086092131513,
+  "nmse_per_test": {
+    "dataset_0": 0.4686328341087061,
+    "dataset_1": 0.40174444032068674,
+    "dataset_2": 0.3493029480101517,
+    "dataset_3": 0.22362689650635367,
+    "dataset_4": 0.29610697369649147,
+    "dataset_5": 0.47364888773392416,
+    "dataset_6": 0.2639981950149938,
+    "dataset_7": 0.2547482102723754
+  },
+  "sample_time": 1.916191041469574,
+  "evaluate_time": 4.664017915725708
+}

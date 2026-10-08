@@ -1,0 +1,23 @@
+{
+  "sample_order": 1033,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-12\n    t_safe = t + eps\n    omega_safe = omega + eps\n    \n    # Physical model: damped driven harmonic oscillator transition amplitude\n    # target = A * prob * sin^2(Ω_R * t/2) / Ω_R^2 * exp(-Γ*t) + B * prob * t + C\n    # where Ω_R = sqrt(Ω_0^2 + (ω - ω_0)^2)\n    delta = omega - params[1]\n    omega_r = np.sqrt(params[0]**2 + delta**2)\n    \n    # Rabi-like term with detuning, regularized for zero detuning\n    rabi_term = np.where(omega_r > eps, \n                         np.sin(omega_r * t / 2)**2 / omega_r**2, \n                         0.25 * t * t)\n    \n    # Exponential decay envelope\n    decay = np.exp(-params[2] * t_safe)\n    \n    # Product structure: amplitude factor times probability times oscillatory behavior\n    y = params[3] * prob * (decay * rabi_term) + params[4] * prob * np.cos(omega * t) + params[5] * t_safe\n    \n    return y\n\n",
+  "score": -0.4069286957062753,
+  "mean_nmse": 0.33114005620472287,
+  "min_nmse": 0.27152216699145354,
+  "max_nmse": 0.41085048113504713,
+  "median_nmse": 0.3109453488600248,
+  "std_nmse": 0.04995381273546552,
+  "worst2_mean_nmse": 0.4069286957062753,
+  "nmse_per_test": {
+    "dataset_0": 0.41085048113504713,
+    "dataset_1": 0.35661855647319457,
+    "dataset_2": 0.32585942729477785,
+    "dataset_3": 0.27152216699145354,
+    "dataset_4": 0.2960312704252717,
+    "dataset_5": 0.40300691027750357,
+    "dataset_6": 0.29013808281165104,
+    "dataset_7": 0.2950935542288839
+  },
+  "sample_time": 2.870313584804535,
+  "evaluate_time": 2.1774628162384033
+}

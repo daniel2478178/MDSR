@@ -1,0 +1,23 @@
+{
+  "sample_order": 751,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition law with Rabi oscillation envelope\n    # target ~ prob * exp(-delta*t) * cos(beta*omega*t) + gamma\n    eps = 1e-10\n    angle = omega * t\n    # Use prob to modulate oscillation amplitude, t for damping\n    y = params[0] * prob * np.cos(angle) * np.exp(-params[1] * np.abs(t))\n    y += params[2] * prob * np.sin(angle) * np.exp(-params[3] * np.abs(t))\n    y += params[4] * np.exp(-params[5] * np.abs(t)) * np.sin(angle + params[6])\n    y += params[7]\n    return y\n\n",
+  "score": -0.49060853301899854,
+  "mean_nmse": 0.4232613142948501,
+  "min_nmse": 0.35202128965044394,
+  "max_nmse": 0.5011250923120283,
+  "median_nmse": 0.4056481646201666,
+  "std_nmse": 0.051034024763960774,
+  "worst2_mean_nmse": 0.49060853301899854,
+  "nmse_per_test": {
+    "dataset_0": 0.48009197372596885,
+    "dataset_1": 0.40364271949200375,
+    "dataset_2": 0.37344388434054915,
+    "dataset_3": 0.4735833380975014,
+    "dataset_4": 0.35202128965044394,
+    "dataset_5": 0.5011250923120283,
+    "dataset_6": 0.3945286069919757,
+    "dataset_7": 0.4076536097483294
+  },
+  "sample_time": 2.472675621509552,
+  "evaluate_time": 2.7274396419525146
+}

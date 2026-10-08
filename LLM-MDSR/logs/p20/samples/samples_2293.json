@@ -1,0 +1,23 @@
+{
+  "sample_order": 2293,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Physical model: target = (a0 + a1*prob) * (1 + a2*cos(omega*t) + a3*sin(omega*t))\n    # Damped by exponential decay in t, with linear temporal drift.\n    \n    # Probability-dependent amplitude\n    amplitude = params[0] + params[1] * prob\n    \n    # Oscillatory part (driven by omega*t, no separate t oscillation to avoid overfitting)\n    oscillatory = 1.0 + params[2] * np.cos(omega_safe * t) + params[3] * np.sin(omega_safe * t)\n    \n    # Damping term: larger prob leads to slower decay (params[4] < 0 would give growth, but usually negative)\n    decay = np.exp(-params[4] * np.abs(t) * (1.0 - 0.5 * prob))\n    \n    # Minimal drift with probability-dependent slope\n    drift = params[5] * t * prob\n    \n    # Combined result\n    return amplitude * oscillatory * decay + drift + params[6]\n\n",
+  "score": -688.0457258160257,
+  "mean_nmse": 172.4169578197637,
+  "min_nmse": 0.41470582219860425,
+  "max_nmse": 817.5144956163851,
+  "median_nmse": 0.611317109563638,
+  "std_nmse": 304.6553605474981,
+  "worst2_mean_nmse": 688.0457258160257,
+  "nmse_per_test": {
+    "dataset_0": 0.6224892757021349,
+    "dataset_1": 0.6001449434251411,
+    "dataset_2": 817.5144956163851,
+    "dataset_3": 0.41470582219860425,
+    "dataset_4": 0.5559619908854945,
+    "dataset_5": 0.6282948288510051,
+    "dataset_6": 558.5769560156663,
+    "dataset_7": 0.4226140649958421
+  },
+  "sample_time": 2.315277636051178,
+  "evaluate_time": 3.4967057704925537
+}

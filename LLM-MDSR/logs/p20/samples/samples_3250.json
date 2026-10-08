@@ -1,0 +1,23 @@
+{
+  "sample_order": 3250,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    \n    # Physical form: transition probability modulated by time-dependent\n    # Rabi oscillations and exponential decay\n    x = omega * t\n    # Use a damped sine/cosine structure with a phase\n    return p0 * prob * np.exp(-p1 * t) * np.sin(p2 * x + p3) + (1 - prob) * p0 * np.exp(-p1 * t) * np.cos(p2 * x + p3) * (1 / (1 + p0 * p0 * t * t))\n\n",
+  "score": -0.748956860008872,
+  "mean_nmse": 0.4532697140662654,
+  "min_nmse": 0.2101745410092454,
+  "max_nmse": 0.761015870328581,
+  "median_nmse": 0.41733457333763446,
+  "std_nmse": 0.20912455140908273,
+  "worst2_mean_nmse": 0.748956860008872,
+  "nmse_per_test": {
+    "dataset_0": 0.761015870328581,
+    "dataset_1": 0.5872386788722996,
+    "dataset_2": 0.4902422539367066,
+    "dataset_3": 0.2101745410092454,
+    "dataset_4": 0.3444268927385623,
+    "dataset_5": 0.7368978496891629,
+    "dataset_6": 0.2592692577218813,
+    "dataset_7": 0.23689236823368412
+  },
+  "sample_time": 1.8191106915473938,
+  "evaluate_time": 2.1034390926361084
+}

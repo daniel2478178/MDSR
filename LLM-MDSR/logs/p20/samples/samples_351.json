@@ -1,0 +1,14 @@
+{
+  "sample_order": 351,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Core physical relation: driven Rabi-like oscillation with damping\n    # target = A * prob * sin(omega*t)/(omega) + B * prob * (1-cos(omega*t))/(omega) / t + C\n    angle = omega * t\n    # Rabi oscillation amplitude divided by frequency (common in time-dependent perturbation theory)\n    rabi_term = params[0] * prob * np.sin(angle) / omega_safe\n    # Second-order correction term with (1-cos) envelope\n    env_term = params[1] * prob * (1.0 - np.cos(angle)) / (omega_safe**2)\n    # Simple linear-in-time decay factor\n    decay_term = params[2] * prob * t_safe\n    # Constant offset\n    offset = params[3]\n    \n    y = rabi_term + env_term + decay_term + offset    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.921818435192108,
+  "evaluate_time": 1.9323890209197998
+}

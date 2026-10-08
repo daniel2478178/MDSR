@@ -1,0 +1,23 @@
+{
+  "sample_order": 332,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical rotation-type Rabi-like transition probability expression\n    # Use a generalized arcsine form with sqrt-dependence and damping\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Detuning-like parameter and Rabi frequency-like parameter\n    delta = 0.0  # will be absorbed into params[0]\n    \n    # General form: target ~ arctan( sqrt(prob/(1-prob)) ) * sin(...) + damping\n    # More robust: directly model effective transition probability transformations\n    angle = omega * t_safe\n    \n    # Fundamental relationship: amplitude modulation with prob and angular frequency\n    p_complement = np.maximum(1.0 - prob, eps)\n    sqrt_ratio = np.sqrt(prob / p_complement)\n    \n    # Rabi-like oscillations with possible phase offsets\n    y = params[0] * np.arctan(sqrt_ratio) + params[1] * np.sin(angle) * prob\n    \n    # Damping term with time dependence\n    y += params[2] * np.exp(-params[3] * t_safe) * np.cos(angle) * prob\n    \n    # Additional correction for high frequency behavior\n    y += params[4] * np.sin(angle) / (1.0 + params[5] * omega_safe)\n    \n    # Small constant offset\n    y += params[6]\n    \n    return y\n\n",
+  "score": -0.7334390849533944,
+  "mean_nmse": 0.5843570525892102,
+  "min_nmse": 0.48318367853172,
+  "max_nmse": 0.7565732947163036,
+  "median_nmse": 0.542011251078877,
+  "std_nmse": 0.09537281169573338,
+  "worst2_mean_nmse": 0.7334390849533944,
+  "nmse_per_test": {
+    "dataset_0": 0.7565732947163036,
+    "dataset_1": 0.5504167487216666,
+    "dataset_2": 0.5076270519897883,
+    "dataset_3": 0.7103048751904851,
+    "dataset_4": 0.48318367853172,
+    "dataset_5": 0.6247220337234817,
+    "dataset_6": 0.5084229844041492,
+    "dataset_7": 0.5336057534360874
+  },
+  "sample_time": 3.9865899682044983,
+  "evaluate_time": 2.6368651390075684
+}

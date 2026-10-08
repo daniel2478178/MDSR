@@ -1,0 +1,23 @@
+{
+  "sample_order": 4445,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target = amplitude * probability * sin(omega*t + phase) / t\n    # This represents a resonant interaction where the transition amplitude\n    # scales with probability and oscillates with the driving field\n    return params[0] * (1 - prob) * np.sin(omega * t + params[1]) / (1 + params[2] * t) + params[3] * prob * np.cos(2 * omega * t + params[4])\n\n",
+  "score": -5.822907699713608,
+  "mean_nmse": 3.512894282345644,
+  "min_nmse": 2.335821117449471,
+  "max_nmse": 6.222542366216892,
+  "median_nmse": 2.849191741670093,
+  "std_nmse": 1.3756936776115591,
+  "worst2_mean_nmse": 5.822907699713608,
+  "nmse_per_test": {
+    "dataset_0": 6.222542366216892,
+    "dataset_1": 3.315836658788271,
+    "dataset_2": 2.335821117449471,
+    "dataset_3": 2.8844309946222855,
+    "dataset_4": 2.813952488717901,
+    "dataset_5": 5.423273033210323,
+    "dataset_6": 2.567836437157528,
+    "dataset_7": 2.5394611626024775
+  },
+  "sample_time": 1.6024243831634521,
+  "evaluate_time": 2.095947265625
+}

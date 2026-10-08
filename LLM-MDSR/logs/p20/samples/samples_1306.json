@@ -1,0 +1,23 @@
+{
+  "sample_order": 1306,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10    \n    p_clipped = np.clip(prob, eps, 1-eps)    \n    # Landau-Zener-like transition: p = exp(-gamma/omega) but here prob is given\n    # Extract detuning from probability using inverse relation\n    # Assume prob relates to adiabaticity parameter: prob = 1 - exp(-pi*Omega^2/(2*domega))\n    # Simplify to a physically inspired form: target scales with prob and coupling\n    \n    # Rabi-like oscillation envelope: sin^2(sqrt(prob)*params[0]*t*omega)\n    envelope = np.sin(params[0] * np.sqrt(p_clipped) * omega * t)**2    \n    # Nonlinear transform of prob to represent effective coupling strength\n    coupling = prob**(params[1]) * np.exp(params[2] * (1 - prob))    \n    # Frequency-dependent correction from resonance detuning effects\n    detune_factor = 1 + params[3] * np.sin(2 * omega * t)    \n    # Time envelope with damped oscillation characteristic\n    time_env = np.exp(-params[4] * t**2) * np.cos(params[5] * t)    \n    # Actual target: product of amplitude, coupling term, and oscillation envelope\n    y = params[6] * coupling * envelope * time_env * detune_factor + params[7]    \n    return y\n\n",
+  "score": -0.668951950101317,
+  "mean_nmse": 0.5296695145226353,
+  "min_nmse": 0.4368350099477135,
+  "max_nmse": 0.6707546064170891,
+  "median_nmse": 0.4886128073371805,
+  "std_nmse": 0.08899126231603738,
+  "worst2_mean_nmse": 0.668951950101317,
+  "nmse_per_test": {
+    "dataset_0": 0.6671492937855451,
+    "dataset_1": 0.5693247490930229,
+    "dataset_2": 0.5076077096912339,
+    "dataset_3": 0.46961790498312705,
+    "dataset_4": 0.459196096048553,
+    "dataset_5": 0.6707546064170891,
+    "dataset_6": 0.45687074621479806,
+    "dataset_7": 0.4368350099477135
+  },
+  "sample_time": 3.21401447057724,
+  "evaluate_time": 4.885934591293335
+}

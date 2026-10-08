@@ -1,0 +1,14 @@
+{
+  "sample_order": 283,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Robust trigonometric combination with physical angle omega*t\n    # params: amplitude, phase-shift, decay rate, offset\n    # Use Rabi-like oscillation formula: target = A * sqrt(prob) * sin^2(angle/2) * exp(-gamma*t) + offset\n    # Simplify with fewer parameters (4 total)\n    angle = omega * t\n    # Probability-complemented amplitude: handles cases where prob near 0 or 1\n    amp = params[0] * np.sqrt(np.maximum(prob, 1e-12) * (1 - np.maximum(prob, 1e-12)))\n    # Oscillatory term with phase and damping\n    osc = amp * np.sin(params[1] + params[2] * angle) * np.exp(-params[3] * np.abs(t))\n    # Base offset to allow positive/negative targets\n    y = osc + params[4] * prob\n    # Ensure output shape matches input\n    return np.asarray(y, dtype=np.float64)\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.555688738822937,
+  "evaluate_time": 1.9575893878936768
+}

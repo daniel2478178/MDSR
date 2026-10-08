@@ -1,0 +1,23 @@
+{
+  "sample_order": 3502,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Landau-Zener-like transition with phase and decay modulation\n    return params[0] * (prob * np.sin(params[1] * x) + (1 - prob) * np.cos(params[2] * x)) * np.exp(-params[3] * t) + params[4] * prob * np.cos(params[5] * t + params[6] * omega)\n\n",
+  "score": -1.303256810015522,
+  "mean_nmse": 0.8977884583710998,
+  "min_nmse": 0.36102199396382456,
+  "max_nmse": 1.4075711613434636,
+  "median_nmse": 0.9811178086552917,
+  "std_nmse": 0.35751475875070965,
+  "worst2_mean_nmse": 1.303256810015522,
+  "nmse_per_test": {
+    "dataset_0": 0.5654613859482883,
+    "dataset_1": 1.1989424586875805,
+    "dataset_2": 0.9370132989967466,
+    "dataset_3": 1.4075711613434636,
+    "dataset_4": 0.36102199396382456,
+    "dataset_5": 0.49016911872407604,
+    "dataset_6": 1.196905930990981,
+    "dataset_7": 1.025222318313837
+  },
+  "sample_time": 2.2973600029945374,
+  "evaluate_time": 2.513331890106201
+}

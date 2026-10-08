@@ -1,0 +1,23 @@
+{
+  "sample_order": 1832,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Reject non-physical prob values while allowing broad flexibility\n    p_safe = np.clip(prob, 1e-12, 1.0 - 1e-12)\n    \n    # Key transformation: work in sqrt-space of probabilities\n    # because Rabi oscillations often involve sqrt(P) terms\n    s = np.sqrt(p_safe)\n    \n    # Define effective detuning/Rabi-like frequency\n    # params[0]: overall scale\n    # params[1]: frequency multiplier (to handle different systems)\n    # params[2]: phase offset\n    # params[3]: offset/damping factor\n    # params[4]: additional exponent term\n    \n    # Physical form: Asin^2(delta*t) + B*cos(...) etc.\n    # Use a compact generalized Rabi-like expression\n    delta = params[1] * omega + params[2]  # effective detuning\n    \n    # Time dependence with possible anharmonicity: introduce power-law\n    t_eff = t ** params[3]  # allow non-linear time scaling\n    \n    # Core oscillation: combine probability amplitude with sinusoidal time dependency\n    arg = delta * t_eff\n    \n    # Main term: amplitude modulation from prob, with a sinusoidal frequency sweep\n    # params[4] shifts the oscillation phase; params[5] introduces a second harmonic\n    core = s * (np.sin(arg + params[4]) ** 2) * (1 + params[5] * np.cos(arg))\n    \n    # Add a background that decays slowly with time to capture possible decoherence\n    background = params[6] * np.exp(-params[7] * t)\n    \n    # Final scaling and offset\n    result = params[0] * core + background + params[8]\n    \n    return result\n\n",
+  "score": -0.9961875655914757,
+  "mean_nmse": 0.9832174173210885,
+  "min_nmse": 0.9373933146541525,
+  "max_nmse": 0.9981546893140478,
+  "median_nmse": 0.9916777607508919,
+  "std_nmse": 0.018588883507147592,
+  "worst2_mean_nmse": 0.9961875655914757,
+  "nmse_per_test": {
+    "dataset_0": 0.9373933146541525,
+    "dataset_1": 0.9745447435930437,
+    "dataset_2": 0.990971159322343,
+    "dataset_3": 0.9981546893140478,
+    "dataset_4": 0.9849566382147589,
+    "dataset_5": 0.9942204418689036,
+    "dataset_6": 0.9923843621794407,
+    "dataset_7": 0.9931139894220176
+  },
+  "sample_time": 2.185361087322235,
+  "evaluate_time": 7.339952230453491
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 3932,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Common physical form: Rabi-like oscillation with exponential decay\n    # target = A * sqrt(prob) * sin^2(Ω_eff * t/2) + B * (1-prob) * decay_term\n    # Use simplified two-term structure with shared angular dependence\n    rabi = params[0] * np.sqrt(prob) * np.sin(params[1] * x / 2.0) ** 2\n    decay = params[2] * (1 - prob) * np.exp(-params[3] * t)\n    phase = np.cos(params[4] * x + params[5])\n    # Final: combine Rabi oscillation with non-oscillatory decay\n    return rabi * phase + decay\n\n",
+  "score": -2.293014096950605,
+  "mean_nmse": 1.6855371927948197,
+  "min_nmse": 1.2264218618510965,
+  "max_nmse": 2.310361787222927,
+  "median_nmse": 1.6021463537406389,
+  "std_nmse": 0.37558244989722817,
+  "worst2_mean_nmse": 2.293014096950605,
+  "nmse_per_test": {
+    "dataset_0": 1.6647620245898624,
+    "dataset_1": 1.6174071037683742,
+    "dataset_2": 2.310361787222927,
+    "dataset_3": 1.2264218618510965,
+    "dataset_4": 2.2756664066782837,
+    "dataset_5": 1.5868856037129038,
+    "dataset_6": 1.3641485276127006,
+    "dataset_7": 1.438644226922409
+  },
+  "sample_time": 2.715625603993734,
+  "evaluate_time": 4.132126092910767
+}

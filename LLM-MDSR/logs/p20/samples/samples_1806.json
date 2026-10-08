@@ -1,0 +1,23 @@
+{
+  "sample_order": 1806,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # params[0] scales the detuning/phase, params[1] is phase offset\n    # params[2] scales prob, params[3] is offset\n    # Common Rabi-like formula for transition probability with time & frequency\n    delta = omega - params[0]\n    rabi = np.sqrt(prob + eps)  # effective Rabi frequency from probability\n    oscillatory = np.sin(0.5 * rabi * t + params[1])**2\n    envelope = 1.0 / (1.0 + params[2] * (delta*t)**2)\n    return params[3] * oscillatory * envelope + params[4]\n\n",
+  "score": -0.629392339825784,
+  "mean_nmse": 0.5370270032926955,
+  "min_nmse": 0.39328268849708864,
+  "max_nmse": 0.6501615898617201,
+  "median_nmse": 0.5578594997801285,
+  "std_nmse": 0.08389725340717712,
+  "worst2_mean_nmse": 0.629392339825784,
+  "nmse_per_test": {
+    "dataset_0": 0.6086230897898479,
+    "dataset_1": 0.45277588280908215,
+    "dataset_2": 0.5882876245037593,
+    "dataset_3": 0.6006873381825658,
+    "dataset_4": 0.39328268849708864,
+    "dataset_5": 0.5274313750564977,
+    "dataset_6": 0.6501615898617201,
+    "dataset_7": 0.47496643764100244
+  },
+  "sample_time": 1.7687137722969055,
+  "evaluate_time": 2.230332136154175
+}

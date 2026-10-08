@@ -1,0 +1,23 @@
+{
+  "sample_order": 672,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: For a driven two-level system, transition probability relates to\n    # Rabi frequency and detuning. The target may be the generalized Rabi frequency\n    # or a related quantity. Common pattern: target = sqrt(params[0] * omega^2 + params[1] * prob) * params[2] * sin(params[3] * omega * t) / (omega * t)\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Avoid overflow for large angles\n    angle = omega * t_safe\n    \n    # Basic Rabi-like model: target typically scales with sin^2 of pulse area.\n    # Pulse area = sqrt(omega^2 + detuning^2) * t. Here detuning might be encoded in prob.\n    # Try: target = params[0] * (1 - prob) * np.sin(params[1] * omega * t) / omega\n    # Better: assume target = sqrt(params[0] + params[1] * prob) * sinc(params[2] * omega * t)\n    \n    sqrt_term = np.sqrt(np.maximum(params[0] + params[1] * prob, eps))\n    # Sinc function: sin(x)/x for small x, limit to 1 for x->0\n    x = params[2] * omega_safe * t_safe\n    sinc_val = np.where(np.abs(x) < 0.1, 1.0 - x**2/6.0 + x**4/120.0, np.sin(x)/x)\n    \n    y = params[3] * sqrt_term * sinc_val + params[4] * prob * np.cos(params[5] * omega_safe * t_safe)\n    \n    return y\n\n",
+  "score": -0.7878972354343663,
+  "mean_nmse": 0.7248119876286856,
+  "min_nmse": 0.5955047923297764,
+  "max_nmse": 0.8013885089245163,
+  "median_nmse": 0.7401104201910835,
+  "std_nmse": 0.06245940567828595,
+  "worst2_mean_nmse": 0.7878972354343663,
+  "nmse_per_test": {
+    "dataset_0": 0.8013885089245163,
+    "dataset_1": 0.7744059619442162,
+    "dataset_2": 0.7510210600681108,
+    "dataset_3": 0.5955047923297764,
+    "dataset_4": 0.7291997803140564,
+    "dataset_5": 0.7740181296145573,
+    "dataset_6": 0.6935239827572961,
+    "dataset_7": 0.6794336850769557
+  },
+  "sample_time": 3.1745124459266663,
+  "evaluate_time": 2.176870584487915
+}

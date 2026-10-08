@@ -1,0 +1,23 @@
+{
+  "sample_order": 1203,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target = A * sin^2(omega*t) * (1-prob) + B * exp(-t/tau) * prob + C\n    # Using a Rabi-like oscillation pattern\n    eps = 1e-10\n    angle = omega * t\n    \n    # Main oscillatory term with probability weighting\n    osc_term = params[0] * np.sin(angle) * np.sin(angle) * (1 - prob)\n    \n    # Decay term \n    decay = params[1] * np.exp(-t * params[2]) * prob\n    \n    # Baseline offset\n    baseline = params[3]\n    \n    y = osc_term + decay + baseline\n    \n    return y\n\n",
+  "score": -0.6474315825294701,
+  "mean_nmse": 0.5621701531783098,
+  "min_nmse": 0.5034412966975832,
+  "max_nmse": 0.660568505110081,
+  "median_nmse": 0.5372047798588926,
+  "std_nmse": 0.05647442646655607,
+  "worst2_mean_nmse": 0.6474315825294701,
+  "nmse_per_test": {
+    "dataset_0": 0.660568505110081,
+    "dataset_1": 0.5962875572578842,
+    "dataset_2": 0.5437876987732433,
+    "dataset_3": 0.5034412966975832,
+    "dataset_4": 0.507923710898698,
+    "dataset_5": 0.634294659948859,
+    "dataset_6": 0.5204359357955876,
+    "dataset_7": 0.5306218609445418
+  },
+  "sample_time": 3.408418834209442,
+  "evaluate_time": 2.1669437885284424
+}

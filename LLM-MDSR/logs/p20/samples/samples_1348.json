@@ -1,0 +1,14 @@
+{
+  "sample_order": 1348,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Rabi-like formula: P = (Omega_R^2 / (Omega_R^2 + Delta^2)) * sin^2(sqrt(Omega_R^2 + Delta^2) * t / 2)\n    # Assume target is related to Rabi frequency or similar\n    \n    # params[0]: amplitude scale\n    # params[1]: detuning parameter\n    # params[2]: offset\n    \n    # Use probability to encode coupling strength, omega to driver frequency\n    # Physical model: target = A * (prob * omega^2 / (omega^2 + delta^2)) * sin^2(t * sqrt(omega^2 + delta^2))\n    \n    delta = params[1] * omega  # detuning proportional to omega\n    rabi_freq = np.sqrt(omega**2 + delta**2 + eps)\n    \n    # Probability-weighted resonance term\n    resonance = prob * omega**2 / (omega**2 + delta**2 + eps)\n    \n    # Oscillatory term with time\n    oscillation = np.sin(t * rabi_freq / 2)**2\n    \n    # Additional nonlinear probability envelope \n    envelope = np.power(np.maximum(prob, eps), params[3])\n    \n    y = params[0] * resonance * oscillation * envelope + params[2]\n    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.670859932899475,
+  "evaluate_time": 1.9568638801574707
+}

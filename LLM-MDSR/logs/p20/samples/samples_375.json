@@ -1,0 +1,23 @@
+{
+  "sample_order": 375,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Use a physically-motivated Rabi-like oscillation form:\n    # target = prob * (A*cos(omega*t*B) + C) + D * sin(omega*t)\n    # with amplitude modulated by prob\n    B = params[0] if len(params) > 0 else 1.0\n    C = params[1] if len(params) > 1 else 0.0\n    A = params[2] if len(params) > 2 else 1.0\n    D = params[3] if len(params) > 3 else 0.0\n    E = params[4] if len(params) > 4 else 1.0\n\n    phase = omega * t * B\n    y = prob * (A * np.cos(phase) + C) + D * np.sin(phase) * E\n    return y\n\n",
+  "score": -2.14191957769158,
+  "mean_nmse": 1.7413820242458877,
+  "min_nmse": 1.1362871457011432,
+  "max_nmse": 2.210637863312534,
+  "median_nmse": 1.765927956094989,
+  "std_nmse": 0.3283518037720693,
+  "worst2_mean_nmse": 2.14191957769158,
+  "nmse_per_test": {
+    "dataset_0": 2.210637863312534,
+    "dataset_1": 1.8637197057365202,
+    "dataset_2": 1.9470660835377323,
+    "dataset_3": 1.1362871457011432,
+    "dataset_4": 1.668136206453458,
+    "dataset_5": 2.073201292070626,
+    "dataset_6": 1.546388409381693,
+    "dataset_7": 1.4856194877733953
+  },
+  "sample_time": 3.6630496978759766,
+  "evaluate_time": 2.021574020385742
+}

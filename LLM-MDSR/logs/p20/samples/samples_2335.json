@@ -1,0 +1,23 @@
+{
+  "sample_order": 2335,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Normalization to avoid division by zero in prob\n    p = np.clip(prob, eps, 1 - eps)\n    \n    # Physical model inspired by Landau-Zener / Rabi oscillations\n    # target = params[0] * (sin(omega*t + params[1]) / (omega*t + params[2])) * (1 - 2*p) + params[3] * t\n    # Simplified to capture resonance peaks and damping\n    envelope = np.sin(x) / (x + params[2])\n    \n    # Nonlinear frequency and phase coupling\n    term1 = params[0] * envelope * np.cos(params[1] * p)\n    \n    # Time-dependent decay term\n    term2 = params[3] * np.exp(-params[4] * np.abs(t)) * np.sin(params[5] * x + params[6])\n    \n    # Linear term for baseline drift\n    term3 = params[7] * t\n    \n    return term1 + term2 + term3 + params[8]\n\n",
+  "score": -0.9985388051211695,
+  "mean_nmse": 0.9964481213632123,
+  "min_nmse": 0.9927523969137124,
+  "max_nmse": 0.9993658034207706,
+  "median_nmse": 0.9968929587788629,
+  "std_nmse": 0.0018788068621111752,
+  "worst2_mean_nmse": 0.9985388051211695,
+  "nmse_per_test": {
+    "dataset_0": 0.9927523969137124,
+    "dataset_1": 0.9946798337436005,
+    "dataset_2": 0.9993658034207706,
+    "dataset_3": 0.9977118068215685,
+    "dataset_4": 0.9970420200117561,
+    "dataset_5": 0.9960015975905576,
+    "dataset_6": 0.9967438975459696,
+    "dataset_7": 0.9972876148577622
+  },
+  "sample_time": 2.533269166946411,
+  "evaluate_time": 5.053348779678345
+}

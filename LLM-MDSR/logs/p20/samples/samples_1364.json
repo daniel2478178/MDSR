@@ -1,0 +1,23 @@
+{
+  "sample_order": 1364,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Landau-Zener-like transition with Rabi oscillations\n    # target = A * prob * sinc²(Ω_eff * t/2) + C * sin²(ω * t) + offset\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Parameters:\n    # params[0] = overall amplitude\n    # params[1] = effective Rabi frequency scale (coupling strength)\n    # params[2] = detuning offset\n    # params[3] = phase offset\n    # params[4] = background amplitude\n    # params[5] = frequency modulation factor\n    # params[6] = damping rate\n    # params[7] = additional constant\n    \n    amplitude = params[0]\n    coupling = params[1]\n    detuning = params[2]\n    phase = params[3]\n    background = params[4]\n    freq_mod = params[5]\n    damping = params[6]\n    constant = params[7]\n    \n    # Detuning dependent effective frequency\n    delta = omega - detuning\n    omega_eff = np.sqrt(coupling**2 + delta**2)\n    \n    # Rabi oscillation envelope\n    rabi_term = (np.sin(omega_eff * t_safe / 2 + phase) / (omega_eff + eps))**2\n    \n    # Probability-driven main term\n    main_term = amplitude * np.maximum(prob, eps) * rabi_term\n    \n    # Additional prob-independent oscillation driven by omega\n    background_term = background * np.sin(freq_mod * omega * t_safe + phase)**2\n    \n    # Exponential decay to simulate dissipation\n    decay_term = constant * np.exp(-damping * t_safe)\n    \n    # Combine all terms\n    y = main_term + background_term + decay_term\n    \n    # Ensure non-negative (physical target often magnitude)\n    return y\n\n",
+  "score": -0.5463466999789498,
+  "mean_nmse": 0.37478368005247253,
+  "min_nmse": 0.2223979038896855,
+  "max_nmse": 0.5507529196319582,
+  "median_nmse": 0.3480710937075401,
+  "std_nmse": 0.12399916544566465,
+  "worst2_mean_nmse": 0.5463466999789498,
+  "nmse_per_test": {
+    "dataset_0": 0.5507529196319582,
+    "dataset_1": 0.4691122691804924,
+    "dataset_2": 0.3906208754341226,
+    "dataset_3": 0.2223979038896855,
+    "dataset_4": 0.30552131198095756,
+    "dataset_5": 0.5419404803259414,
+    "dataset_6": 0.2661374211556791,
+    "dataset_7": 0.2517862588209432
+  },
+  "sample_time": 3.050776958465576,
+  "evaluate_time": 2.532352924346924
+}

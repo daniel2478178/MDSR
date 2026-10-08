@@ -1,0 +1,24 @@
+{
+  "sample_order": 83,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"Improved version of `equation_v2`. Rewrite the mathematical expression in the function body. Return a complete valid implementation with an explicit return statement.\"\"\"\n    y = (\n        params[0] * np.log1p(params[1] * prob) * np.cos(params[2] * omega)\n        + params[3] * np.exp(-params[4] * prob) * np.sin(params[5] * t + params[6] * omega)\n        + params[7] * np.tanh(params[8] * t * np.sqrt(prob) + params[9] * np.sqrt(omega))\n    )\n    return y\n\n",
+  "score": 0.7596017364583849,
+  "complexity": 27,
+  "mean_nmse": 0.16011926197238183,
+  "min_nmse": 0.07686614906774475,
+  "max_nmse": 0.3737091070471653,
+  "median_nmse": 0.13781216522091783,
+  "std_nmse": 0.08528492350915652,
+  "worst2_mean_nmse": 0.27264035412763693,
+  "nmse_per_test": {
+    "dataset_0": 0.17157160120810858,
+    "dataset_1": 0.15775228463497634,
+    "dataset_2": 0.13869007728407268,
+    "dataset_3": 0.07686614906774475,
+    "dataset_4": 0.13693425315776295,
+    "dataset_5": 0.3737091070471653,
+    "dataset_6": 0.11479623043754182,
+    "dataset_7": 0.11063439294168226
+  },
+  "sample_time": 1.5093791484832764,
+  "evaluate_time": 4.679511785507202
+}

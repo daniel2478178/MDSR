@@ -1,0 +1,23 @@
+{
+  "sample_order": 2263,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Model: Landau-Zener-like transition with time-dependent oscillation\n    # target = A * prob * sin^2(B * omega * t + C) + D * (1 - prob) * cos^2(E * omega * t + F)\n    # Simplified: target = params[0] * prob * sin^2(params[1] * omega * t + params[2]) + \n    #                      params[3] * (1 - prob) * cos^2(params[4] * omega * t + params[5]) + params[6]\n    return (params[0] * prob * np.sin(params[1] * omega * t + params[2])**2 +\n            params[3] * (1 - prob) * np.cos(params[4] * omega * t + params[5])**2 +\n            params[6])\n\n",
+  "score": -0.6882123136933149,
+  "mean_nmse": 0.6397394427124754,
+  "min_nmse": 0.5290859279079763,
+  "max_nmse": 0.7042298637932186,
+  "median_nmse": 0.6604022770820484,
+  "std_nmse": 0.052261321838711496,
+  "worst2_mean_nmse": 0.6882123136933149,
+  "nmse_per_test": {
+    "dataset_0": 0.7042298637932186,
+    "dataset_1": 0.668386089393966,
+    "dataset_2": 0.6680004004353124,
+    "dataset_3": 0.5290859279079763,
+    "dataset_4": 0.6528041537287842,
+    "dataset_5": 0.6721947635934112,
+    "dataset_6": 0.6341964977990733,
+    "dataset_7": 0.5890178450480617
+  },
+  "sample_time": 2.132282078266144,
+  "evaluate_time": 6.193196773529053
+}

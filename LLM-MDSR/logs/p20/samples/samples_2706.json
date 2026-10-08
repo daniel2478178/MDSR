@@ -1,0 +1,23 @@
+{
+  "sample_order": 2706,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Rabi-like oscillation with prob and detuning dependence\n    detuning = params[0] * (omega - params[1])\n    rabi_freq = np.sqrt(prob * params[2]**2 + detuning**2 + params[3])\n    return (prob * params[4] * np.sin(rabi_freq * t)**2 + \n            detuning * params[5] * np.sin(rabi_freq * t) * np.cos(rabi_freq * t) + \n            params[6] * prob * t) / (1 + params[7] * t**2)\n\n",
+  "score": -2.060729674285624,
+  "mean_nmse": 1.1660775961485452,
+  "min_nmse": 0.5046057295258333,
+  "max_nmse": 2.1183856489056243,
+  "median_nmse": 0.8291656072810021,
+  "std_nmse": 0.6226639208933588,
+  "worst2_mean_nmse": 2.060729674285624,
+  "nmse_per_test": {
+    "dataset_0": 0.665600042164374,
+    "dataset_1": 0.9190861708193879,
+    "dataset_2": 0.7392450437426162,
+    "dataset_3": 1.7193765825314131,
+    "dataset_4": 2.0030736996656238,
+    "dataset_5": 0.6592478518334907,
+    "dataset_6": 0.5046057295258333,
+    "dataset_7": 2.1183856489056243
+  },
+  "sample_time": 2.019631862640381,
+  "evaluate_time": 3.256032943725586
+}

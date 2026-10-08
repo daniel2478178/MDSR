@@ -1,0 +1,23 @@
+{
+  "sample_order": 3418,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Generalized Rabi frequency: sqrt((omega - omega0)^2 + (Omega)^2), but omega0 and Omega are absorbed in params\n    # Rabi-like formula: P(t) = A * (Omega^2 / (Delta^2 + Omega^2)) * sin^2( sqrt(Delta^2 + Omega^2) * t / 2 )\n    # Here we use prob as measured transition probability, and infer the Rabi formula inverse:\n    # target = -params[0] * log(1 - prob) / t  resembles rate equation?\n    # More physical: target = (params[0] * prob * omega^2) / (params[1] + (omega - params[2])^2) * sin(params[3]*t + params[4]) * exp(-params[5]*t)\n    # But simpler: target = params[0] * prob * (params[1] + (omega - params[2])^2) * t / (1 + params[3] * t)\n    # Aim simple: amplitude modulated by resonance curve\n    \n    # Use a Lorentian resonance peak and linear time growth for small t\n    # target ~ excitation rate = prob/t * f(omega)\n    # So try: target = params[0] * (prob / t) * (1 / (1 + params[1]*(omega - params[2])^2)) + params[3]\n    \n    # But need to handle t=0 carefully; add epsilon\n    eps = 1e-10\n    teff = t + eps\n    # Fermi's Golden Rule: transition rate = (2π/h) |V|^2 ρ(E) → target could be rate * something\n    # Also oscillatory time dependence from Rabi\n    \n    # Perhaps target is a scaled Rabi frequency: target = sqrt( (omega-omega0)^2 + Ω^2 ) - |omega-omega0|\n    # but using prob to infer Ω: prob = (Ω^2 / ((ω-ω0)^2 + Ω^2)) sin^2(0.5 sqrt(... ) t)\n    \n    # Invert for Ω given prob, t, ω?  complex.\n    \n    # Simpler empirical: target = params[0] * prob * (1 - np.exp(-params[1]*t)) * np.cos(params[2]*omega + params[3]) + params[4]\n    # But we need more params for flexibility.\n    \n    # Since problem mentions \"driving angular frequency\", t interaction time, prob transition probability,\n    # likely target is related to detuning or Rabi frequency.\n    # Try: target = params[0] * (prob - params[1]) * np.sin(omega*t) + params[2] * np.cos(omega*t) + params[3]\n    \n    # But requirement: no more than 4 params unless necessary. We'll use 4.\n    # Use expression: target = params[0] * prob / (1 + params[1]*(omega*t - params[2])**2) + params[3]\n    \n    x = omega * t\n    y = params[0] * prob / (1.0 + params[1] * (x - params[2])**2) + params[3]\n    return y\n\n",
+  "score": -0.7976640104789757,
+  "mean_nmse": 0.7058933916006591,
+  "min_nmse": 0.5497408707422622,
+  "max_nmse": 0.8148973297852532,
+  "median_nmse": 0.7113670935328434,
+  "std_nmse": 0.08133859342020792,
+  "worst2_mean_nmse": 0.7976640104789757,
+  "nmse_per_test": {
+    "dataset_0": 0.7804306911726983,
+    "dataset_1": 0.7728990541690051,
+    "dataset_2": 0.7108085659605095,
+    "dataset_3": 0.5497408707422622,
+    "dataset_4": 0.7119256211051774,
+    "dataset_5": 0.8148973297852532,
+    "dataset_6": 0.6756691666506448,
+    "dataset_7": 0.6307758332197232
+  },
+  "sample_time": 3.054902672767639,
+  "evaluate_time": 2.330514669418335
+}

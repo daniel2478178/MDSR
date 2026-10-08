@@ -1,0 +1,23 @@
+{
+  "sample_order": 1070,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # param indexes:\n    # params[0]: base amplitude\n    # params[1]: nonlinearity exponent for prob\n    # params[2]: time coupling parameter\n    # params[3]: frequency coupling parameter\n    # params[4]: phase offset\n    # params[5]: scaling factor\n    # params[6]: constant offset\n    \n    epsilon = 1e-9\n    # Avoid division by zero and ensure valid magnitude operations\n    t_abs = np.abs(t) + epsilon\n    omega_abs = np.abs(omega) + epsilon\n    \n    # Probability cannot be exactly zero or one for log-stability, clamp it\n    prob_clamped = np.clip(prob, epsilon, 1.0 - epsilon)\n    \n    # Core physical model: target depends on prob power, sinusoidal time modulation, and inverse omega\n    angle = omega * t + params[4]\n    \n    # Apply a function with respect to probability (e.g. involving logit)\n    logit_prob = np.log(prob_clamped / (1.0 - prob_clamped))\n    \n    # sin and cos components of the driving; combine amplitude modulated by prob^n\n    amp_factor = np.power(prob_clamped, params[1]) + params[2] * t_abs\n    \n    oscillation = params[0] * (amp_factor) * (np.sin(angle) + params[3] * np.cos(angle))\n    \n    # Additional term: rapidly varying part scaled with probability and t\n    additional_term = params[5] * prob_clamped * np.sin(omega_abs * t) / np.sqrt(omega_abs)\n    \n    y = oscillation + additional_term + params[6]\n    \n    return y\n\n",
+  "score": -0.9984611378255188,
+  "mean_nmse": 0.9883216526805685,
+  "min_nmse": 0.9667643626166629,
+  "max_nmse": 0.9993172918038519,
+  "median_nmse": 0.9954299415226022,
+  "std_nmse": 0.012170361542392176,
+  "worst2_mean_nmse": 0.9984611378255188,
+  "nmse_per_test": {
+    "dataset_0": 0.9700715450852015,
+    "dataset_1": 0.9852903189737799,
+    "dataset_2": 0.995097625798984,
+    "dataset_3": 0.996664836072662,
+    "dataset_4": 0.9957622572462204,
+    "dataset_5": 0.9667643626166629,
+    "dataset_6": 0.9976049838471858,
+    "dataset_7": 0.9993172918038519
+  },
+  "sample_time": 2.4214481711387634,
+  "evaluate_time": 2.7454330921173096
+}

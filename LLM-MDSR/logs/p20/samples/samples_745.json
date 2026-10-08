@@ -1,0 +1,23 @@
+{
+  "sample_order": 745,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target relates to probability of transition modulated by resonance-like sinc and Rabi oscillation\n    # Alternative simpler form using Rabi frequency: Omega_R = sqrt((omega-omega0)^2 + (2*|coupling|*prob)^2)\n    # Since omega0 and coupling are dataset-specific, use params[0] for omega0, params[1] for coupling strength\n    # t is interaction time - typical Rabi formula: P = (Omega_R*t/2)^2 * sinc^2(sqrt((delta)^2 + Omega^2) * t/2)\n    # target maybe related to transition amplitude sqrt(prob) * sin(Omega_R*t/2) etc.\n    \n    # Estimate Rabi frequency from prob and omega\n    delta = omega - params[0]  # detuning from resonance (params[0] = omega0)\n    Omega = params[1] * np.sqrt(prob)  # Rabi frequecy proportional to sqrt(prob)\n    Omega_total = np.sqrt(delta**2 + Omega**2 + 1e-15)\n    \n    # Physical quantity might be transition amplitude or phase\n    # Try combining sine of Rabi oscillation with probability factor\n    angle = Omega_total * t / 2\n    term1 = params[2] * np.sin(angle) * prob\n    term2 = params[3] * np.cos(angle) * prob\n    \n    # Also include decay/exponential factor for possible damping\n    decay = np.exp(-params[4] * t * (1 - prob))\n    \n    y = (term1 + term2) * decay + params[5]\n    \n    return y\n\n",
+  "score": -0.9994475018881583,
+  "mean_nmse": 0.663457009968834,
+  "min_nmse": 0.35045799938318395,
+  "max_nmse": 0.9996439391555492,
+  "median_nmse": 0.5769792122788224,
+  "std_nmse": 0.27096620545437633,
+  "worst2_mean_nmse": 0.9994475018881583,
+  "nmse_per_test": {
+    "dataset_0": 0.4081662993873801,
+    "dataset_1": 0.5556168268226971,
+    "dataset_2": 0.5983415977349478,
+    "dataset_3": 0.9992510646207675,
+    "dataset_4": 0.35045799938318395,
+    "dataset_5": 0.3979290906602471,
+    "dataset_6": 0.9996439391555492,
+    "dataset_7": 0.9982492619859001
+  },
+  "sample_time": 3.1817110180854797,
+  "evaluate_time": 2.568883180618286
+}

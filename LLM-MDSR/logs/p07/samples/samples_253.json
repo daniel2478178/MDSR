@@ -1,0 +1,24 @@
+{
+  "sample_order": 253,
+  "function": "def equation(E_n: np.ndarray, theta: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        B = f(E_n, theta, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        E_n:\n            Independent variable.\n\n        theta:\n            Independent variable.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity B.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    y = params[0] * E_n / (params[1] + params[2] * np.cos(theta) + params[3] * np.sin(theta)) * np.exp(-params[4] * theta) + params[5] * np.tanh(params[6] * E_n)\n    return y\n\n",
+  "score": 18.393918308861874,
+  "complexity": 25,
+  "mean_nmse": 9.707580860630823e-10,
+  "min_nmse": 1.5153901048066797e-11,
+  "max_nmse": 7.461851245021705e-09,
+  "median_nmse": 3.789125903487775e-11,
+  "std_nmse": 2.4535272249886737e-09,
+  "worst2_mean_nmse": 3.778577167604368e-09,
+  "nmse_per_test": {
+    "dataset_0": 2.416746983108195e-11,
+    "dataset_1": 1.5153901048066797e-11,
+    "dataset_2": 6.66601524150107e-11,
+    "dataset_3": 7.461851245021705e-09,
+    "dataset_4": 9.530309018703165e-11,
+    "dataset_5": 4.69593624656412e-11,
+    "dataset_6": 2.71463119320069e-11,
+    "dataset_7": 2.88231556041143e-11
+  },
+  "sample_time": 1.1637684106826782,
+  "evaluate_time": 4.044807434082031
+}

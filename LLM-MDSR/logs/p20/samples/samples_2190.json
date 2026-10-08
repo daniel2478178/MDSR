@@ -1,0 +1,23 @@
+{
+  "sample_order": 2190,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p = np.clip(prob, 1e-10, 1 - 1e-10)\n    z = omega * t\n    \n    # Landau-Zener-like inverse relation: exp(-param0 * detuning * time) = p\n    # Thus detuning-related term ~ ln(p)/t\n    \n    # Main physical model: Rabi oscillation in a two-level system\n    # target = params[0] * sqrt(p*(1-p)) * sin(params[1]*t + params[2]) + params[3]*p + params[4]\n    \n    # Simpler: target = A*sqrt(p*(1-p))*sin(B*omega*t + C) + D*p + E\n    A = params[0]\n    B = params[1]\n    C = params[2]\n    D = params[3]\n    E = params[4]\n    \n    # Correlated Rabi term with energy scale\n    rabi = A * np.sqrt(p * (1 - p)) * np.sin(B * z + C)\n    \n    # Second-order correction in t to capture dynamics\n    corr = D * p * np.cos(E * t)\n    \n    return rabi + corr + (1 - params[5]) * (1 - 2*p) + params[6]\n\n",
+  "score": -0.995779046021747,
+  "mean_nmse": 0.972520562582518,
+  "min_nmse": 0.9318789420037834,
+  "max_nmse": 0.9959098558858377,
+  "median_nmse": 0.9851674113557312,
+  "std_nmse": 0.025718049623524666,
+  "worst2_mean_nmse": 0.995779046021747,
+  "nmse_per_test": {
+    "dataset_0": 0.9322543642350659,
+    "dataset_1": 0.960204592621545,
+    "dataset_2": 0.9869277592693602,
+    "dataset_3": 0.9959098558858377,
+    "dataset_4": 0.9834070634421022,
+    "dataset_5": 0.9318789420037834,
+    "dataset_6": 0.9939336870447936,
+    "dataset_7": 0.9956482361576563
+  },
+  "sample_time": 1.9363023042678833,
+  "evaluate_time": 2.429593086242676
+}

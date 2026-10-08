@@ -1,0 +1,24 @@
+{
+  "sample_order": 221,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"Improved version of `equation_v1`. Rewrite the mathematical expression in the function body. Return a complete valid implementation with an explicit return statement.\"\"\"\n    y = (\n        params[0] * np.log1p(params[1] * prob * t) * np.cos(params[2] * omega)\n        + params[3] * np.exp(-params[4] * prob) * np.sin(params[5] * t + params[6] * np.sqrt(omega) + params[7] * np.sin(params[8] * prob * t))\n        + params[9] * np.tanh(np.sqrt(prob) * np.sin(omega + t) * np.cos(params[1] * t))\n    )\n    return y\n\n",
+  "score": 1.3605578186846992,
+  "complexity": 35,
+  "mean_nmse": 0.09313158241749706,
+  "min_nmse": 0.05368597812432587,
+  "max_nmse": 0.13051509296764285,
+  "median_nmse": 0.08729950139124806,
+  "std_nmse": 0.023189025671523613,
+  "worst2_mean_nmse": 0.12738289351468376,
+  "nmse_per_test": {
+    "dataset_0": 0.12425069406172469,
+    "dataset_1": 0.09866393843693255,
+    "dataset_2": 0.0788533515840058,
+    "dataset_3": 0.05368597812432587,
+    "dataset_4": 0.08448460138284858,
+    "dataset_5": 0.13051509296764285,
+    "dataset_6": 0.08613886233082557,
+    "dataset_7": 0.08846014045167054
+  },
+  "sample_time": 1.6886315941810608,
+  "evaluate_time": 5.382534503936768
+}

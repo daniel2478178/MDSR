@@ -1,0 +1,23 @@
+{
+  "sample_order": 1418,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Ensure non-negative values for safe operations\n    prob_safe = np.maximum(prob, eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical structure: target scales with probability, with sinusoidal Rabi-like oscillations\n    # and frequency-dependent modulation, plus a damping term in time.\n    \n    # Core Rabi-like term: prob * sin^2(omega * t) commonly seen in two-level systems\n    # Here we use a flexible combination of prob powers and oscillatory terms.\n    \n    # Primary term: sin^2(omega*t) envelope scaled by probability and params[0]\n    osc = np.sin(omega_safe * t) ** 2\n    primary = params[0] * prob_safe * osc\n    \n    # Secondary term: additional prob dependence with parameterized exponent\n    prob_term = params[1] * np.power(prob_safe, params[2])\n    \n    # Third term: frequency-dependent factor, possibly accounting for detuning or resonance\n    # Using a reciprocal-like and sine modulation to capture non-trivial frequency behavior\n    freq_factor = np.sin(omega_safe * t) / (1.0 + params[3] * omega_safe * t_safe)\n    freq_term = params[4] * freq_factor * prob_safe\n    \n    # Damping/exponential term in time to capture decay or relaxation\n    decay_term = params[5] * np.exp(-params[6] * t_safe) * (1.0 - prob_safe)\n    \n    # Combine all contributions with an overall amplitude and offset\n    y = params[7] * (primary + prob_term + freq_term + decay_term) + params[8]\n    \n    return y\n\n",
+  "score": -0.5541576818533952,
+  "mean_nmse": 0.38961113145480697,
+  "min_nmse": 0.198127854351351,
+  "max_nmse": 0.5818120955048982,
+  "median_nmse": 0.3676751983434391,
+  "std_nmse": 0.11608275868851974,
+  "worst2_mean_nmse": 0.5541576818533952,
+  "nmse_per_test": {
+    "dataset_0": 0.5265032682018922,
+    "dataset_1": 0.3829885102341063,
+    "dataset_2": 0.5818120955048982,
+    "dataset_3": 0.198127854351351,
+    "dataset_4": 0.35236188645277194,
+    "dataset_5": 0.4438355327424893,
+    "dataset_6": 0.32390826584925736,
+    "dataset_7": 0.3073516383016896
+  },
+  "sample_time": 3.4709436297416687,
+  "evaluate_time": 5.611293315887451
+}

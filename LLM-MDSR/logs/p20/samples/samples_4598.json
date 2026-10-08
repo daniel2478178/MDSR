@@ -1,0 +1,23 @@
+{
+  "sample_order": 4598,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Use only prob, t, omega and params; no forbidden constants\n    p0 = params[0]  # amplitude for the oscillatory decay term\n    p1 = params[1]  # phase offset\n    p2 = params[2]  # frequency multiplier for omega*t\n    p3 = params[3]  # exponential decay rate in t\n    \n    # Physical structure: product of probability-dependent amplitude,\n    # oscillatory driving term, and exponential decay in time\n    return p0 * (prob * (1 - prob) + 1e-15) * np.sin(p2 * omega * t + p1) * np.exp(-p3 * t)\n\n",
+  "score": -5.508379004112854,
+  "mean_nmse": 4.130861236384721,
+  "min_nmse": 3.168514890463332,
+  "max_nmse": 5.912284439644529,
+  "median_nmse": 3.766921887928297,
+  "std_nmse": 0.8721439844005846,
+  "worst2_mean_nmse": 5.508379004112854,
+  "nmse_per_test": {
+    "dataset_0": 5.912284439644529,
+    "dataset_1": 4.276307733958647,
+    "dataset_2": 3.7258731511271113,
+    "dataset_3": 3.168514890463332,
+    "dataset_4": 3.807970624729483,
+    "dataset_5": 5.104473568581179,
+    "dataset_6": 3.6145909797117244,
+    "dataset_7": 3.436874502861764
+  },
+  "sample_time": 1.704361915588379,
+  "evaluate_time": 3.6350412368774414
+}

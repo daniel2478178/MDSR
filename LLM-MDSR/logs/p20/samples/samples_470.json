@@ -1,0 +1,23 @@
+{
+  "sample_order": 470,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Avoid division by zero in omega\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Enforce physically meaningful domain for prob between 0 and 1\n    prob_clipped = np.clip(prob, 0, 1)\n    \n    # Rotation angle\n    theta = omega * t\n    \n    # Physical relationship: target likely proportional to the transition amplitude over time\n    # Use a damped sinusoidal form where prob modulates the response\n    # params: p0 = amplitude, p1 = frequency modulation factor, p2 = damping rate, p3 = offset\n    amplitude = params[0]\n    freq_factor = params[1]\n    damping = params[2]\n    offset = params[3]\n    \n    # Combined effect of rotation and transition probability\n    main_term = amplitude * np.sin(theta * freq_factor) * prob_clipped\n    \n    # Exponential decay in time\n    decay_term = np.exp(-damping * np.abs(t))\n    \n    # Scaling by driving frequency (inverse square root - Rabi-like)\n    frequency_term = 1.0 / np.sqrt(omega_safe)  # up to scaling\n    \n    # Coupling between prob and frequency effects\n    coupling = prob_clipped * frequency_term\n    \n    y = main_term * decay_term + offset * coupling + params[4] * np.cos(theta * freq_factor) * prob_clipped\n    \n    # Final normalization ensuring output finite values\n    return y + params[5] * t * np.sin(theta * freq_factor) * prob_clipped\n\n",
+  "score": -1.133280930943742,
+  "mean_nmse": 1.0793073279206027,
+  "min_nmse": 1.0136836605895003,
+  "max_nmse": 1.1648497676555563,
+  "median_nmse": 1.0790738363688601,
+  "std_nmse": 0.04284174423027781,
+  "worst2_mean_nmse": 1.133280930943742,
+  "nmse_per_test": {
+    "dataset_0": 1.1648497676555563,
+    "dataset_1": 1.1017120942319276,
+    "dataset_2": 1.0728952105843441,
+    "dataset_3": 1.0136836605895003,
+    "dataset_4": 1.0852524621533761,
+    "dataset_5": 1.0990903504518434,
+    "dataset_6": 1.0582298558018275,
+    "dataset_7": 1.038745221896446
+  },
+  "sample_time": 2.359401822090149,
+  "evaluate_time": 2.713862657546997
+}

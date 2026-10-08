@@ -1,0 +1,23 @@
+{
+  "sample_order": 840,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Ensure non-zero values for safe operations\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Physical insight: transition probability related to rotation angle theta = omega * t\n    # Common form for Rabi-like systems: target ∝ prob * sin^2(omega*t/2) / t^2\n    # Or target ∝ prob * (sin(omega*t)/(omega*t))^2 with decay\n    \n    angle = omega * t\n    # Use params[0] as overall amplitude, params[1] as frequency scaling,\n    # params[2] as decay rate, params[3] as phase shift, params[4] as offset\n    \n    # Candidate: target = A * prob * (sin(B * omega * t + C))^2 * exp(-D * |t|) + E * prob + F\n    sinc_term = np.sin(params[1] * angle + params[2])\n    squared_sinc = sinc_term ** 2\n    decay = np.exp(-params[3] * t_safe)\n    \n    y = params[0] * prob * squared_sinc * decay / (1.0 + t_safe) + params[4] * prob + params[5]\n    \n    return y\n\n",
+  "score": -0.6841212856708022,
+  "mean_nmse": 0.5099496521269505,
+  "min_nmse": 0.36873638172066614,
+  "max_nmse": 0.7087916713703115,
+  "median_nmse": 0.4895295741422609,
+  "std_nmse": 0.11205550128230592,
+  "worst2_mean_nmse": 0.6841212856708022,
+  "nmse_per_test": {
+    "dataset_0": 0.7087916713703115,
+    "dataset_1": 0.6594508999712929,
+    "dataset_2": 0.5079232976720741,
+    "dataset_3": 0.38332891727123497,
+    "dataset_4": 0.36873638172066614,
+    "dataset_5": 0.5024460552371417,
+    "dataset_6": 0.47230690072550247,
+    "dataset_7": 0.4766130930473801
+  },
+  "sample_time": 4.905064423878987,
+  "evaluate_time": 2.685828924179077
+}

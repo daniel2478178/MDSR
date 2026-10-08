@@ -1,0 +1,23 @@
+{
+  "sample_order": 1794,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical interpretation: Landau-Zener transition probability\n    # target = (hbar * Omega_R) related to transition amplitude\n    # Using prob as sin^2(x), so arcsin gives phase accumulation\n    theta = 2.0 * np.arcsin(np.clip(np.sqrt(np.clip(prob, 0, 1)), 0, 1))\n    # theta = Omega_R * t when resonant, here using prob to extract effective coupling\n    # target likely energy = sqrt((delta)^2 + Omega_R^2) or similar\n    # We'll use: target = A * sqrt(theta^2/t^2 + (omega - omega_0)^2) * t? \n    # Simpler: target = A * omega * theta / t  (dimensionless or scaled)\n    # For Rabi: population = sin^2(Omega_R*t/2) => Omega_R = 2*arcsin(sqrt(prob))/t\n    omega_r = theta / (t + 1e-12)\n    # Physical relation with detuning (omega as driving, params[0] as resonance freq)\n    detuning = omega - params[0]\n    # Rabi frequency with detuning: Omega = sqrt(omega_r^2 + detuning^2)\n    omega_total = np.sqrt(omega_r**2 + detuning**2 + 1e-30)\n    # Target could be transition energy or amplitude; let's try:\n    y = params[1] * omega_total + params[2] * np.cos(omega_r * t) * np.exp(-params[3] * t)\n    return y\n\n",
+  "score": -1.0000451361368823,
+  "mean_nmse": 0.9998186406278979,
+  "min_nmse": 0.999065237750281,
+  "max_nmse": 1.0000474746031696,
+  "median_nmse": 0.9999836468976584,
+  "std_nmse": 0.000318740554156457,
+  "worst2_mean_nmse": 1.0000451361368823,
+  "nmse_per_test": {
+    "dataset_0": 1.0000474746031696,
+    "dataset_1": 1.0000050864824805,
+    "dataset_2": 0.9999995592241895,
+    "dataset_3": 0.9998320183723478,
+    "dataset_4": 1.0000427976705952,
+    "dataset_5": 0.999065237750281,
+    "dataset_6": 0.9995892163489922,
+    "dataset_7": 0.9999677345711274
+  },
+  "sample_time": 3.046120762825012,
+  "evaluate_time": 4.058551073074341
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 1467,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Landau-Zener-like transition probability formula:\n    # target = A * (1 - exp(-B * prob * f(omega,t))) + C\n    # where f incorporates oscillatory and power-law dependencies\n    \n    # Oscillatory frequency-dependent term\n    osc_term = np.sin(params[0] * omega * t + params[1])**2\n    \n    # Probability power-law transformation\n    prob_term = np.power(np.maximum(prob, eps), params[2])\n    \n    # Time-dependent decay with probability modulation\n    decay_term = np.exp(-params[3] * t_safe * np.power(prob_term, params[4]))\n    \n    # Combine all terms multiplicatively in exponent\n    exponent = params[5] * prob_term * osc_term * decay_term / (1 + params[6] * omega_safe)\n    \n    # Final sigmoidal-like saturation\n    y = params[7] * (1 - np.exp(-exponent)) + params[8]\n    \n    # Ensure finite output\n    y = np.nan_to_num(y, nan=0.0, posinf=1e10, neginf=-1e10)\n    \n    return y\n\n",
+  "score": -0.999999994657155,
+  "mean_nmse": 0.9778425953200367,
+  "min_nmse": 0.9362439529413309,
+  "max_nmse": 1.0000000007539884,
+  "median_nmse": 0.999999957778588,
+  "std_nmse": 0.028701290031150142,
+  "worst2_mean_nmse": 0.999999994657155,
+  "nmse_per_test": {
+    "dataset_0": 0.9362439529413309,
+    "dataset_1": 0.9456368550400455,
+    "dataset_2": 1.0000000007539884,
+    "dataset_3": 0.9999999885603215,
+    "dataset_4": 0.9999999483815465,
+    "dataset_5": 0.9408600643698141,
+    "dataset_6": 0.9999999671756294,
+    "dataset_7": 0.9999999853376169
+  },
+  "sample_time": 2.6304816007614136,
+  "evaluate_time": 2.1532034873962402
+}

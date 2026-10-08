@@ -1,0 +1,23 @@
+{
+  "sample_order": 284,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-12\n    # Common structure: exponential decay in time modulated by probability,\n    # with an oscillatory Rabi-like term and a baseline.\n    # params[0], params[1], params[2] are dataset-specific amplitudes/rates.\n    angle = omega * t\n    decay = np.exp(-params[0] * np.abs(t))\n    rabi_osc = np.sin(0.5 * np.sqrt(params[1]**2 + omega**2) * t + params[2])\n    y = prob * (params[3] * decay * rabi_osc + params[4] * np.cos(angle)) + params[5] * np.exp(-np.abs(t) * params[6])\n    return y\n\n",
+  "score": -0.5082019027720641,
+  "mean_nmse": 0.36641573130727834,
+  "min_nmse": 0.2009828290955801,
+  "max_nmse": 0.5558459705340857,
+  "median_nmse": 0.38042969121337067,
+  "std_nmse": 0.11486135416992595,
+  "worst2_mean_nmse": 0.5082019027720641,
+  "nmse_per_test": {
+    "dataset_0": 0.46055783501004255,
+    "dataset_1": 0.40897574986647167,
+    "dataset_2": 0.3518836325602696,
+    "dataset_3": 0.2009828290955801,
+    "dataset_4": 0.5558459705340857,
+    "dataset_5": 0.44429517417257697,
+    "dataset_6": 0.26544265417724794,
+    "dataset_7": 0.24334200504195208
+  },
+  "sample_time": 3.555688738822937,
+  "evaluate_time": 2.5707361698150635
+}

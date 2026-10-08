@@ -1,0 +1,23 @@
+{
+  "sample_order": 1081,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    sin_angle = np.sin(angle)\n    cos_angle = np.cos(angle)\n    \n    # Target = A * sin(omega*t) * prob + B * cos(omega*t) * prob + C * prob * t\n    # This captures Rabi-like oscillation driven by prob and time\n    y = params[0] * sin_angle * prob + params[1] * cos_angle * prob + params[2] * prob * t\n    \n    return y\n\n",
+  "score": -1.2972583085774185,
+  "mean_nmse": 1.0301967368441367,
+  "min_nmse": 0.7047462641024648,
+  "max_nmse": 1.3391553450949758,
+  "median_nmse": 1.0165757302829963,
+  "std_nmse": 0.1852116557558012,
+  "worst2_mean_nmse": 1.2972583085774185,
+  "nmse_per_test": {
+    "dataset_0": 1.3391553450949758,
+    "dataset_1": 1.0132325991622777,
+    "dataset_2": 1.0547919104883587,
+    "dataset_3": 0.7047462641024648,
+    "dataset_4": 1.0199188614037147,
+    "dataset_5": 1.255361272059861,
+    "dataset_6": 0.9353293370280719,
+    "dataset_7": 0.91903830541337
+  },
+  "sample_time": 1.584108293056488,
+  "evaluate_time": 1.9820077419281006
+}

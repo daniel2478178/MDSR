@@ -1,0 +1,23 @@
+{
+  "sample_order": 2935,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Rabi-like oscillation amplitude and frequency, with probability scaling\n    # and a decay term, common in two-level system population transfer\n    amplitude = params[0] * prob\n    frequency = params[1]\n    phase = params[2]\n    decay = params[3]\n    \n    # Physical target often proportional to pi * (Rabi frequency / detuning)², \n    # but here we keep a structure: amplitude * sin²(frequency*t+phase)/t²?\n    # Actually, simpler: amplitude * sin(frequency*x + phase) * exp(-decay*t)\n    # plus a constant offset and a small correction from (1-prob)\n    \n    # Let's try: target = p * A * sin(B*x + C) * exp(-D*t) + (1-p)*E*cos(F*x+G) + H\n    # but reduce parameters by combining terms -> use params[0..5]\n    \n    # A physically motivated ansatz: \n    # target = params[0]*prob*sin(params[1]*x + params[2]) * exp(-params[3]*t) \n    #         + params[4]*(1-prob)*cos(params[5]*x) + params[6]\n    \n    # But to improve, maybe detuning affects phase: phase includes t*omega frequency mismatch\n    # Let's simplify to 6 params max:\n    return (params[0] * prob * np.sin(params[1] * x + params[2]) * np.exp(-params[3] * t) \n            + params[4] * (1 - prob) * np.cos(params[5] * x) \n            + params[6] * t)\n\n",
+  "score": -0.5786809456228077,
+  "mean_nmse": 0.4389458305758979,
+  "min_nmse": 0.18435111152797007,
+  "max_nmse": 0.5799389057528479,
+  "median_nmse": 0.42689093094517055,
+  "std_nmse": 0.12695013012203202,
+  "worst2_mean_nmse": 0.5786809456228077,
+  "nmse_per_test": {
+    "dataset_0": 0.5799389057528479,
+    "dataset_1": 0.5774229854927675,
+    "dataset_2": 0.45064645378200113,
+    "dataset_3": 0.18435111152797007,
+    "dataset_4": 0.40313540810834,
+    "dataset_5": 0.5638219665154439,
+    "dataset_6": 0.38481301460726863,
+    "dataset_7": 0.36743679882054436
+  },
+  "sample_time": 2.1969558000564575,
+  "evaluate_time": 3.4171829223632812
+}

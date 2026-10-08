@@ -1,0 +1,23 @@
+{
+  "sample_order": 622,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: amplitude of Rabi-like oscillations modulated by probability and detuning\n    # Avoid singularities with a small epsilon\n    eps = 1e-12\n    \n    # Effective Rabi frequency: sqrt((omega - omega0)^2 + (prob * Omega)^2)\n    # Use params for: omega0 (detuning offset), Omega (coupling strength), phase, and overall amplitude\n    delta = omega - params[0]\n    rabi_freq = np.sqrt(delta**2 + (params[1] * prob)**2 + eps)\n    \n    # Physical solution: sin^2(rabi_freq * t/2) * (Omega^2 / rabi_freq^2)\n    # Simplifies to prob-dependent oscillation with functional form\n    envelope = (params[1] * prob)**2 / (rabi_freq**2 + eps)\n    osc = np.sin(rabi_freq * t / 2)**2\n    \n    return params[2] * envelope * osc + params[3] * np.sin(omega * t) * prob\n\n",
+  "score": -3.8741160008828244,
+  "mean_nmse": 2.7234599876067676,
+  "min_nmse": 1.2810715173307785,
+  "max_nmse": 3.929565166181991,
+  "median_nmse": 2.74930912191311,
+  "std_nmse": 1.0194963575747675,
+  "worst2_mean_nmse": 3.8741160008828244,
+  "nmse_per_test": {
+    "dataset_0": 2.1327071952991945,
+    "dataset_1": 1.895932120115109,
+    "dataset_2": 3.3659110485270256,
+    "dataset_3": 1.2810715173307785,
+    "dataset_4": 1.6498414410435454,
+    "dataset_5": 3.713984576772839,
+    "dataset_6": 3.818666835583658,
+    "dataset_7": 3.929565166181991
+  },
+  "sample_time": 2.5255581736564636,
+  "evaluate_time": 2.0168943405151367
+}

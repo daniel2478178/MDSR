@@ -1,0 +1,23 @@
+{
+  "sample_order": 5189,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Physical form: transition probability modulates a damped oscillation in time\n    # with a phase proportional to omega*t (driving phase accumulation)\n    # base = prob * A * exp(-gamma*t) * sin(omega*t + phi) + (1-prob)*B*cos(...)\n    common_phase = x + params[4]\n    # Use prob to interpolate between cosine for no transition and sine for full transition\n    return (\n        params[0] * prob * np.exp(-params[1]*t) * np.sin(common_phase + params[2]) \n        + params[3] * (1-prob) * np.exp(-params[1]*t*0.5) * np.cos(common_phase - params[2])\n    )\n\n",
+  "score": -3.2645753164254496,
+  "mean_nmse": 2.3485306837482316,
+  "min_nmse": 1.4454008288772942,
+  "max_nmse": 3.377920587558594,
+  "median_nmse": 2.329082473819309,
+  "std_nmse": 0.7838487821867881,
+  "worst2_mean_nmse": 3.2645753164254496,
+  "nmse_per_test": {
+    "dataset_0": 3.1512300452923054,
+    "dataset_1": 1.8534417058954151,
+    "dataset_2": 1.4697242352981645,
+    "dataset_3": 2.8047232417432033,
+    "dataset_4": 1.5780007659871955,
+    "dataset_5": 3.377920587558594,
+    "dataset_6": 1.4454008288772942,
+    "dataset_7": 3.1078040593336818
+  },
+  "sample_time": 2.481921136379242,
+  "evaluate_time": 2.3858165740966797
+}

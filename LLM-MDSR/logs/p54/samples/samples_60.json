@@ -1,0 +1,14 @@
+{
+  "sample_order": 60,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    gamma = params[1] if len(params) > 1 else 0.0\n    omega_base = params[2] if len(params) > 2 else 1.0\n    phi = params[3] if len(params) > 3 else 0.0\n    offset = params[4] if len(params) > 4 else 0.0\n    beta = params[5] if len(params) > 5 else 0.0\n    delta = params[6] if len(params) > 6 else 0.0\n\n    # Envelope combining exponential decay with an algebraic factor\n    envelope = np.exp(-gamma * t) / (1.0 + 0.1 * gamma * t)\n    \n    # Phase with linear term plus sinusoidal modulation that evolves as t^1.5\n    phase = omega_base * t + beta * np.sin(delta * t) * t**1.5 + phi\n    \n    # Amplitude modulation with a slowly decaying oscillation\n    amp_mod = 1.0 + 0.1 * np.cos(0.4 * t) * np.exp(-0.05 * gamma * t)\n    \n    # Additional harmonic content via second cosine term with different phase\n    second_harmonic = 0.05 * np.cos(2.0 * omega_base * t + phi)\n    \n    y = offset + A * envelope * amp_mod * np.cos(phase) + A * envelope * second_harmonic\n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.3718984127044678,
+  "evaluate_time": 2.7592077255249023
+}

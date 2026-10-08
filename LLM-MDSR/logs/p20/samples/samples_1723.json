@@ -1,0 +1,23 @@
+{
+  "sample_order": 1723,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Guard against division by zero\n    safe_omega = np.where(np.abs(omega) < 1e-10, 1e-10, omega)\n    \n    # Physical model: amplitude modulation of Rabi-like oscillation with detuning\n    # Common form: target = A * prob * sinc^2(delta*t/2) + B * (1-prob) * exp(-gamma*t)\n    # where delta = omega - omega0, but simplified based on available params\n    \n    p0 = params[0]  # overall scale\n    p1 = params[1]  # coupling strength\n    p2 = params[2]  # detuning frequency\n    p3 = params[3]  # damping rate\n    \n    # Effective detuning (dimensionless parameter times omega if needed)\n    delta = p2 * omega\n    \n    # Rabi-like oscillation factor\n    sinc_arg = delta * t / 2.0\n    envelope = np.where(np.abs(sinc_arg) < 1e-10, 1.0, \n                        np.sin(sinc_arg) / sinc_arg)\n    \n    # Transition probability drives the resonant feature\n    rabi_term = p1 * prob * envelope**2\n    \n    # Off-resonant / background contribution with decay\n    decay = p3 * np.exp(-p2 * np.abs(t))\n    \n    # Basic time evolution phase\n    phase = np.cos(delta * t)\n    \n    y = p0 * (rabi_term * phase + decay * (1 - prob))\n    \n    return y\n\n",
+  "score": -2.2057622241370183,
+  "mean_nmse": 1.2368392612142147,
+  "min_nmse": 0.6722123629371551,
+  "max_nmse": 2.572036411425934,
+  "median_nmse": 0.9051220566731034,
+  "std_nmse": 0.6350089968485753,
+  "worst2_mean_nmse": 2.2057622241370183,
+  "nmse_per_test": {
+    "dataset_0": 0.8056704666867747,
+    "dataset_1": 0.7390843308797871,
+    "dataset_2": 0.6722123629371551,
+    "dataset_3": 1.0045736466594322,
+    "dataset_4": 2.572036411425934,
+    "dataset_5": 0.7765231416785978,
+    "dataset_6": 1.8394880368481021,
+    "dataset_7": 1.485125692597934
+  },
+  "sample_time": 2.244049370288849,
+  "evaluate_time": 2.6224288940429688
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 1901,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Rabi-like oscillation term: probability modulates the oscillation envelope\n    rabi = np.sqrt((params[0] * omega)**2 + params[1]**2)\n    osc = np.sin(rabi * t / 2.0)**2\n    # Decay term\n    decay = np.exp(-params[2] * t)\n    # Detuning phase correction\n    phase = params[3] * omega * t + params[4]\n    # Amplitude and baseline\n    result = params[5] + params[6] * prob * osc * decay * np.cos(phase)\n    # Small off-resonance correction proportional to prob and time\n    correction = params[7] * prob * np.sin(omega * t) / (omega + eps)\n    return result + correction\n\n",
+  "score": -0.6494258128337416,
+  "mean_nmse": 0.45023811327739643,
+  "min_nmse": 0.1851500643674084,
+  "max_nmse": 0.658259034877933,
+  "median_nmse": 0.458580425909913,
+  "std_nmse": 0.15079065461606198,
+  "worst2_mean_nmse": 0.6494258128337416,
+  "nmse_per_test": {
+    "dataset_0": 0.5168820642820303,
+    "dataset_1": 0.4263419166807586,
+    "dataset_2": 0.37357576765214523,
+    "dataset_3": 0.1851500643674084,
+    "dataset_4": 0.3102845324302785,
+    "dataset_5": 0.4908189351390674,
+    "dataset_6": 0.6405925907895501,
+    "dataset_7": 0.658259034877933
+  },
+  "sample_time": 1.8182724714279175,
+  "evaluate_time": 7.668869256973267
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 5411,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    amplitude = params[0]\n    offset = params[1]\n    damping = params[2]\n    \n    # Physical model: transition probability governs coupling between sinusoidal driving\n    # and exponential decay in time, with resonance-like dependence on omega*t\n    # target = A * (prob^0.5) * sin(omega*t + phase) * exp(-gamma) + B\n    term1 = amplitude * np.sqrt(prob) * np.sin(x + offset)\n    term2 = damping * (1 - prob) * np.cos(x) * np.exp(-params[3] * t)\n    return term1 + term2 + params[4]\n\n",
+  "score": -0.8150978367876787,
+  "mean_nmse": 0.7480471733253828,
+  "min_nmse": 0.6983141250832836,
+  "max_nmse": 0.8363051676334408,
+  "median_nmse": 0.7319362571641138,
+  "std_nmse": 0.045985233846000666,
+  "worst2_mean_nmse": 0.8150978367876787,
+  "nmse_per_test": {
+    "dataset_0": 0.8363051676334408,
+    "dataset_1": 0.7721856893501019,
+    "dataset_2": 0.7059832387286463,
+    "dataset_3": 0.6983141250832836,
+    "dataset_4": 0.7479116840948858,
+    "dataset_5": 0.7938905059419166,
+    "dataset_6": 0.7159608302333418,
+    "dataset_7": 0.7138261455374463
+  },
+  "sample_time": 2.0250150561332703,
+  "evaluate_time": 2.1698949337005615
+}

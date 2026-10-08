@@ -1,0 +1,23 @@
+{
+  "sample_order": 4201,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition probability for a two-level system:\n    # target = params[0] * (1 - 2*prob) * omega * sin(params[1] * t)\n    # But we need to handle prob near 0/1 gracefully.\n    # Improved form: target = A * sqrt(prob*(1-prob)) * omega * sin(B*t + C) + D\n    # This is inspired by Rabi oscillations / Landau-Zener transfer.\n    # Use only 4 parameters: params[0] amplitude, params[1] frequency scale,\n    # params[2] phase, params[3] offset.\n    \n    # Protection against sqrt of negative due to numerical issues\n    p_safe = np.clip(prob, 0, 1)\n    envelope = np.sqrt(p_safe * (1 - p_safe))\n    return params[0] * envelope * omega * np.sin(params[1] * t + params[2]) + params[3] * np.ones_like(t)\n\n",
+  "score": -0.9953515540438944,
+  "mean_nmse": 0.9771815168845734,
+  "min_nmse": 0.938926951141928,
+  "max_nmse": 0.9955800805632261,
+  "median_nmse": 0.9904199277461347,
+  "std_nmse": 0.022719555030772283,
+  "worst2_mean_nmse": 0.9953515540438944,
+  "nmse_per_test": {
+    "dataset_0": 0.9398556300508971,
+    "dataset_1": 0.9740881527460062,
+    "dataset_2": 0.9910775711155565,
+    "dataset_3": 0.9955800805632261,
+    "dataset_4": 0.9897622843767131,
+    "dataset_5": 0.938926951141928,
+    "dataset_6": 0.993038437557698,
+    "dataset_7": 0.9951230275245628
+  },
+  "sample_time": 1.4761916399002075,
+  "evaluate_time": 2.5813324451446533
+}

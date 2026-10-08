@@ -1,0 +1,23 @@
+{
+  "sample_order": 31,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Damped oscillator with amplitude envelope that has a time-shifted Gaussian-like\n    # correction, and a phase with a slow cubic drift to capture frequency changes.\n    # params: [amplitude, damping, freq, phase, offset, cubic_phase, envelope_mod]\n    env = np.exp(-params[1] * t) * (1.0 + params[6] * np.cos(params[2] * t * 0.3))\n    phase = params[2] * t + params[3] + params[5] * t**3\n    y = params[0] * env * np.sin(phase) + params[4]\n    return y\n\n",
+  "score": -5.366082790885389e-05,
+  "mean_nmse": 1.3757746828325789e-05,
+  "min_nmse": 2.763031481455686e-09,
+  "max_nmse": 9.281267189326924e-05,
+  "median_nmse": 1.770829310637155e-07,
+  "std_nmse": 3.0240000336901068e-05,
+  "worst2_mean_nmse": 5.366082790885389e-05,
+  "nmse_per_test": {
+    "dataset_0": 1.4508983924438541e-05,
+    "dataset_1": 1.1473299931014605e-07,
+    "dataset_2": 1.5127115052864713e-07,
+    "dataset_3": 2.0289471159878387e-07,
+    "dataset_4": 2.763031481455686e-09,
+    "dataset_5": 9.281267189326924e-05,
+    "dataset_6": 1.3515307693897178e-08,
+    "dataset_7": 2.255141608285595e-06
+  },
+  "sample_time": 4.711079299449921,
+  "evaluate_time": 6.376183271408081
+}

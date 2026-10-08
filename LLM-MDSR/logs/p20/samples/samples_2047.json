@@ -1,0 +1,23 @@
+{
+  "sample_order": 2047,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-12\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Main Rabi oscillation term: amplitude proportional to sqrt(prob) with damping\n    envelope = params[0] * np.sqrt(np.clip(prob, eps, None)) \n    detuning = params[1] * (1 - prob)  # accounts for detuning effect\n    oscillation = np.sin(x + params[2]) * np.exp(-params[3] * t)\n    base = (envelope + detuning) * oscillation\n    \n    # Coherent second-order correction: frequency-dependent exponential\n    correction = params[4] * np.cos(2 * x + params[5]) * np.exp(-params[6] * t)\n    \n    # Static bias and slow decoherence term\n    bias = params[7] * prob * np.exp(-params[8] * t)\n    \n    return base + correction + bias + params[5] * t\n\n",
+  "score": -0.49415089558603376,
+  "mean_nmse": 0.3847075657263168,
+  "min_nmse": 0.29794972784208523,
+  "max_nmse": 0.5008538140595816,
+  "median_nmse": 0.3686229297903326,
+  "std_nmse": 0.07367454904910843,
+  "worst2_mean_nmse": 0.49415089558603376,
+  "nmse_per_test": {
+    "dataset_0": 0.5008538140595816,
+    "dataset_1": 0.4045932177731867,
+    "dataset_2": 0.4113930806372153,
+    "dataset_3": 0.3326526418074785,
+    "dataset_4": 0.3240581079801237,
+    "dataset_5": 0.48744797711248583,
+    "dataset_6": 0.29794972784208523,
+    "dataset_7": 0.3187119585983775
+  },
+  "sample_time": 1.920307457447052,
+  "evaluate_time": 3.5023581981658936
+}

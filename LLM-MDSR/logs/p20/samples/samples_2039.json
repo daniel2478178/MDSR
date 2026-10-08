@@ -1,0 +1,14 @@
+{
+  "sample_order": 2039,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    p4 = params[4]\n    p5 = params[5]\n    p6 = params[6]\n    p7 = params[7]\n    \n    # Corrected Rabi-like oscillation with time and detuning effects\n    envelope = p0 * np.exp(-p1 * t)\n    rabi = np.sqrt(prob * (1.0 - prob))\n    oscillation = np.power(np.sin(p2 * omega * t + p3), 2)\n    spread = np.power(prob, p4)\n    \n    return p5 * envelope * rabi * oscillation + p6 * spread + p7 * np.sin(omega * t)\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.1589099764823914,
+  "evaluate_time": 1.9430623054504395
+}

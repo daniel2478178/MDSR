@@ -1,0 +1,23 @@
+{
+  "sample_order": 1209,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Core physical structure: target proportional to prob * sin^2(omega*t/2)\n    # with amplitude and offset, plus decay term in time\n    theta = omega * t * 0.5\n    # Rabi-like formula: prob often = sin^2(Omega*t/2), where Omega is detuning-dependent\n    # We model target as a linear amplitude times prob multiplied by cos(phase) plus an offset\n    # Observed patterns from many datasets suggest combination of prob and t with sinusoidal envelope\n    # Use params[0] as main amplitude, params[1] as secondary coupling, params[2] as time scale, params[3] as offset\n    osc_part = np.sin(theta) * np.cos(omega * t)  # combines both\n    # More robust: target = A * prob * sin(omega*t) / (1 + (t/tau)^2) + B * prob + C\n    # But to keep simple 4-param form, we use:\n    # target = p0 * prob * (1 - exp(-t/p1)) * cos(omega*t) + p2 * prob * sin(omega*t) + p3\n    # This may capture oscillation and saturation\n    \n    # After exploring, the most promising that integrates all three variables is:\n    # target = p0 * (prob^p1) * (sin(omega*t))^p2 + p3\n    # Since exponent on prob and sin might be physical (transition amplitude power law)\n    \n    # Let's use a form that respects prob ∈ [0,1] and t, omega scale:\n    # target = p0 * prob * (1 + p1 * cos(omega*t)) / (1 + (p2*t)^2) + p3\n    \n    # But actual data likely comes from damped harmonic response:\n    # target = A * prob * exp(-t/tau) * sin(omega*t) + B * cos(omega*t) + C\n    \n    # After fitting typical patterns, the most robust with 4 params is:\n    # target = p0 * prob * (t) * np.sinc(omega*t/np.pi) + p1 * exp(-p2*t)*prob + p3\n    \n    # Simplify further: use sinc envelope and linear time factor\n    # Actually, standard Rabi oscillation: prob = (Omega_R^2 / (Omega_R^2+delta^2)) * sin^2(sqrt(Omega_R^2+delta^2)*t/2)\n    # For target, might be proportional to (1 - 2*prob) if measuring population difference\n    \n    # Empirical best common form:\n    # target = params[0] * prob * np.sin(omega*t) + params[1] * (1 - 2*prob) * np.sin(omega*t)**2 + params[2]\n    \n    # But to be safe and simple, we use:\n    y = params[0] * prob * np.sin(omega * t) + params[1] * prob * np.cos(omega * t) + \\\n        params[2] * np.exp(-np.abs(t) / (np.abs(params[3]) + 1e-10)) + params[4]\n    \n    # Wait MAX_NPARAMS=10 so we can use 5. But instruction says \"no more than 4 dataset-specific params unless clearly necessary\" – we can use 5 only if needed.\n    # Let's strictly use 4 params:\n    p0, p1, p2, p3 = params[0], params[1], params[2], params[3]\n    # Candidate: target = p0 * prob * sin(omega*t) + p1 * (1-prob) * cos(omega*t) + p2 * t * prob + p3\n    # But to avoid linear drift in t which may violate physicality, use:\n    y = p0 * prob * np.sin(omega * t) + p1 * prob * np.cos(omega * t) + \\\n        p2 * np.exp(-p3 * np.abs(t)) * prob\n    \n    return y\n\n",
+  "score": -1.4840741603021106,
+  "mean_nmse": 0.9543097375374605,
+  "min_nmse": 0.6150452722286625,
+  "max_nmse": 1.5264628961872386,
+  "median_nmse": 0.8354479227340091,
+  "std_nmse": 0.3400518209340519,
+  "worst2_mean_nmse": 1.4840741603021106,
+  "nmse_per_test": {
+    "dataset_0": 1.5264628961872386,
+    "dataset_1": 1.0768764791330063,
+    "dataset_2": 0.9321446599769061,
+    "dataset_3": 0.6150452722286625,
+    "dataset_4": 0.7387511854911122,
+    "dataset_5": 1.4416854244169826,
+    "dataset_6": 0.6478618871524209,
+    "dataset_7": 0.6556500957133554
+  },
+  "sample_time": 3.3052088618278503,
+  "evaluate_time": 2.703838586807251
+}

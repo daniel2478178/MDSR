@@ -1,0 +1,23 @@
+{
+  "sample_order": 1314,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Core physical structure: target scales with probability and oscillatory response\n    # Characteristic Rabi-like frequency depends on prob and omega\n    rabi = params[0] * np.sqrt(np.maximum(prob, eps)) * omega\n    envelope = np.sin(rabi * t + params[1])**2\n    # Time decay term for finite interaction\n    decay = np.exp(-params[2] * t)\n    # Amplitude factor and offset\n    y = params[3] * prob * envelope * decay + params[4] * np.sin(omega * t) / np.maximum(omega, eps)\n    return y\n\n",
+  "score": -3.920810134948053,
+  "mean_nmse": 2.9089861568747755,
+  "min_nmse": 0.8919513456799874,
+  "max_nmse": 3.950993087195852,
+  "median_nmse": 3.319971645777767,
+  "std_nmse": 1.1298257590391019,
+  "worst2_mean_nmse": 3.920810134948053,
+  "nmse_per_test": {
+    "dataset_0": 1.119668004051352,
+    "dataset_1": 0.8919513456799874,
+    "dataset_2": 3.3695678234094846,
+    "dataset_3": 3.8906271827002543,
+    "dataset_4": 3.1792092995507697,
+    "dataset_5": 3.950993087195852,
+    "dataset_6": 3.270375468146049,
+    "dataset_7": 3.5994970442644556
+  },
+  "sample_time": 2.837980031967163,
+  "evaluate_time": 3.079063653945923
+}

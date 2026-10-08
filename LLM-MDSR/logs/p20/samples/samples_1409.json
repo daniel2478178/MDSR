@@ -1,0 +1,23 @@
+{
+  "sample_order": 1409,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Rabi-like oscillation with probability-modulated amplitude and frequency detuning\n    # Use params: [a0, a1, a2, a3] for amplitude modulation, frequency scaling, phase, offset\n    omega_safe = np.maximum(np.abs(omega), eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Argument combining time and frequency with a Rabi frequency offset\n    rabi_arg = np.sqrt(omega_safe**2 + params[1]**2)\n    \n    # Core Rabi oscillation: sin^2(rt) modulated by probability\n    core_term = np.sin(rabi_arg * t_safe)**2\n    \n    # Probability weighting with saturation\n    prob_weight = np.tanh(params[0] * prob)\n    \n    # Amplitude envelope with inverse frequency dependence\n    amplitude = params[2] * np.exp(-t_safe * 0.01) / np.sqrt(1 + params[1]**2)\n    \n    # Final combination\n    y = params[3] + amplitude * prob_weight * core_term\n    \n    return y\n\n",
+  "score": -0.9989027997332894,
+  "mean_nmse": 0.9240241372443595,
+  "min_nmse": 0.8875681771064637,
+  "max_nmse": 0.9989385983881629,
+  "median_nmse": 0.905654960978244,
+  "std_nmse": 0.04416003684478386,
+  "worst2_mean_nmse": 0.9989027997332894,
+  "nmse_per_test": {
+    "dataset_0": 0.9145723864085461,
+    "dataset_1": 0.9011165148526282,
+    "dataset_2": 0.8898133400272698,
+    "dataset_3": 0.9989385983881629,
+    "dataset_4": 0.8911236729895295,
+    "dataset_5": 0.9101934071038598,
+    "dataset_6": 0.998867001078416,
+    "dataset_7": 0.8875681771064637
+  },
+  "sample_time": 3.8011640906333923,
+  "evaluate_time": 3.5116827487945557
+}

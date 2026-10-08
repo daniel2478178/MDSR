@@ -1,0 +1,23 @@
+{
+  "sample_order": 328,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: For a two-level system driven near resonance,\n    # the transition probability relates to the rotation angle via\n    # target ~ (1 - 2*prob) * cos(omega*t) + params adjustments\n    # Using common Rabi-like formula: target = A * sqrt(prob*(1-prob)) * sin^2(omega*t/2) \n    # with decay corrections\n    eps = 1e-10\n    # Ensure t and omega are not zero for safe operations\n    safe_t = t + eps\n    safe_omega = omega + eps\n    \n    # Core functional form: sinusoidal dependence on omega*t, \n    # amplitude modulated by prob*(1-prob) which is typical for transition probabilities\n    angle = omega * t\n    \n    # Simplified oscillatory term with physical parameters\n    # params[0]: overall amplitude\n    # params[1]: phase offset\n    # params[2]: damping rate\n    # params[3]: constant offset\n    # params[4]: frequency scaling factor\n    y = params[0] * np.sin(omega * t + params[1]) * np.sqrt(np.abs(prob * (1 - prob)) + eps) * np.exp(-params[2] * np.abs(t)) + params[3]\n    \n    # Add correction for small probabilities or times\n    correction = params[4] * np.sin(omega * t) * prob\n    y = y + correction\n    \n    return y\n\n",
+  "score": -0.8055838784473153,
+  "mean_nmse": 0.7202788066422225,
+  "min_nmse": 0.5660746794327102,
+  "max_nmse": 0.8096363049265248,
+  "median_nmse": 0.7393276619664646,
+  "std_nmse": 0.07554754872874593,
+  "worst2_mean_nmse": 0.8055838784473153,
+  "nmse_per_test": {
+    "dataset_0": 0.8015314519681058,
+    "dataset_1": 0.7332647631193666,
+    "dataset_2": 0.6962461665061731,
+    "dataset_3": 0.5660746794327102,
+    "dataset_4": 0.6528285975881685,
+    "dataset_5": 0.8096363049265248,
+    "dataset_6": 0.757257928783169,
+    "dataset_7": 0.7453905608135626
+  },
+  "sample_time": 2.1936851739883423,
+  "evaluate_time": 2.394545793533325
+}

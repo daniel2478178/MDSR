@@ -1,0 +1,14 @@
+{
+  "sample_order": 5715,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Target physical quantity as function of transition probability,\n    interaction time, driving frequency, and dataset parameters.\n    \"\"\"\n    # Landau-Zener-like transition probability relation\n    # target might represent energy or population inverse\n    x = omega * t\n    \n    # Physical combination: prob ~ exp(-decay * parametric_rate)\n    # target related to |driving| times sqrt(prob*(1-prob)) * oscillatory factor\n    # plus linear prob contribution and small decay correction\n    \n    # Most probable: target = A * sqrt(prob * (1 - prob)) * cos(omega*t + phi)\n    # + B * prob + C * (1 - 2*prob)\n    # with possible envelope factor depending on t\n    \n    # A more compact physically inspired form:\n    amplitude = params[0] * np.sqrt(prob * (1 - prob))  # Rabi-like amplitude\n    detuning_factor = params[1] * (2 * prob - 1)  # population difference term\n    \n    # Oscillatory part with driving\n    oscillation = np.cos(x + params[2])\n    \n    # Damping or decay exponential\n    envelope = np.exp(-params[3] * t)\n    \n    # Main term: coherent oscillation modulated by interaction time\n    main_term = amplitude * oscillation * envelope\n    \n    # Off-resonant contribution: prob-dependent monotonic part\n    monotonic = params[4] * (prob - params[5])\n    \n    # Small correction to account for possible phase shifts\n    secondary = params[6] * np.sin(x + params[7]) * prob\n    \n    return main_term + monotonic + secondary\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.2355340719223022,
+  "evaluate_time": 1.955629587173462
+}

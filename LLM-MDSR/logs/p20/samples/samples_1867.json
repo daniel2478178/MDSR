@@ -1,0 +1,23 @@
+{
+  "sample_order": 1867,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Physical form: Landau-Zener-like transition probability scaling \n    # with Rabi-type oscillations and resonance envelope\n    # params: [scale, phase_offset, rabi_freq_offset, decay_rate, amplitude, resonance_width]\n    \n    # Main oscillatory term with amplitude proportional to prob (transition probability)\n    theta = params[0] * omega * t + params[1]\n    # prob represents probability of transition; physical target likely an energy or amplitude\n    # Proportional to sqrt(prob) times sinusoidal driving response\n    core_osc = np.sqrt(np.clip(prob, eps, 1.0)) * np.sin(theta) * params[2]\n    \n    # Resonance denominator term - typical for driven systems at resonance\n    resonance = params[3] * np.sin(omega * t) / (omega * t + eps) * np.exp(-params[4] * np.abs(t))\n    \n    # Damping envelope from interaction time\n    damping_env = np.exp(-params[5] * t**2)\n    \n    # Linear in prob term (may represent direct transition amplitude)\n    direct = params[6] * prob * np.cos(params[7] * omega * t + params[8])\n    \n    # Final combination with constant offset\n    y = (core_osc * damping_env + resonance + direct + params[9])\n    \n    return y\n\n",
+  "score": -0.3716478458216969,
+  "mean_nmse": 0.26850897941342045,
+  "min_nmse": 0.1767071781711488,
+  "max_nmse": 0.3735735215138582,
+  "median_nmse": 0.2502157515874829,
+  "std_nmse": 0.06939815910101035,
+  "worst2_mean_nmse": 0.3716478458216969,
+  "nmse_per_test": {
+    "dataset_0": 0.3697221701295356,
+    "dataset_1": 0.3040201461848198,
+    "dataset_2": 0.26492590693177764,
+    "dataset_3": 0.1767071781711488,
+    "dataset_4": 0.23550559624318806,
+    "dataset_5": 0.3735735215138582,
+    "dataset_6": 0.20822818019364897,
+    "dataset_7": 0.21538913593938672
+  },
+  "sample_time": 3.8349992434183755,
+  "evaluate_time": 4.81106972694397
+}

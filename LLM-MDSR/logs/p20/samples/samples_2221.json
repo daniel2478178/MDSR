@@ -1,0 +1,23 @@
+{
+  "sample_order": 2221,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Physical model: generalized Rabi oscillations with exponential decay\n    # Rabi frequency from detuning and coupling: Omega_eff = sqrt(omega^2 + Delta^2)\n    # Assuming prob follows Rabi formula: prob = (Omega_R^2 / Omega_eff^2) * sin^2(Omega_eff * t / 2)\n    # Inverting to express target as a function of prob and oscillatory terms\n    \n    # Base oscillation term driven by resonance\n    base = params[0] * np.sin(x) * prob\n    \n    # Harmonic factor with amplitude and phase shift - captures Rabi envelope\n    harmonic = params[1] * np.sin(params[2] * x + params[3])\n    \n    # Exponential decay term representing dissipation\n    decay_term = np.exp(-params[4] * np.abs(t))\n    \n    # Combination: interaction strength scales with omega and prob\n    # Use division-safe transform to prevent singularities\n    prob_safe = np.where(np.abs(prob) < 1e-10, 1e-10, prob)\n    resonance = params[5] * np.sin(x) / np.sqrt(prob_safe + 1e-8)\n    \n    # Final expression: target = prob * [base harmonic + resonance correction] * decay\n    return base + harmonic * prob + resonance * decay_term\n\n",
+  "score": -2.4349839933728514,
+  "mean_nmse": 1.8793019880404926,
+  "min_nmse": 1.2208723105658257,
+  "max_nmse": 2.4606774723232645,
+  "median_nmse": 1.7704445235491577,
+  "std_nmse": 0.42685591961330877,
+  "worst2_mean_nmse": 2.4349839933728514,
+  "nmse_per_test": {
+    "dataset_0": 1.8437465302528204,
+    "dataset_1": 2.4606774723232645,
+    "dataset_2": 2.2854507736179,
+    "dataset_3": 1.2208723105658257,
+    "dataset_4": 2.409290514422438,
+    "dataset_5": 1.6971425168454952,
+    "dataset_6": 1.5673700324870705,
+    "dataset_7": 1.549865753809126
+  },
+  "sample_time": 2.59138286113739,
+  "evaluate_time": 7.755950689315796
+}

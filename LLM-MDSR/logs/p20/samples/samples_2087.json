@@ -1,0 +1,23 @@
+{
+  "sample_order": 2087,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model inspired by Landau-Zener transition probability \n    # with Rabi oscillations and damping\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # General transition probability model with time-dependent phase\n    # and sinusoidal behavior modified by prob\n    \n    # Core term: prob modulates a damped oscillatory response in omega*t\n    x = omega_safe * t\n    oscillatory = np.sin(x * params[0] + params[1]) * np.exp(-params[2] * np.abs(t))\n    \n    # Nonlinear coupling between prob and frequency\n    prob_modulated = prob * np.sin(np.pi * prob / 2.0)\n    \n    # Linear and quadratic frequency terms combined with time envelope\n    freq_term = params[3] * omega_safe + params[4] * omega_safe**2\n    \n    # Final functional form: target = prob-driven oscillation with \n    # frequency-dependent amplitude and exponential time decay\n    return prob_modulated * (params[5] * oscillatory + freq_term) + params[6] * np.exp(-params[7] * t * omega_safe)\n\n",
+  "score": -0.9967617016105303,
+  "mean_nmse": 0.9801727074221471,
+  "min_nmse": 0.9541318962282961,
+  "max_nmse": 0.9976495500038399,
+  "median_nmse": 0.9861598818562562,
+  "std_nmse": 0.015001224044174182,
+  "worst2_mean_nmse": 0.9967617016105303,
+  "nmse_per_test": {
+    "dataset_0": 0.9626832525690824,
+    "dataset_1": 0.9697608406786211,
+    "dataset_2": 0.9842940164044222,
+    "dataset_3": 0.9958738532172207,
+    "dataset_4": 0.9889625029676036,
+    "dataset_5": 0.9541318962282961,
+    "dataset_6": 0.9880257473080902,
+    "dataset_7": 0.9976495500038399
+  },
+  "sample_time": 2.816835343837738,
+  "evaluate_time": 3.9056081771850586
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 393,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_abs = np.abs(t) + eps\n    omega_safe = np.abs(omega) + eps\n    \n    # Rabi-like oscillation amplitude with detuning correction\n    rabi_freq = np.sqrt(omega**2 + params[0]**2 + eps)\n    theta = rabi_freq * t_abs\n    \n    # Detuning factor reduces effective coupling\n    detune = params[0] / rabi_freq\n    \n    # Main physical term: transition probability modulated by oscillation\n    term1 = params[1] * prob * (1 - np.cos(theta)) / 2.0\n    \n    # Time decay envelope\n    term2 = params[2] * np.exp(-t_abs * params[3])\n    \n    # Oscillatory correction dependent on frequency and time\n    term3 = params[4] * np.sin(omega_safe * t_abs) * np.sqrt(prob + eps)\n    \n    # Linear bias term\n    term4 = params[5] * prob\n    \n    y = term1 * (1 + params[6] * np.cos(2 * omega_safe * t_abs)) + term2 + term3 + term4 + params[7]\n    \n    return y\n\n",
+  "score": -0.4203529138614686,
+  "mean_nmse": 0.2960872837861936,
+  "min_nmse": 0.15416086403982787,
+  "max_nmse": 0.44224473992867136,
+  "median_nmse": 0.3057154811158691,
+  "std_nmse": 0.11085597370065604,
+  "worst2_mean_nmse": 0.4203529138614686,
+  "nmse_per_test": {
+    "dataset_0": 0.39089118539295453,
+    "dataset_1": 0.44224473992867136,
+    "dataset_2": 0.39846108779426587,
+    "dataset_3": 0.15416086403982787,
+    "dataset_4": 0.22572438208643358,
+    "dataset_5": 0.38570658014530457,
+    "dataset_6": 0.1879887297283417,
+    "dataset_7": 0.1835207011737491
+  },
+  "sample_time": 4.4631547927856445,
+  "evaluate_time": 3.963594436645508
+}

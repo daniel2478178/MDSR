@@ -1,0 +1,23 @@
+{
+  "sample_order": 2750,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Physical model: Rabi-like oscillations damped in time, \n    # with frequency shift proportional to driving frequency\n    # and a baseline offset. Common structure:\n    # target = A * prob * exp(-gamma*t) * cos(delta*x + phi) + B * (1-prob) + C*t\n    # To keep number of params manageable (<=10):\n    # params[0]: amplitude for prob term\n    # params[1]: frequency scaling factor for x\n    # params[2]: phase offset\n    # params[3]: damping rate\n    # params[4]: offset for (1-prob) term\n    # params[5]: baseline amplitude\n    # params[6]: linear time term\n    # params[7]: constant offset\n    # params[8]: not used but keep for compatibility? Not needed.\n    # Let's simplify: use 5 params max.\n    # Proposed:  target = A * prob * exp(-gamma*t) * cos(beta*x + phi) + C * (1 - prob) + D * t + E\n    # Using params[0..4] with max 5, but we have up to 10 allowed.\n    # To be safe and general, we'll use a physically motivated form with at most 5 params.\n    # After analyzing typical scenarios: Rabi oscillations with decay:\n    # target = params[0] * prob * np.exp(-params[1] * t) * np.cos(params[2] * x + params[3]) + params[4] * (1 - prob) + params[5] * t + params[6]\n    # That's 7 params but allowed up to 10.\n    # For simplicity and to ensure robust convergence, use 5 essential parameters:\n    # Let params[0]=amplitude, params[1]=damping, params[2]=frequency scale, params[3]=phase, params[4]=base offset for (1-prob) contribution.\n    # Additional small terms can be added.\n    A = params[0]\n    gamma = params[1]\n    beta = params[2]\n    phi = params[3]\n    B = params[4]\n    # Simple common law: Rabi-like with driving frequency and decay\n    # plus linear trend in time to capture possible drift.\n    C = params[5] if len(params) > 5 else 0.0\n    D = params[6] if len(params) > 6 else 0.0\n    # Use at most 7 params to stay within limit.\n    # But better to use exactly the minimal physical expression: \n    # For driven two-level system, probability p(t) oscillates, but here we predict a target related to prob.\n    # Perhaps the target is something like energy or amplitude: target = A * p * cos(omega t) exp(-gamma t) + offset.\n    # Found in many contexts: Landau-Zener, Rabi, etc.\n    # We choose a form with cosine of time and linear in prob.\n    return A * prob * np.exp(-gamma * t) * np.cos(beta * omega * t + phi) + B * (1 - prob) * np.exp(-gamma * t * 0.5) + C * t + D\n\n",
+  "score": -0.43627706100555697,
+  "mean_nmse": 0.3090274546076229,
+  "min_nmse": 0.18883962028798956,
+  "max_nmse": 0.43854168583427156,
+  "median_nmse": 0.29658813930478767,
+  "std_nmse": 0.09528686118379984,
+  "worst2_mean_nmse": 0.43627706100555697,
+  "nmse_per_test": {
+    "dataset_0": 0.43401243617684243,
+    "dataset_1": 0.3851356323506482,
+    "dataset_2": 0.33126950520758464,
+    "dataset_3": 0.18883962028798956,
+    "dataset_4": 0.26190677340199064,
+    "dataset_5": 0.43854168583427156,
+    "dataset_6": 0.22242750301313916,
+    "dataset_7": 0.210086480588517
+  },
+  "sample_time": 4.72158420085907,
+  "evaluate_time": 5.145910263061523
+}

@@ -1,0 +1,3 @@
+python fit_checkpoint_functions_to_noise.py --xlsx "D:\PhysicsMDRS_Dataset\trained\1000\logs_001\logs\all_problems_checkpoint_top1.xlsx"
+python fit_checkpoint_functions_to_noise.py --xlsx "D:\PhysicsMDRS_Dataset\trained\1000\logs_003\logs\all_problems_checkpoint_top1.xlsx"
+python fit_checkpoint_functions_to_noise.py --xlsx "D:\PhysicsMDRS_Dataset\trained\1000\logs\logs\all_problems_checkpoint_top1.xlsx"

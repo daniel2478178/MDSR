@@ -1,0 +1,23 @@
+{
+  "sample_order": 4543,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Rabi-like two-level oscillation: P(t) = A * sin^2(Ω_eff * t / 2) with\n    # Ω_eff = sqrt((delta)^2 + (Rabi_freq)^2)\n    # Here we treat prob and t as inputs; for a driven transition prob evolves as\n    # P(t) = (Ω_R^2 / (Ω_R^2 + Δ^2)) * sin^2( (1/2) * sqrt(Ω_R^2 + Δ^2) * t )\n    # We can map: prob = sin^2(θ/2) and invert to get a phase, but simpler form:\n    \n    # Let theta = arccos(1 - 2*prob) (quantum angle)\n    theta = np.arccos(np.clip(1 - 2 * prob, -1.0, 1.0))\n    # Effective Rabi frequency depends on omega and detuning param\n    Omega_R = params[0] * omega  # Rabi coupling scales with omega\n    Delta = params[1]  # detuning parameter (dataset-specific)\n    Omega_eff = np.sqrt(Omega_R**2 + Delta**2)\n    \n    # Time evolution of the population under a detuned drive:\n    # Instantaneous population = (Ω_R^2 / Ω_eff^2) * sin^2(Ω_eff * t / 2) \n    # But we want target from prob. Assume target relates to energy shift or phase:\n    # Let's make target = Ω_eff * t / (2π) scaled by some parameter — a common physical quantity is the generalized Rabi frequency.\n    \n    # For a functional form that uses prob, t, omega, we propose:\n    # target = params[2] * Omega_eff * t * cos(theta/2) + params[3] * sin(Omega_eff * t) \n    \n    # Simpler: Rabi oscillation gives prob = (Ω_R^2/Ω_eff^2) sin^2(Ω_eff t/2)\n    # Invert for a target that is Ω_eff^2 or similar frequency squared:\n    # Given prob, we can compute the argument of sine: \n    # sin^2(φ) = prob * (Ω_eff^2 / Ω_R^2)  → This is messy.\n    \n    # A cleaner physical target: the accumulated phase (area) under Rabi oscillations\n    # Phase = Ω_eff * t (radians) measured in a rotating frame.\n    # We relate prob to that phase via the standard formula:\n    # prob = (Ω_R^2/Ω_eff^2) * sin^2( (Ω_eff * t)/2 )\n    # So we can solve for Ω_eff * t, but it's non-trivial.\n    \n    # For a robust shared law, use a physically motivated form:\n    # target = params[2] * (Omega_eff / omega) * t * np.sqrt(prob) * np.cos(theta) \n    #       + params[3] * (1 - prob) * np.sin(Omega_eff * t)\n    \n    # Simpler and with few params:\n    # target = params[0] * np.sin( (params[1] * omega + params[2]) * t ) * np.sqrt(prob) \n    #        + params[3] * t * (1 - prob) * np.cos( (params[1] * omega) * t )\n    \n    # Choose a 4-parameter form: \n    # target = A * sqrt(prob) * sin( (B*omega + C) * t ) + D * t * (1-prob) * cos( (B*omega) * t )\n    # This has params A,B,C,D but we have 4 parameters.\n    \n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    \n    # Physical form: target = amplitude * sqrt(prob) * sin(phase1 * t) \n    #                + drift * t * (1-prob) * cos(phase2 * t)\n    phase1 = p1 * omega + p2\n    phase2 = p1 * omega  # same frequency offset without p2\n    \n    y = p0 * np.sqrt(prob) * np.sin(phase1 * t) + p3 * t * (1 - prob) * np.cos(phase2 * t)\n    \n    return y\n\n",
+  "score": -9.86143581258225,
+  "mean_nmse": 4.656656771308018,
+  "min_nmse": 0.42730024638706815,
+  "max_nmse": 12.416121349162186,
+  "median_nmse": 4.747177642382413,
+  "std_nmse": 3.943532292336462,
+  "worst2_mean_nmse": 9.86143581258225,
+  "nmse_per_test": {
+    "dataset_0": 7.306750276002317,
+    "dataset_1": 4.89354811106475,
+    "dataset_2": 0.49071753728805223,
+    "dataset_3": 12.416121349162186,
+    "dataset_4": 4.600807173700076,
+    "dataset_5": 6.678929932693418,
+    "dataset_6": 0.42730024638706815,
+    "dataset_7": 0.43907954416627953
+  },
+  "sample_time": 4.220014214515686,
+  "evaluate_time": 3.416069984436035
+}

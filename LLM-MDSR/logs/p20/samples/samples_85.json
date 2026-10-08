@@ -1,0 +1,24 @@
+{
+  "sample_order": 85,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"Improved version of `equation_v0`. Rewrite the mathematical expression in the function body. Return a complete valid implementation with an explicit return statement.\"\"\"\n    y = (\n        params[0] * np.log1p(params[1] * prob * t) * np.cos(params[2] * omega)\n        + params[3] * np.exp(-params[4] * prob) * np.sin(params[5] * t + params[6] * np.sqrt(omega))\n        + params[7] * np.tanh(params[8] * np.sqrt(prob) * omega)\n    )\n    return y\n\n",
+  "score": 1.6438283015349646,
+  "complexity": 26,
+  "mean_nmse": 0.08662526006958257,
+  "min_nmse": 0.03609416327118648,
+  "max_nmse": 0.11662869028934517,
+  "median_nmse": 0.09089554342872735,
+  "std_nmse": 0.02528477440468419,
+  "worst2_mean_nmse": 0.11488446571907254,
+  "nmse_per_test": {
+    "dataset_0": 0.11662869028934517,
+    "dataset_1": 0.09743624349764402,
+    "dataset_2": 0.08435484335981071,
+    "dataset_3": 0.03609416327118648,
+    "dataset_4": 0.10436678934356293,
+    "dataset_5": 0.1131402411487999,
+    "dataset_6": 0.0700082163225125,
+    "dataset_7": 0.07097289332379884
+  },
+  "sample_time": 1.431318461894989,
+  "evaluate_time": 5.573594331741333
+}

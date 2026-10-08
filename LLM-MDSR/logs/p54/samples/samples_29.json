@@ -1,0 +1,23 @@
+{
+  "sample_order": 29,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    # Damped oscillator with frequency modulation and phase-dependent amplitude\n    # params: [amplitude, damping_rate, base_frequency, phase_shift, offset, modulation_strength, harmonic_weight]\n    envelope = np.exp(-params[1] * t)\n    # Time-dependent frequency with slow modulation\n    phase = params[2] * t + params[3] + params[5] * np.sin(params[2] * t * 0.5)\n    # Main oscillation combined with phase-shifted harmonic\n    oscillation = np.sin(phase) + params[6] * np.sin(phase + np.pi / 4)\n    y = params[0] * envelope * oscillation + params[4]\n    return y\n\n",
+  "score": -0.0005135504623255888,
+  "mean_nmse": 0.00012966684942757338,
+  "min_nmse": 1.2481571479735805e-08,
+  "max_nmse": 0.0009412899205285901,
+  "median_nmse": 7.271610250042055e-08,
+  "std_nmse": 0.0003080144056717459,
+  "worst2_mean_nmse": 0.0005135504623255888,
+  "nmse_per_test": {
+    "dataset_0": 8.581100412258762e-05,
+    "dataset_1": 6.416291274661187e-08,
+    "dataset_2": 2.863312934266558e-08,
+    "dataset_3": 1.374369616281019e-08,
+    "dataset_4": 1.003358016742337e-05,
+    "dataset_5": 0.0009412899205285901,
+    "dataset_6": 1.2481571479735805e-08,
+    "dataset_7": 8.126929225422925e-08
+  },
+  "sample_time": 2.6988333463668823,
+  "evaluate_time": 3.4080731868743896
+}

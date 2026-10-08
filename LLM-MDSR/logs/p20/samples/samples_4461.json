@@ -1,0 +1,23 @@
+{
+  "sample_order": 4461,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Physical form: damped Rabi-like oscillations in probability space\n    # target = A * sqrt(prob*(1-prob)) * sin(sqrt((omega*t)^2 + delta^2) * t) * exp(-gamma*t)\n    A = params[0]\n    delta = params[1]\n    gamma = params[2]\n    phase = params[3]\n    C = params[4]\n    # Common Rabi frequency with detuning\n    rabi = np.sqrt((omega * t) ** 2 + delta**2)\n    return A * np.sqrt(np.clip(prob * (1 - prob), 0, None)) * np.sin(rabi + phase) * np.exp(-gamma * t) + C * (prob - 0.5)\n\n",
+  "score": -3.2280279554666134,
+  "mean_nmse": 2.3594911624753685,
+  "min_nmse": 1.431781352462239,
+  "max_nmse": 3.6398134729495846,
+  "median_nmse": 2.3140209858287277,
+  "std_nmse": 0.6144002425724772,
+  "worst2_mean_nmse": 3.2280279554666134,
+  "nmse_per_test": {
+    "dataset_0": 2.8162424379836417,
+    "dataset_1": 2.35675104090621,
+    "dataset_2": 2.2712909307512454,
+    "dataset_3": 1.431781352462239,
+    "dataset_4": 2.405088830592947,
+    "dataset_5": 3.6398134729495846,
+    "dataset_6": 2.047046328980864,
+    "dataset_7": 1.9079149051762152
+  },
+  "sample_time": 2.5757293105125427,
+  "evaluate_time": 2.3202428817749023
+}

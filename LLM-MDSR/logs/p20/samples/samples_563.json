@@ -1,0 +1,23 @@
+{
+  "sample_order": 563,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical form: Rayleigh-like scattering amplitude with resonance denominator.\n    # target = A * prob * sin(omega*t) / (1 + B*prob*cos(omega*t)) + C * t\n    angle = omega * t\n    denom = 1.0 + params[1] * prob * np.cos(angle)\n    y = params[0] * prob * np.sin(angle) / denom + params[2] * t\n    return y\n\n",
+  "score": -2.552629559153848,
+  "mean_nmse": 1.746126895361349,
+  "min_nmse": 0.7918736069598057,
+  "max_nmse": 2.577936138258347,
+  "median_nmse": 1.9481286675755514,
+  "std_nmse": 0.6924088248444784,
+  "worst2_mean_nmse": 2.552629559153848,
+  "nmse_per_test": {
+    "dataset_0": 2.5273229800493486,
+    "dataset_1": 2.261003192009221,
+    "dataset_2": 2.0527388007637737,
+    "dataset_3": 1.026635555885814,
+    "dataset_4": 0.7918736069598057,
+    "dataset_5": 2.577936138258347,
+    "dataset_6": 1.8435185343873293,
+    "dataset_7": 0.8879863545771507
+  },
+  "sample_time": 3.9468523263931274,
+  "evaluate_time": 2.2285656929016113
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 941,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition probability dynamics with Rabi oscillations\n    # Physical form: target = A * prob * sin(omega*t) + B * prob * (1 - prob) * something\n    \n    eps = 1e-12\n    \n    # Extract parameters with physical meaning\n    # params[0]: overall amplitude for oscillation term\n    # params[1]: additional amplitude for envelope\n    # params[2]: phase offset / constant term\n    \n    angle = omega * t\n    sin_term = np.sin(angle)\n    cos_term = np.cos(angle)\n    \n    # Common structure: driven transition amplitude modulated by time and frequency\n    # Include adiabatic-impulse-like factor\n    p_safe = np.clip(prob, eps, 1 - eps)\n    p_comp = 1 - p_safe\n    \n    # Key quantum-mechanical form: transition amplitude relates to probability via\n    # amplitude = sqrt(prob * (1-prob)) * osc(t, omega)\n    # target = params[0] * sqrt(prob * (1-prob)) * sin_term + params[1] * prob * cos_term + params[2]\n    \n    # For Landau-Zener type: target frequency content dominated by omega\n    amplitude = np.sqrt(p_safe * p_comp)\n    \n    # Physical target often relates to |amplitude|^2 or directly to prob but with\n    # time-varying coefficients from driving\n    y = params[0] * amplitude * sin_term + params[1] * prob * cos_term + params[2] * p_safe\n    \n    # Alternative simpler form to consider: y = A * prob * (1 - cost_angle) + B * prob\n    # but let's keep above structure\n    \n    return y\n\n",
+  "score": -1.1487138719680456,
+  "mean_nmse": 1.0403405998618473,
+  "min_nmse": 0.920867286906369,
+  "max_nmse": 1.206669905103845,
+  "median_nmse": 1.0356361819571431,
+  "std_nmse": 0.08206627856501013,
+  "worst2_mean_nmse": 1.1487138719680456,
+  "nmse_per_test": {
+    "dataset_0": 1.206669905103845,
+    "dataset_1": 1.0719920914972476,
+    "dataset_2": 1.0120890876596706,
+    "dataset_3": 0.920867286906369,
+    "dataset_4": 1.0591832762546156,
+    "dataset_5": 1.0907578388322465,
+    "dataset_6": 0.9876801697276218,
+    "dataset_7": 0.9734851429131636
+  },
+  "sample_time": 3.18743759393692,
+  "evaluate_time": 2.0162477493286133
+}

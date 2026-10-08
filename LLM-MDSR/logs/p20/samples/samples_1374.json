@@ -1,0 +1,14 @@
+{
+  "sample_order": 1374,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    \n    # Physical model: Landau-Zener-like transition probability with Rabi oscillations\n    # target = A * sin^2( (1/2) * sqrt( (omega*delta)^2 + (g*sqrt(prob))^2 ) * t + phase )\n    # Simplified to a Rabi-type oscillation amplitude modulated by probability\n    \n    p = np.clip(prob, eps, 1.0 - eps)\n    omega_abs = np.abs(omega)\n    \n    # Effective Rabi frequency combining drive and probability coupling\n    delta = params[0]  # detuning-like parameter\n    g = params[1]     # coupling strength\n    \n    rabi_freq = np.sqrt( (omega_abs - delta)**2 + (g * np.sqrt(p))**2 )\n    \n    # Time-evolved oscillation with phase offset\n    oscill = np.sin(radeg * rabi_freq * t)  # radeg placeholder, will use params\n    \n    # Use params[2] as phase and params[3] as overall amplitude\n    y = params[3] * np.sin(rabi_freq * t + params[2])**2\n    \n    # Add small offset parameter\n    y = y + params[4] * np.ones_like(t)\n    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.9322782158851624,
+  "evaluate_time": 1.9284260272979736
+}

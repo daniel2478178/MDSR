@@ -1,0 +1,23 @@
+{
+  "sample_order": 2224,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Landau-Zener-like transition with Rabi oscillations\n    # Physical model: target = prob * [a * sin^2(sqrt(b^2 + omega^2) * t + c) + d] * exp(-e*t)\n    # plus a small oscillatory term\n    sqrt_term = np.sqrt(omega_safe**2 + params[0]**2)\n    osc = np.sin(sqrt_term * t + params[1])**2\n    \n    base = prob * (params[2] * osc + params[3])\n    \n    # Decay\n    decay = np.exp(-params[4] * np.abs(t))\n    \n    # Additional small resonance term\n    resonance = params[5] * np.sin(omega_safe * t) * np.cos(params[6] * x)\n    \n    return params[7] * base * decay + resonance\n\n",
+  "score": -0.9262288902810544,
+  "mean_nmse": 0.7320310526347501,
+  "min_nmse": 0.6160454449303203,
+  "max_nmse": 0.9629736080884458,
+  "median_nmse": 0.6765843827830358,
+  "std_nmse": 0.12203317255694532,
+  "worst2_mean_nmse": 0.9262288902810544,
+  "nmse_per_test": {
+    "dataset_0": 0.9629736080884458,
+    "dataset_1": 0.7683615114540819,
+    "dataset_2": 0.6813465206291641,
+    "dataset_3": 0.64847743623528,
+    "dataset_4": 0.6160454449303203,
+    "dataset_5": 0.889484172473663,
+    "dataset_6": 0.6177374823301384,
+    "dataset_7": 0.6718222449369073
+  },
+  "sample_time": 2.0966179966926575,
+  "evaluate_time": 2.2440145015716553
+}

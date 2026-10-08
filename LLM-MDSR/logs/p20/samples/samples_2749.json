@@ -1,0 +1,23 @@
+{
+  "sample_order": 2749,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t    \n    # Physically motivated: Rabi-like oscillations with detuning and decay\n    # target = A * prob * sin(omega_R * t) + B * cos(omega_d * t) * exp(-gamma * t)\n    # Use params: [amplitude_scale, rabi_freq_offset, decay, phase_offset, background]\n    # Simplified structure with fewer params, based on common Rabi formula: \n    # P = (omega_R^2 / (omega_R^2 + delta^2)) * sin^2(sqrt(omega_R^2 + delta^2) * t/2)\n    # Here we express target as a damped sinusoidal function of prob and phase\n    \n    # Assume target = A * (prob - 0.5) * sin(omega * t + phi) * exp(-gamma * t) + B\n    # But prob is already the transition probability; often target relates to energy or something similar.\n    # Try: target = A * prob * sin(omega * t + phi) + B * (1 - prob) * cos(omega * t) + C * t\n    # To reduce parameters: \n    # Convert prob to a \"detuning-like\" variable: delta = arccos(1 - 2*prob) / t  (if prob = sin^2(delta*t/2)?)\n    # But we don't know exact relationship.\n    \n    # Let's use a Breit-Wigner-like resonance term: target = A * prob / (1 + (delta/omega)^2) * cos(omega * t + phi)\n    # With delta = (arccos(1 - 2*prob) / t) - omega? Too complex.\n    \n    # Given typical Rabi oscillations: prob = (omega_R^2 / (omega_R^2+delta^2)) sin^2(Omega*t/2)\n    # where Omega = sqrt(omega_R^2+delta^2).  \n    # target often is the energy or population difference squared, etc.\n    # Let's assume target is related to the derivative or a linear combination.\n    \n    # For simplicity: target = params[0] * prob * np.sin(params[1]*x + params[2]) * np.exp(-params[3]*t) + params[4]*(1-prob)*np.cos(params[5]*x+params[6]) \n    # But we need to reduce from 10 params to fewer.\n    \n    # Consider: target = A * prob * sin(omega * t + phi) + B * cos(omega * t + theta) + C\n    # But dependent on prob? We know prob varies with time.\n    # Maybe target = A * sqrt(prob*(1-prob)) * cos(omega*t+phi) + B*prob?\n    \n    # After reasoning, let's use a damped harmonic with amplitude dependent on prob:\n    # target = params[0] * (prob - 0.5) * np.cos(params[1]*x + params[2]) + params[3] * t\n    # But that seems too simple.\n    \n    # Let's try: target = params[0] * prob * np.sin(params[1]*x) + params[2] * (1-prob) * np.cos(params[3]*x) * np.exp(-params[4]*t)\n    # With 5 params.\n    \n    # Actually, a common formula in such contexts: target = (1 - prob) * cos(omega*t) * exp(-gamma*t) + offset\n    # But prob already encodes time evolution.\n    \n    # After consideration, a physically plausible expression: \n    # target = params[0] * (prob - params[1]) * np.cos(omega*t + params[2]) * np.exp(-params[3]*t) + params[4] * t\n    # But we need to ensure it fits all.\n    \n    # I'll implement a relatively compact form: \n    # target = A * prob * cos(omega*t + phi) + B * sin(omega*t + theta) * exp(-gamma*t) + C\n    # Reduce to 6 params.\n    \n    # To satisfy shared structure, let's use:\n    y = params[0] * prob * np.cos(omega * t + params[1]) + params[2] * (1 - prob) * np.sin(omega * t + params[3]) * np.exp(-params[4] * t) + params[5] * t\n    return y\n\n",
+  "score": -0.6884140895984522,
+  "mean_nmse": 0.5713018873311726,
+  "min_nmse": 0.5110796125029903,
+  "max_nmse": 0.6966789508069102,
+  "median_nmse": 0.5382089529397625,
+  "std_nmse": 0.07067401829017492,
+  "worst2_mean_nmse": 0.6884140895984522,
+  "nmse_per_test": {
+    "dataset_0": 0.6801492283899941,
+    "dataset_1": 0.5737732076157908,
+    "dataset_2": 0.5232236148900756,
+    "dataset_3": 0.5531942909894492,
+    "dataset_4": 0.5110796125029903,
+    "dataset_5": 0.6966789508069102,
+    "dataset_6": 0.5204866512701732,
+    "dataset_7": 0.5118295421839972
+  },
+  "sample_time": 4.72158420085907,
+  "evaluate_time": 2.280374050140381
+}

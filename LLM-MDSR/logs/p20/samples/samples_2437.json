@@ -1,0 +1,23 @@
+{
+  "sample_order": 2437,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t    \n    # Shared structure: power-law in prob with Rabi-frequency resonance and damping    \n    return params[0] * np.power(prob, params[1]) * np.sin(params[2] * x) * np.exp(-params[3] * t) + params[4] * prob * np.cos(params[5] * omega * t) + params[6]\n\n",
+  "score": -0.6700681111163187,
+  "mean_nmse": 0.4987299236713649,
+  "min_nmse": 0.28164522793638175,
+  "max_nmse": 0.6701949324433483,
+  "median_nmse": 0.4985548050227586,
+  "std_nmse": 0.15570882069699932,
+  "worst2_mean_nmse": 0.6700681111163187,
+  "nmse_per_test": {
+    "dataset_0": 0.3806334430083873,
+    "dataset_1": 0.3233008187651455,
+    "dataset_2": 0.28164522793638175,
+    "dataset_3": 0.6670140673828504,
+    "dataset_4": 0.4117193728871914,
+    "dataset_5": 0.5853902371583258,
+    "dataset_6": 0.6701949324433483,
+    "dataset_7": 0.669941289789289
+  },
+  "sample_time": 2.3277149200439453,
+  "evaluate_time": 3.5885913372039795
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 1221,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-12\n    x = omega * t\n    half = 0.5 * x\n    denom = np.maximum(np.abs(np.sin(half)), eps)\n    # Rabi-like probability relation inverted:\n    # prob = params[0] * (sin^2(Omega*t/2) / (Omega^2 + params[1]^2)) \n    # target = params[2] * (prob / denom^2) * (omega^2 + params[3]^2)\n    y = params[0] * (prob / (denom * denom)) * (omega * omega + params[1] * params[1]) + params[2] * np.cos(x) + params[3] * np.sin(x) * prob + params[4]\n    return y\n\n",
+  "score": -0.7705206665210569,
+  "mean_nmse": 0.7064178801690064,
+  "min_nmse": 0.6526173050713886,
+  "max_nmse": 0.770584113606692,
+  "median_nmse": 0.7014790928071728,
+  "std_nmse": 0.04421395661586469,
+  "worst2_mean_nmse": 0.7705206665210569,
+  "nmse_per_test": {
+    "dataset_0": 0.770584113606692,
+    "dataset_1": 0.7267588413257735,
+    "dataset_2": 0.7166704229030864,
+    "dataset_3": 0.6633774530296292,
+    "dataset_4": 0.6862877627112594,
+    "dataset_5": 0.7704572194354218,
+    "dataset_6": 0.6645899232688,
+    "dataset_7": 0.6526173050713886
+  },
+  "sample_time": 2.4758352637290955,
+  "evaluate_time": 3.600942850112915
+}

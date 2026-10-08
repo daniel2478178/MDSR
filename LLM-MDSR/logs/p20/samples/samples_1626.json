@@ -1,0 +1,23 @@
+{
+  "sample_order": 1626,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target = A * (omega*t) * sin^2( (B * sqrt(prob) * omega * t) / (1 + C * omega^2 * t^2) ) + D\n    # This represents a damped oscillatory transition amplitude common in driven quantum systems\n    \n    # Guard against division by zero\n    omega_safe = np.where(np.abs(omega) < 1e-10, 1e-10, omega)\n    t_safe = np.where(np.abs(t) < 1e-10, 1e-10, t)\n    \n    # Physical argument combining variables\n    theta = params[0] * omega_safe * t_safe  # phase accumulated\n    \n    # Resonance denominator with detuning-like term\n    resonance = 1.0 + params[1] * (omega_safe * t_safe)**2\n    \n    # Probability coupling with square-root dependence\n    prob_coupled = np.sqrt(np.maximum(prob, 0.0))\n    \n    # Oscillatory part\n    osc = np.sin(params[2] * prob_coupled * theta / resonance)**2\n    \n    # Overall with decay-like time dependence and offset\n    target = params[3] * osc * np.exp(-params[4] * np.abs(t_safe)) + params[5] * prob\n    \n    return target\n\n",
+  "score": -3.317396784384748,
+  "mean_nmse": 1.9501089198033852,
+  "min_nmse": 0.5945488457007622,
+  "max_nmse": 3.3288335046475233,
+  "median_nmse": 1.8713582048252837,
+  "std_nmse": 0.9959485946197979,
+  "worst2_mean_nmse": 3.317396784384748,
+  "nmse_per_test": {
+    "dataset_0": 3.3288335046475233,
+    "dataset_1": 2.6049896977022895,
+    "dataset_2": 0.7576284637743956,
+    "dataset_3": 1.2661943728295704,
+    "dataset_4": 1.9886846192474557,
+    "dataset_5": 3.305960064121973,
+    "dataset_6": 1.7540317904031117,
+    "dataset_7": 0.5945488457007622
+  },
+  "sample_time": 2.332114815711975,
+  "evaluate_time": 2.091629981994629
+}

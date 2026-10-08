@@ -1,0 +1,23 @@
+{
+  "sample_order": 664,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Prevent division by zero and unstable operations\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Rabi-like oscillation between two levels: \n    # population transfer described by sin^2(Omega*t/2) with generalized detuning\n    # target is likely related to transition rate or energy splitting\n    \n    # Physical model: sin^2(pi * prob) envelope modulating frequency response,\n    # with Landau-Zener-like linear frequency sweep factor\n    x = omega * t\n    \n    # Core oscillatory term using prob as effective population transfer\n    osc = np.sin(params[0] * x) * prob\n    \n    # Squared sine amplitude common in resonance phenomena\n    amp = np.sin(np.pi * prob / 2.0) ** 2\n    \n    # Frequency-dependent response using Lorentzian-like form\n    lorentz = params[1] / (1.0 + params[2] * (omega_safe - params[3])**2)\n    \n    # Time-decay physical transport term\n    decay = params[4] * np.exp(-params[5] * t_safe)\n    \n    # Combine: main resonance peak modulated by transition probability\n    y = params[6] * amp * osc + lorentz * np.cos(x) + decay + params[7]\n    \n    # Ensure finite values\n    y = np.where(np.isfinite(y), y, 0.0)\n    \n    return y\n\n",
+  "score": -0.9784230188004073,
+  "mean_nmse": 0.9359294553024388,
+  "min_nmse": 0.8889119098744117,
+  "max_nmse": 0.9791820797128409,
+  "median_nmse": 0.9289779909970897,
+  "std_nmse": 0.03393598817371374,
+  "worst2_mean_nmse": 0.9784230188004073,
+  "nmse_per_test": {
+    "dataset_0": 0.9286825254530913,
+    "dataset_1": 0.9200275556170712,
+    "dataset_2": 0.9776639578879737,
+    "dataset_3": 0.8889119098744117,
+    "dataset_4": 0.9706219430810739,
+    "dataset_5": 0.9292734565410882,
+    "dataset_6": 0.9791820797128409,
+    "dataset_7": 0.8930722142519595
+  },
+  "sample_time": 2.4130444526672363,
+  "evaluate_time": 3.8360626697540283
+}

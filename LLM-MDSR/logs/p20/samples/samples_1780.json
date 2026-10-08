@@ -1,0 +1,23 @@
+{
+  "sample_order": 1780,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    theta = params[0] * omega * t + params[1]\n    core = prob * (np.cos(theta)**2 + params[2])\n    resonance = params[3] * np.sin(omega * t) / (omega + eps)\n    damping = params[4] * np.exp(-params[5] * np.abs(t))\n    nonlinear = params[6] * np.sin(params[7] * omega * t) * prob\n    return params[8] * core + params[9] * resonance + damping + nonlinear + params[10] if len(params) > 10 else params[8] * core + params[9] * resonance + damping + nonlinear + params[10] if len(params) > 10 else params[8] * core + params[9] * resonance + damping + nonlinear + 0.0\n\n",
+  "score": -0.6161643900238601,
+  "mean_nmse": 0.484400981133825,
+  "min_nmse": 0.3127500966730789,
+  "max_nmse": 0.630353464402567,
+  "median_nmse": 0.4802180993495613,
+  "std_nmse": 0.10270956757653339,
+  "worst2_mean_nmse": 0.6161643900238601,
+  "nmse_per_test": {
+    "dataset_0": 0.630353464402567,
+    "dataset_1": 0.5587345563881719,
+    "dataset_2": 0.5077822171709581,
+    "dataset_3": 0.3127500966730789,
+    "dataset_4": 0.4526539815281645,
+    "dataset_5": 0.6019753156451533,
+    "dataset_6": 0.41702913067697506,
+    "dataset_7": 0.3939290865855315
+  },
+  "sample_time": 2.210241913795471,
+  "evaluate_time": 8.454980850219727
+}

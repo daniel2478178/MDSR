@@ -1,0 +1,23 @@
+{
+  "sample_order": 2207,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Rabi oscillations with damping and phase shift\n    # target ≈ prob * A * (1 - cos(Ω_res * t)) * exp(-γ * t) + B\n    # where Ω_res is the effective Rabi frequency depending on omega and detuning\n    \n    # params[0] = amplitude scaling\n    # params[1] = effective frequency scale\n    # params[2] = decay rate\n    # params[3] = offset\n    \n    # Simplified Rabi formula: P(t) = (Ω^2 / (Ω^2 + Δ^2)) * sin^2(0.5 * sqrt(Ω^2 + Δ^2) * t)\n    # For transition probability prob, interpret as Ω^2 / (Ω^2 + Δ^2)\n    # Then derive target = prob * sin^2(0.5 * omega * t * sqrt(...)) with some parameter adjustments\n    \n    # Let's try: target = prob * sin^2( (params[0] * omega + params[1]) * t / 2 ) * exp(-params[2] * t) + params[3]\n    \n    # More physically grounded: \n    # target = A * prob * sin^2(ω_eff * t / 2) * exp(-γ * t) + C\n    # with ω_eff depending on omega via sqrt(omega^2 + detuning^2), but we can approximate\n    \n    # Final simple oscillatory damped model:\n    # Use prob as envelope, oscillate with frequency proportional to omega, and decay\n    \n    omega_eff = params[0] * omega + params[1]  # effective frequency with offset\n    osc = np.sin(omega_eff * t) ** 2\n    damp = np.exp(-params[2] * np.abs(t))\n    result = params[3] * prob * osc * damp + params[4]\n    \n    return result\n\n",
+  "score": -0.8825108927029415,
+  "mean_nmse": 0.8325087653451999,
+  "min_nmse": 0.6812891667569481,
+  "max_nmse": 0.8943605848175129,
+  "median_nmse": 0.8622068133461409,
+  "std_nmse": 0.06589972206288502,
+  "worst2_mean_nmse": 0.8825108927029415,
+  "nmse_per_test": {
+    "dataset_0": 0.848627409887822,
+    "dataset_1": 0.6812891667569481,
+    "dataset_2": 0.865168591123547,
+    "dataset_3": 0.8592450355687348,
+    "dataset_4": 0.8664949026091001,
+    "dataset_5": 0.7742232314095644,
+    "dataset_6": 0.87066120058837,
+    "dataset_7": 0.8943605848175129
+  },
+  "sample_time": 3.1755273938179016,
+  "evaluate_time": 2.1775519847869873
+}

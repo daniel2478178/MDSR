@@ -1,0 +1,23 @@
+{
+  "sample_order": 926,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Avoid division by zero and protect logs/roots\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Basic physical structure: amplitude modulation with oscillation in omega*t\n    # transformed probability / time dependence\n    angle = omega * t\n    \n    # Landau-Zener-like probability scaling combined with Rabi oscillation\n    p_mod = prob * (1.0 - prob)  # symmetric transition factor\n    \n    # Core terms:\n    #   - oscillation term with coupling to probability\n    #   - decay-like amplitude modulation\n    #   - offset and linear terms\n    oscillation = params[0] * np.sin(angle) / np.sqrt(1.0 + params[1] * omega**2 * t**2)\n    prob_coupling = params[2] * p_mod * np.cos(angle)\n    decay = params[3] * np.exp(-params[4] * t_safe) * prob\n    offset = params[5]\n    \n    y = (oscillation + prob_coupling) * decay + offset\n    \n    return y\n\n",
+  "score": -0.8374804176717464,
+  "mean_nmse": 0.7798835908473201,
+  "min_nmse": 0.7286563949643082,
+  "max_nmse": 0.8621780090327763,
+  "median_nmse": 0.7734535507870506,
+  "std_nmse": 0.043477934301932655,
+  "worst2_mean_nmse": 0.8374804176717464,
+  "nmse_per_test": {
+    "dataset_0": 0.8621780090327763,
+    "dataset_1": 0.7933738690369987,
+    "dataset_2": 0.8067915453519213,
+    "dataset_3": 0.7411962669045109,
+    "dataset_4": 0.740556582640226,
+    "dataset_5": 0.8127828263107165,
+    "dataset_6": 0.7286563949643082,
+    "dataset_7": 0.7535332325371026
+  },
+  "sample_time": 3.238190531730652,
+  "evaluate_time": 3.2812399864196777
+}

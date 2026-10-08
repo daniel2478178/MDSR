@@ -1,0 +1,23 @@
+{
+  "sample_order": 560,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical form: target related to transition probability and rotation angle\n    # Use simple physically meaningful combination with minimal parameters\n    angle = omega * t\n    # Assume target scales with prob and oscillates with angle, plus decay term\n    y = params[0] * prob * np.sin(angle) + params[1] * prob * np.cos(angle) + params[2] * np.exp(-t_safe) + params[3]\n    \n    return y\n\n",
+  "score": -0.800520672374281,
+  "mean_nmse": 0.7217835543957912,
+  "min_nmse": 0.655773681454887,
+  "max_nmse": 0.8401147390250963,
+  "median_nmse": 0.7233925932921409,
+  "std_nmse": 0.058302365531832705,
+  "worst2_mean_nmse": 0.800520672374281,
+  "nmse_per_test": {
+    "dataset_0": 0.7313696946633383,
+    "dataset_1": 0.6662471214346394,
+    "dataset_2": 0.6614758667982032,
+    "dataset_3": 0.8401147390250963,
+    "dataset_4": 0.655773681454887,
+    "dataset_5": 0.7429452341457564,
+    "dataset_6": 0.7154154919209434,
+    "dataset_7": 0.7609266057234657
+  },
+  "sample_time": 3.55051589012146,
+  "evaluate_time": 1.9856376647949219
+}

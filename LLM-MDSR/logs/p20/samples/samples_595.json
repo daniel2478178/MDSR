@@ -1,0 +1,23 @@
+{
+  "sample_order": 595,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Rabi-type resonance behavior: P = A * sin^2(omega_r * t/2) / (omega_r^2), with effective frequency\n    omega_r = np.sqrt(omega**2 + params[0]**2 + eps)  # generalized Rabi frequency\n    rabi_term = np.sin(omega_r * t / 2.0)**2 / (omega_r**2 + eps)\n    \n    # Linear scaling with probability and exponential decay in time\n    y = params[1] * prob * rabi_term * np.exp(-params[2] * t) + params[3] * prob * t\n    \n    return y\n\n",
+  "score": -1.5990302373189569,
+  "mean_nmse": 1.2871656806042535,
+  "min_nmse": 0.8824644461807235,
+  "max_nmse": 1.6324244737212803,
+  "median_nmse": 1.3032596898149453,
+  "std_nmse": 0.29032875483673887,
+  "worst2_mean_nmse": 1.5990302373189569,
+  "nmse_per_test": {
+    "dataset_0": 1.6324244737212803,
+    "dataset_1": 1.5656360009166332,
+    "dataset_2": 1.5610383711046154,
+    "dataset_3": 0.8824644461807235,
+    "dataset_4": 1.0159020523243358,
+    "dataset_5": 1.5271553054289815,
+    "dataset_6": 1.0333407209565484,
+    "dataset_7": 1.0793640742009094
+  },
+  "sample_time": 1.8291327357292175,
+  "evaluate_time": 2.0785043239593506
+}

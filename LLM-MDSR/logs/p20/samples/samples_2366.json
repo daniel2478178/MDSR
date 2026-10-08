@@ -1,0 +1,23 @@
+{
+  "sample_order": 2366,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Using a physically motivated form: probability-scaled damped oscillations\n    # with frequency mixing between omega and a natural frequency parameter\n    # This captures resonance-like behavior and decay\n    term1 = params[0] * prob * np.exp(-params[1] * np.abs(t)) * np.cos(x + params[2])\n    term2 = params[3] * prob * np.exp(-params[4] * np.abs(t)) * np.sin(x)\n    term3 = params[5] * t * prob * omega\n    term4 = params[6] * prob * (1 - prob)\n    return term1 + term2 + term3 + term4\n\n",
+  "score": -1.6196724204875161,
+  "mean_nmse": 1.179667763664832,
+  "min_nmse": 0.7096076430208478,
+  "max_nmse": 2.0531830690891195,
+  "median_nmse": 1.12411660716815,
+  "std_nmse": 0.3586351996807851,
+  "worst2_mean_nmse": 1.6196724204875161,
+  "nmse_per_test": {
+    "dataset_0": 1.1861617718859128,
+    "dataset_1": 1.1051231039962794,
+    "dataset_2": 1.1307164528084472,
+    "dataset_3": 0.7096076430208478,
+    "dataset_4": 1.0043168541817495,
+    "dataset_5": 1.1189671860806074,
+    "dataset_6": 1.1292660282556928,
+    "dataset_7": 2.0531830690891195
+  },
+  "sample_time": 1.7731001377105713,
+  "evaluate_time": 4.002784967422485
+}

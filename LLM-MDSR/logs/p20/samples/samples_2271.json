@@ -1,0 +1,23 @@
+{
+  "sample_order": 2271,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    import numpy as np\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Physical model: damped oscillation with probability-modulated amplitude\n    # target = A(prob) * exp(-gamma*t) * cos(omega*t + phase) + offset\n    # Amplitude has linear and quadratic prob dependence\n    \n    amplitude = params[0] + params[1] * prob + params[2] * prob**2\n    decay = params[3]\n    phase = params[4]\n    offset = params[5]\n    \n    oscillation = amplitude * np.exp(-decay * np.abs(t)) * np.cos(x + phase)\n    \n    # Additional slow modulation term proportional to prob*(1-prob)\n    transition_term = params[6] * prob * (1.0 - prob) * np.sin(params[7] * t + params[8])\n    \n    # Small probability-dependent damping adjustment\n    prob_correction = params[9] * (prob - 0.5) * t / (1.0 + np.abs(t))\n    \n    return oscillation + transition_term + prob_correction + offset\n\n",
+  "score": -0.43974597638128365,
+  "mean_nmse": 0.41799168107419293,
+  "min_nmse": 0.34423677704257993,
+  "max_nmse": 0.4410229435369812,
+  "median_nmse": 0.4258744406800794,
+  "std_nmse": 0.029190391059978487,
+  "worst2_mean_nmse": 0.43974597638128365,
+  "nmse_per_test": {
+    "dataset_0": 0.43846900922558607,
+    "dataset_1": 0.4211947472050724,
+    "dataset_2": 0.4172839430866896,
+    "dataset_3": 0.34423677704257993,
+    "dataset_4": 0.4171253311732565,
+    "dataset_5": 0.4410229435369812,
+    "dataset_6": 0.43404656316829154,
+    "dataset_7": 0.4305541341550865
+  },
+  "sample_time": 2.6004878282546997,
+  "evaluate_time": 3.06585431098938
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 966,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like universal transition probability formula\n    # For a two-level system driven by harmonic perturbation,\n    # transition probability P(t) = A * sin^2(Omega_R*t/2) / (1 + delta^2/Omega_R^2)\n    # where Omega_R = sqrt(delta^2 + omega^2), delta is detuning.\n    # We parametrize detuning via prob (as proxy) and driving amplitude.\n    \n    eps = 1e-10\n    delta = params[0] * (1 - prob)  # effective detuning scaled by params\n    Omega_R = np.sqrt(omega**2 + delta**2 + eps)\n    \n    # Physical form: target = amplitude * sin^2(sqrt(...)*t/2) * modulation\n    half_angle = Omega_R * t / 2.0\n    sin2 = np.sin(half_angle) ** 2\n    \n    # Account for resonance enhancement via prob and amplitude factor\n    y = params[1] * sin2 / (1.0 + (params[2] * delta / Omega_R)**2)\n    \n    # Add small correction for non-ideal envelope\n    y = y * (1.0 + params[3] * np.exp(-params[4] * np.abs(t) * omega))\n    \n    return y\n\n",
+  "score": -4.945641404015872,
+  "mean_nmse": 2.9613964382977795,
+  "min_nmse": 0.8868099164194505,
+  "max_nmse": 4.95336220767821,
+  "median_nmse": 3.0135514002063837,
+  "std_nmse": 1.9530735076918395,
+  "worst2_mean_nmse": 4.945641404015872,
+  "nmse_per_test": {
+    "dataset_0": 1.0920211055119586,
+    "dataset_1": 0.8868099164194505,
+    "dataset_2": 4.877524627560844,
+    "dataset_3": 4.881969625712099,
+    "dataset_4": 0.9119852502942161,
+    "dataset_5": 1.1495781728519228,
+    "dataset_6": 4.937920600353532,
+    "dataset_7": 4.95336220767821
+  },
+  "sample_time": 2.2661746740341187,
+  "evaluate_time": 3.282301664352417
+}

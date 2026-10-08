@@ -1,0 +1,23 @@
+{
+  "sample_order": 1387,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Physical model: resonance-like transition with amplitude modulation\n    # target = A * prob * sin^2(omega*t/2 + phase) + B * sin(omega*t) + C\n    \n    # Define core resonance term using Rabi-like formula\n    # sin^2(Ω*t/2) envelope where Ω = sqrt(omega^2 + params[0]^2)\n    Omega = np.sqrt(omega*omega + params[0]*params[0])\n    \n    # Main resonance probability envelope\n    resonance_envelope = np.sin(Omega * t / 2 + params[1])**2\n    \n    # Probability-weighted response with saturation exponent\n    prob_term = np.power(np.maximum(prob, eps), params[2])\n    \n    # Combine primary terms\n    y = params[3] * prob_term * resonance_envelope\n    \n    # Add coherent oscillation term (interference between driving and prob)\n    y += params[4] * np.sin(omega * t + params[5]) * np.power(np.maximum(prob, eps), 0.5)\n    \n    # Small offset and linear probability dependence\n    y += params[6] * prob + params[7]\n    \n    return y\n\n",
+  "score": -0.5404138459651903,
+  "mean_nmse": 0.49472187996261596,
+  "min_nmse": 0.42669961842388976,
+  "max_nmse": 0.5454723677457576,
+  "median_nmse": 0.5016401287864789,
+  "std_nmse": 0.03996443937485426,
+  "worst2_mean_nmse": 0.5404138459651903,
+  "nmse_per_test": {
+    "dataset_0": 0.535355324184623,
+    "dataset_1": 0.5159631969868484,
+    "dataset_2": 0.49411815017953964,
+    "dataset_3": 0.4976855439607808,
+    "dataset_4": 0.43688612460731163,
+    "dataset_5": 0.5055947136121771,
+    "dataset_6": 0.5454723677457576,
+    "dataset_7": 0.42669961842388976
+  },
+  "sample_time": 3.5207241773605347,
+  "evaluate_time": 2.642268180847168
+}

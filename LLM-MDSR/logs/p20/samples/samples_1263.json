@@ -1,0 +1,23 @@
+{
+  "sample_order": 1263,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-12\n    p_safe = np.maximum(prob, eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical form: Landau-Zener-like transition with sinusoidal driving\n    # target = A * (1 - exp(-p * omega * t)) * cos(delta) + B * sin^2(theta * t)\n    # Key shared structure: exponential probability coupling and oscillatory terms\n    \n    # Exponential probability-time coupling\n    exp_coupling = 1.0 - np.exp(-params[0] * p_safe * omega_safe * t_safe)\n    \n    # Sinusoidal driving term with phase\n    drive_angle = params[1] * t_safe + params[2] * np.sin(omega_safe * t)\n    drive_term = np.cos(drive_angle)\n    \n    # Omega-dependent amplitude modulation\n    amplitude_mod = np.sin(params[3] * np.log(omega_safe + 1.0) * t_safe)\n    \n    # Combine: primary term with probability-driven amplitude and oscillatory correction\n    y = params[4] * exp_coupling * drive_term + params[5] * amplitude_mod * p_safe + params[6]\n    \n    return y\n\n",
+  "score": -0.960824198878053,
+  "mean_nmse": 0.4902936880739368,
+  "min_nmse": 0.22328448203051027,
+  "max_nmse": 0.9935223268696842,
+  "median_nmse": 0.38448292157866343,
+  "std_nmse": 0.2809312521240836,
+  "worst2_mean_nmse": 0.960824198878053,
+  "nmse_per_test": {
+    "dataset_0": 0.4459070408783482,
+    "dataset_1": 0.35701745038917543,
+    "dataset_2": 0.3120762295492909,
+    "dataset_3": 0.9935223268696842,
+    "dataset_4": 0.2504675112199124,
+    "dataset_5": 0.41194839276815143,
+    "dataset_6": 0.22328448203051027,
+    "dataset_7": 0.9281260708864219
+  },
+  "sample_time": 5.066350638866425,
+  "evaluate_time": 2.967532157897949
+}

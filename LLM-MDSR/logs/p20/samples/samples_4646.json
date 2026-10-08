@@ -1,0 +1,23 @@
+{
+  "sample_order": 4646,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Simplified physically inspired form: Rabi-like oscillation with decay\n    # target ~ sqrt(prob) * sin^2(x) / (1 + (t*params[0])^2) * exp(-params[1]*t)\n    # plus a small baseline term\n    sin_term = np.sin(x)**2\n    denominator = 1.0 + (params[0] * t)**2\n    exp_decay = np.exp(-params[1] * t)\n    prob_factor = np.sqrt(prob + 1e-10)  # avoid sqrt(0) issues\n    return (params[2] * prob_factor * sin_term * exp_decay / denominator) + params[3] * (1 - prob) * np.cos(x) * exp_decay\n\n",
+  "score": -2.8525434865339934,
+  "mean_nmse": 1.7409439085114151,
+  "min_nmse": 1.188714098539514,
+  "max_nmse": 3.1426592079461946,
+  "median_nmse": 1.3569566446546055,
+  "std_nmse": 0.6847838354318827,
+  "worst2_mean_nmse": 2.8525434865339934,
+  "nmse_per_test": {
+    "dataset_0": 3.1426592079461946,
+    "dataset_1": 1.8214440916464805,
+    "dataset_2": 1.2477422944770609,
+    "dataset_3": 1.188714098539514,
+    "dataset_4": 1.4614166485343507,
+    "dataset_5": 2.562427765121792,
+    "dataset_6": 1.2524966407748601,
+    "dataset_7": 1.2506505210510677
+  },
+  "sample_time": 2.134048104286194,
+  "evaluate_time": 2.1702044010162354
+}

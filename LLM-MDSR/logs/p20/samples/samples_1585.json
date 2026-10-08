@@ -1,0 +1,23 @@
+{
+  "sample_order": 1585,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Based on Rabi oscillations: P(t) = (Omega_R^2 / (Omega_R^2 + Delta^2)) * sin^2(sqrt(Omega_R^2 + Delta^2) * t / 2)\n    # Here, prob plays role of scaled Rabi frequency, omega is related to detuning\n    # Physical target likely amplitude or related quantity\n    \n    # Use transformed variables to capture Rabi-like behavior\n    # Parameters: params[0]=scale, params[1]=detuning offset, params[2]=frequency scale, params[3]=probability exponent\n    \n    # Generalize: prob could be sin^2(θ/2) or similar; here treat prob as the transition probability directly\n    \n    # Extract components\n    p = prob\n    tau = t\n    w = omega\n    \n    # Define parameters with physical meaning\n    a = params[0]  # overall amplitude\n    b = params[1]  # detuning-like parameter (frequency shift)\n    c = params[2]  # time scaling factor\n    d = params[3]  # nonlinear exponent on prob\n    \n    # Rabi-like frequency: depends on prob and omega through detuning relation\n    delta = w - b  # effective detuning\n    omega_eff = np.sqrt(p**2 + delta**2 + 1e-10)  # generalized Rabi frequency\n    \n    # Driving term: effective oscillation\n    drive = np.sin(omega_eff * tau * c)\n    \n    # Probability factor with power law\n    prob_factor = np.power(np.maximum(p, 1e-10), d)\n    \n    # Physical response: amplitude multiplied by envelope and oscillation\n    y = a * prob_factor * drive / (omega_eff + 1e-10)\n    \n    # Add small constant to handle zero cases\n    y = y + params[4] if len(params) > 4 else y\n    \n    return y\n\n",
+  "score": -0.9780196173330504,
+  "mean_nmse": 0.8293993607312422,
+  "min_nmse": 0.5208235694165008,
+  "max_nmse": 0.9981264265309926,
+  "median_nmse": 0.8487129822989585,
+  "std_nmse": 0.13498724262302328,
+  "worst2_mean_nmse": 0.9780196173330504,
+  "nmse_per_test": {
+    "dataset_0": 0.8676952671605345,
+    "dataset_1": 0.8070810294964528,
+    "dataset_2": 0.7845348679545915,
+    "dataset_3": 0.9981264265309926,
+    "dataset_4": 0.8297306974373825,
+    "dataset_5": 0.9579128081351082,
+    "dataset_6": 0.8692902197183757,
+    "dataset_7": 0.5208235694165008
+  },
+  "sample_time": 3.0926199555397034,
+  "evaluate_time": 3.559600830078125
+}

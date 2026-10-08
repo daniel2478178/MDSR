@@ -1,0 +1,23 @@
+{
+  "sample_order": 2151,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared physical law: target = prob * exp(-k1*t) * sin(k2*omega*t + k3) + k4*t + k5\n    \n    Physical interpretation: damped Rabi oscillations with offset\n    \"\"\"\n    # Ensure positive time decay exponent\n    t_abs = np.abs(t)\n    \n    # Damped oscillation term proportional to transition probability\n    # params[0]: amplitude scaling of damping\n    # params[1]: decay rate  \n    # params[2]: oscillation frequency multiplier\n    # params[3]: phase offset\n    # params[4]: linear drift coefficient\n    # params[5]: vertical offset\n    \n    # Main physical term: damped Rabi oscillation\n    damping = np.exp(-params[1] * t_abs)\n    oscillation = np.sin(params[2] * omega * t + params[3])\n    \n    # First-order correction for small t behavior\n    linear_drift = params[4] * t\n    \n    # Combine terms with prob scaling\n    # params[0] determines overall coupling strength\n    result = params[0] * prob * damping * oscillation + linear_drift + params[5]\n    \n    return result\n\n",
+  "score": -0.6172622232125033,
+  "mean_nmse": 0.43194692722361405,
+  "min_nmse": 0.28298620893261545,
+  "max_nmse": 0.6226452269187133,
+  "median_nmse": 0.4004240125796097,
+  "std_nmse": 0.1316795848039752,
+  "worst2_mean_nmse": 0.6172622232125033,
+  "nmse_per_test": {
+    "dataset_0": 0.6226452269187133,
+    "dataset_1": 0.527517101904229,
+    "dataset_2": 0.44687476210090915,
+    "dataset_3": 0.28298620893261545,
+    "dataset_4": 0.3539732630583103,
+    "dataset_5": 0.6118792195062935,
+    "dataset_6": 0.3094103096555496,
+    "dataset_7": 0.30028932571229244
+  },
+  "sample_time": 2.8046637177467346,
+  "evaluate_time": 3.862457752227783
+}

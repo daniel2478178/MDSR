@@ -1,0 +1,23 @@
+{
+  "sample_order": 265,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    \n    # Rabi-like oscillation with amplitude modulated by probability\n    # and decay envelope\n    rabi = np.sin(angle) * np.exp(-np.abs(t) * params[4])\n    \n    # Probability-weighted correction for off-resonance effects\n    prob_corr = prob * np.cos(angle)\n    \n    # Time-dependent growth term weighted by probability\n    time_term = prob * np.sqrt(np.abs(t) + eps)\n    \n    # Base line and decay parameter in phase\n    y = params[0] * rabi + params[1] * prob_corr + params[2] * time_term + params[3]\n    \n    return y\n\n",
+  "score": -0.48158124732939,
+  "mean_nmse": 0.4322420804055346,
+  "min_nmse": 0.3767933159428226,
+  "max_nmse": 0.49862480788631647,
+  "median_nmse": 0.4388978468742286,
+  "std_nmse": 0.03838130455473433,
+  "worst2_mean_nmse": 0.48158124732939,
+  "nmse_per_test": {
+    "dataset_0": 0.4461668713304824,
+    "dataset_1": 0.3767933159428226,
+    "dataset_2": 0.38211143346849696,
+    "dataset_3": 0.49862480788631647,
+    "dataset_4": 0.4119068340952373,
+    "dataset_5": 0.43381572753049014,
+    "dataset_6": 0.44397996621796715,
+    "dataset_7": 0.4645376867724636
+  },
+  "sample_time": 2.3726471662521362,
+  "evaluate_time": 2.166125774383545
+}

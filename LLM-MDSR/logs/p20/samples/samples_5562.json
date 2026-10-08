@@ -1,0 +1,23 @@
+{
+  "sample_order": 5562,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Use physically motivated form: damped oscillatory dependence on omega*t,\n    # modulated by probabilities and with a time-decay factor.\n    # params[0]: amplitude scale for the prob-dependent term\n    # params[1]: frequency multiplier for omega*t\n    # params[2]: phase shift\n    # params[3]: decay rate\n    # params[4]: amplitude for the sqrt(prob) term (can be zero if not needed)\n    x = omega * t\n    # A compact form: combination of a Rabi-like oscillation and a decay factor.\n    # Use only 5 parameters for clarity and robustness.\n    oscillatory = np.sin(params[1] * x + params[2])\n    # For small t, decay factor ~1; for large t, tends to 0.\n    decay = np.exp(-params[3] * t)\n    # Combine: dominant term proportional to sqrt(prob*(1-prob))? \n    # But we only have prob, so we use prob and (1-prob) terms.\n    # Simplify: the underlying physics might be that target = A * sqrt(prob) * sin(omega*t + phi) * exp(-gamma*t)\n    # plus a small offset that could be prob-dependent.\n    # Let us use a 5-parameter model:\n    # target = params[0] * sqrt(prob) * sin(params[1]*omega*t + params[2]) * exp(-params[3]*t) + params[4] * (1 - 2*prob)\n    # Check for all datasets.\n    # If that fails, we might need a linear combination of sin and cos to capture phase.\n    # But we already have phase in sin.\n    # To be more flexible, add a cos term via params[5]? But requirement says <=4 params unless necessary.\n    # Let's start with 5 params model and see.\n    return params[0] * np.sqrt(prob) * np.sin(params[1] * x + params[2]) * np.exp(-params[3] * t) + params[4] * (1 - 2 * prob)\n\n",
+  "score": -1.336516862070086,
+  "mean_nmse": 0.8045785882403416,
+  "min_nmse": 0.4595557952969384,
+  "max_nmse": 1.532860583861918,
+  "median_nmse": 0.7043734310131231,
+  "std_nmse": 0.3362512514564606,
+  "worst2_mean_nmse": 1.336516862070086,
+  "nmse_per_test": {
+    "dataset_0": 0.7657922261977033,
+    "dataset_1": 0.6760770737028731,
+    "dataset_2": 0.6107760403017194,
+    "dataset_3": 1.1401731402782538,
+    "dataset_4": 0.5187240579599534,
+    "dataset_5": 0.7326697883233732,
+    "dataset_6": 0.4595557952969384,
+    "dataset_7": 1.532860583861918
+  },
+  "sample_time": 2.3778515458106995,
+  "evaluate_time": 5.720836877822876
+}

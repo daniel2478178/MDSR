@@ -1,0 +1,23 @@
+{
+  "sample_order": 1583,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared physical law: Rabi-like transition probability combined with\n    detuning and time-dependent oscillation.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.maximum(np.abs(omega), eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Rabi frequency: sqrt(prob) times coupling constant\n    # Detuning: omega - omega_0 (parameter)\n    delta = omega - params[0]\n    \n    # Generalized Rabi frequency\n    omega_r = np.sqrt(np.maximum(prob, eps) + delta**2)\n    \n    # Time-dependent oscillation with damping\n    oscillation = np.sin(omega_r * t + params[1])**2\n    \n    # Probability-weighted core with saturation correction\n    core = prob * (params[2] + params[3] * np.cos(delta * t))\n    \n    # Frequency response\n    freq_factor = 1.0 / (1.0 + eps * omega_safe)\n    \n    # Combine terms: primary Rabi oscillation plus detuning correction\n    y = params[4] * (core * freq_factor +  params[5] * oscillation) + params[6] * delta**2 / (delta**2 + params[7])\n    \n    return y\n\n",
+  "score": -0.640920055243007,
+  "mean_nmse": 0.5830028215737567,
+  "min_nmse": 0.4642157155441963,
+  "max_nmse": 0.6620907590051404,
+  "median_nmse": 0.6089250460286075,
+  "std_nmse": 0.060168755485396935,
+  "worst2_mean_nmse": 0.640920055243007,
+  "nmse_per_test": {
+    "dataset_0": 0.619659740582281,
+    "dataset_1": 0.5611721153273678,
+    "dataset_2": 0.6620907590051404,
+    "dataset_3": 0.4642157155441963,
+    "dataset_4": 0.6197493514808736,
+    "dataset_5": 0.6122737686717095,
+    "dataset_6": 0.5192847985929789,
+    "dataset_7": 0.6055763233855057
+  },
+  "sample_time": 4.000145971775055,
+  "evaluate_time": 2.3410048484802246
+}

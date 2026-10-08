@@ -1,0 +1,23 @@
+{
+  "sample_order": 1665,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical interpretation: transition rate in driven systems\n    # Using prob in an inverted Lorentzian-like resonance term\n    # that couples prob, omega, and t naturally\n    \n    # Avoid division by zero\n    eps = 1e-10\n    \n    # Resonance denominator: prob controls coupling strength\n    denominator = (1.0 + params[0] * (omega - params[1])**2)\n    \n    # Oscillatory interference term between driving and probability\n    oscillation = np.sin(omega * t + params[2] * prob)\n    \n    # Decay envelope depending on time\n    decay = np.exp(-params[3] * np.abs(t) + eps)\n    \n    # Core physical relation: probability-modulated resonance\n    result = prob * (params[4] / denominator) * (1.0 + params[5] * oscillation) * decay\n    \n    # Add small offset for numerical stability\n    return result + params[6]\n\n",
+  "score": -0.582806998487398,
+  "mean_nmse": 0.44062920921603643,
+  "min_nmse": 0.30539494138894163,
+  "max_nmse": 0.5886455254153391,
+  "median_nmse": 0.4116216083311953,
+  "std_nmse": 0.10199109655414983,
+  "worst2_mean_nmse": 0.582806998487398,
+  "nmse_per_test": {
+    "dataset_0": 0.5886455254153391,
+    "dataset_1": 0.5153961672230131,
+    "dataset_2": 0.4519967085620194,
+    "dataset_3": 0.30539494138894163,
+    "dataset_4": 0.36611064054601195,
+    "dataset_5": 0.576968471559457,
+    "dataset_6": 0.3492747109331381,
+    "dataset_7": 0.3712465081003712
+  },
+  "sample_time": 1.916191041469574,
+  "evaluate_time": 2.467165470123291
+}

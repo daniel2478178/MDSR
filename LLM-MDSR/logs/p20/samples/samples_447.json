@@ -1,0 +1,14 @@
+{
+  "sample_order": 447,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical angle from driving\n    angle = omega * t\n    \n    # Bell-like transition probability modulation with detuning and decay\n    # Atomic transition probability in driven systems often follows:\n    # P = (Omega^2 / (Delta^2 + Omega^2)) * sin^2(0.5 * sqrt(Delta^2 + Omega^2) * t)\n    # Rewriting with prob as input: represent generalized Rabi frequency via prob\n    \n    # Simple effective Rabi frequency from prob (prob = sin^2(theta/2) style)\n    # Inverted: theta = 2*arcsin(sqrt(prob))\n    theta = 2.0 * np.arcsin(np.clip(np.sqrt(prob), -1.0, 1.0))\n    \n    # Generalized frequency = sqrt(delta^2 + Omega^2) = parameter combination\n    # Assume prob encodes effective oscillation amplitude, and t gives time\n    # Physical target often = amplitude * cos or sin of accumulated phase\n    \n    # Candidate: target = A * sin(theta + phi) * exp(-t/tau) + offset\n    # But theta itself contains prob, so possible\n    \n    # Try target = A * (1 - 2*prob) * cos(omega*t) + B * sin(omega*t) * sqrt(prob*(1-prob)) + C*exp(-t/tau)\n    \n    s = np.sqrt(prob * (1.0 - prob) + eps)\n    \n    y = params[0] * (1.0 - 2.0*prob) * np.cos(angle) \\\n        + params[1] * np.sin(angle) * s \\\n        + params[2] * np.exp(-np.abs(t)/np.maximum(params[3], eps)) \\\n        + params[4] * np.sin(angle) / np.sqrt(omega_safe) \\\n        + params[5] * prob * np.sqrt(t_safe)\n    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 2.4640376567840576,
+  "evaluate_time": 1.9386687278747559
+}

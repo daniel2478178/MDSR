@@ -1,0 +1,23 @@
+{
+  "sample_order": 2104,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    p4 = params[4]\n    \n    # Physical form: exponential decay modulated by Rabi-like oscillation\n    # target = A * exp(-t/tau) * [cos^2(Omega_eff*t/2) + (delta/Omega_eff)^2 * sin^2(...)]\n    delta = p0  # detuning-like parameter\n    Omega_eff = p1  # effective Rabi frequency scaling\n    \n    # Common Rabi formula for transition probability is given; here we invert to find\n    # amplitude or energy-like target from prob, t, omega.\n    # Assume target relates to prob through a damped Rabi model\n    tau = p2  # damping time\n    A = p3    # amplitude\n    B = p4    # baseline\n    \n    # Omega_eff depends on omega and delta: Omega_eff = sqrt(delta^2 + (p5 * omega)^2)\n    # But keep 4 params: we fold p1 as Omega_eff directly for simplicity\n    # Let's do: target = A * exp(-t/tau) * prob + B\n    # But to use omega, we need it to matter. \n    # Better: target = A * exp(-t/tau) * sin^2(Omega_eff * t) + B + C*prob\n    # We use 4 params: A, tau, Omega_eff, B\n    \n    A = params[0]\n    tau = params[1]\n    Omega_eff = params[2]\n    B = params[3]\n    \n    # Physical law: target is proportional to energy absorbed = prob * (some function)\n    # Common in driven quantum systems: target = C * prob * t * omega / (1 + (delta/omega)^2)\n    # To keep simple, use: target = A * prob * t * omega + B\n    # But need better: maybe target = amplitude / sqrt(prob) ?\n    \n    # Let's revert to a simpler but physically motivated: \n    # target = A * exp(-t/tau) * cos(Omega_eff * t) * prob + B\n    # Since prob itself is likely cos^2(...) form, this may overcomplicate.\n    \n    # Use a Landau-Zener-like probability to field relation:\n    # target = p0 * (1 - exp(-prob * p1 * t * omega)) + p2 * prob + p3\n    \n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    \n    # Ensure positivity via safe operations\n    arg = prob * p1 * t * omega\n    return p0 * (1.0 - np.exp(-np.abs(arg))) + p2 * prob + p3 + p0 * np.sin(omega * t) * 0.0  # omega enters only via arg\n\n",
+  "score": -0.7805667565814423,
+  "mean_nmse": 0.7076368973212639,
+  "min_nmse": 0.5734967219722426,
+  "max_nmse": 0.7922064239267064,
+  "median_nmse": 0.7186957324441152,
+  "std_nmse": 0.06852571575271821,
+  "worst2_mean_nmse": 0.7805667565814423,
+  "nmse_per_test": {
+    "dataset_0": 0.7922064239267064,
+    "dataset_1": 0.768927089236178,
+    "dataset_2": 0.7387447973143497,
+    "dataset_3": 0.5734967219722426,
+    "dataset_4": 0.6986466675738806,
+    "dataset_5": 0.765786940367893,
+    "dataset_6": 0.6629335795957098,
+    "dataset_7": 0.6603529585831512
+  },
+  "sample_time": 4.5902018547058105,
+  "evaluate_time": 2.655343770980835
+}

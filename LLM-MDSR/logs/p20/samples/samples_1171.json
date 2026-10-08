@@ -1,0 +1,23 @@
+{
+  "sample_order": 1171,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Use dimensionless phase combination: prob depends on omega*t typically\n    # in Rabi-like or Landau-Zener dynamics.\n    phase = omega * t\n    # Include a Hall/geometric-like factor where prob modulates a sinusoidal\n    # response with phase saturation for high omega, plus decay envelope.\n    # Keep common structure with 4 independent physical params.\n    a = params[0]\n    b = params[1]\n    c = params[2]\n    d = params[3]\n    \n    # Approximate target as a*sin(2*arctan(prob)) * sin(phase) + b*cos(phase) + c*exp(-d*|t|)\n    # Use bounded functions to avoid huge terms.\n    angle_factor = np.sin(2.0 * np.arctan(prob))\n    oscill = np.sin(phase)\n    cosine_part = np.cos(phase)\n    \n    # Damping term with time scale param d\n    damping = np.exp(-np.maximum(np.abs(t), eps) * d)\n    \n    y = a * angle_factor * oscill + b * cosine_part * prob + c * damping * prob\n    \n    return y\n\n",
+  "score": -1.3152078759083652,
+  "mean_nmse": 0.9952228122335032,
+  "min_nmse": 0.7129103113946872,
+  "max_nmse": 1.3537370344582984,
+  "median_nmse": 0.925489964435668,
+  "std_nmse": 0.20399496612084916,
+  "worst2_mean_nmse": 1.3152078759083652,
+  "nmse_per_test": {
+    "dataset_0": 1.3537370344582984,
+    "dataset_1": 1.0349561114317674,
+    "dataset_2": 0.8864698924673614,
+    "dataset_3": 0.9192571278839481,
+    "dataset_4": 0.7129103113946872,
+    "dataset_5": 1.276678717358432,
+    "dataset_6": 0.8460505018861425,
+    "dataset_7": 0.9317228009873879
+  },
+  "sample_time": 3.5249407291412354,
+  "evaluate_time": 2.1658971309661865
+}

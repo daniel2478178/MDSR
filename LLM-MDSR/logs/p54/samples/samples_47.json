@@ -1,0 +1,23 @@
+{
+  "sample_order": 47,
+  "function": "def equation(t: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation x = f(t, params).\n\n    Keep one common symbolic structure for every dataset.\n    Only params values differ between datasets.\n\n    MUST return a valid NumPy-compatible prediction.\n    \"\"\"\n    A = params[0]\n    gamma = params[1] if len(params) > 1 else 0.1\n    omega_c = params[2] if len(params) > 2 else 1.0\n    phi = params[3] if len(params) > 3 else 0.0\n    offset = params[4] if len(params) > 4 else 0.0\n    beta = params[5] if len(params) > 5 else 0.0\n    alpha = params[6] if len(params) > 6 else 0.5\n    \n    # Time-dependent amplitude modulation with decaying oscillatory correction\n    modulation = 1.0 + beta * np.exp(-alpha * t) * np.sin(alpha * t)\n    \n    # Nonlinear phase: linear term plus smooth arctangent frequency evolution\n    phase = omega_c * t + phi + np.arctan(gamma * t) * beta\n    \n    # Exponential decay envelope combined with a slowly varying amplitude factor\n    envelope = np.exp(-gamma * t) * (1.0 - 0.1 * gamma * t / (1.0 + gamma * t))\n    \n    y = offset + A * envelope * modulation * np.cos(phase)\n    return y\n\n",
+  "score": -0.0005700688582187847,
+  "mean_nmse": 0.00014365784595990138,
+  "min_nmse": 4.415106100829708e-09,
+  "max_nmse": 0.0010931472295891119,
+  "median_nmse": 2.0405583365438697e-06,
+  "std_nmse": 0.0003591858938592237,
+  "worst2_mean_nmse": 0.0005700688582187847,
+  "nmse_per_test": {
+    "dataset_0": 4.6990486848457526e-05,
+    "dataset_1": 4.940489309191022e-06,
+    "dataset_2": 4.415106100829708e-09,
+    "dataset_3": 9.313723214369235e-08,
+    "dataset_4": 3.6134686443910526e-06,
+    "dataset_5": 0.0010931472295891119,
+    "dataset_6": 4.676480286966868e-07,
+    "dataset_7": 5.8929211184548245e-09
+  },
+  "sample_time": 2.331143081188202,
+  "evaluate_time": 4.624678611755371
+}

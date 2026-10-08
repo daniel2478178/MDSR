@@ -1,0 +1,23 @@
+{
+  "sample_order": 2116,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    x = omega * t\n    x_safe = np.where(np.abs(x) < eps, eps, x)\n    \n    # Simplified physically motivated model:\n    # target = A * prob * sin(omega*t)^2 / (omega*t)^2  (diffraction-like) \n    # + B * prob * cos(omega*t) + C\n    # with damping and frequency scaling\n    sinc_term = np.sin(x_safe) / x_safe\n    osc = params[0] * prob * sinc_term**2\n    cos_term = params[1] * prob * np.cos(x)\n    exp_term = np.exp(-params[2] * np.abs(t))\n    \n    # Nonlinear coupling between prob and omega\n    coupling = params[3] * prob * np.sin(params[4] * omega + params[5])\n    \n    # Time-dependent base\n    time_base = params[6] * t * prob\n    \n    return osc + cos_term * exp_term + coupling + time_base + params[7]\n\n",
+  "score": -0.522925887958336,
+  "mean_nmse": 0.4304292015785389,
+  "min_nmse": 0.3144315917139046,
+  "max_nmse": 0.5270181244507709,
+  "median_nmse": 0.4147207302462981,
+  "std_nmse": 0.06527555374286617,
+  "worst2_mean_nmse": 0.522925887958336,
+  "nmse_per_test": {
+    "dataset_0": 0.5270181244507709,
+    "dataset_1": 0.4588236611797878,
+    "dataset_2": 0.4158447231364678,
+    "dataset_3": 0.3144315917139046,
+    "dataset_4": 0.3994980458561009,
+    "dataset_5": 0.5188336514659013,
+    "dataset_6": 0.3953870774692502,
+    "dataset_7": 0.41359673735612834
+  },
+  "sample_time": 1.9752455353736877,
+  "evaluate_time": 4.697136640548706
+}

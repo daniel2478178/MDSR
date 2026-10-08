@@ -1,0 +1,23 @@
+{
+  "sample_order": 1355,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = t * omega\n    sinc_term = np.ones_like(x)\n    mask = np.abs(x) > 1e-10\n    sinc_term[mask] = np.sin(x[mask]) / x[mask]\n    \n    # Simplify to a physically meaningful Rabi-like formula\n    rabi_osc = np.sin(params[0] * np.sqrt(prob + params[1]) * t + params[2])**2\n    main = params[3] * rabi_osc * sinc_term\n    \n    # Minimal additional term for dataset-specific offset/decay\n    secondary = params[4] * (1.0 - prob) * np.exp(-params[5] * np.abs(t))\n    \n    return main + secondary + params[6]\n\n",
+  "score": -0.7853674858156481,
+  "mean_nmse": 0.6041136039833712,
+  "min_nmse": 0.41242767175050654,
+  "max_nmse": 0.7865587922250852,
+  "median_nmse": 0.5824331669135506,
+  "std_nmse": 0.11918576576644209,
+  "worst2_mean_nmse": 0.7853674858156481,
+  "nmse_per_test": {
+    "dataset_0": 0.7865587922250852,
+    "dataset_1": 0.6045880576613003,
+    "dataset_2": 0.5855244610095637,
+    "dataset_3": 0.41242767175050654,
+    "dataset_4": 0.5793418728175376,
+    "dataset_5": 0.7841761794062111,
+    "dataset_6": 0.5081572677333052,
+    "dataset_7": 0.5721345292634605
+  },
+  "sample_time": 2.9056169986724854,
+  "evaluate_time": 2.8941147327423096
+}

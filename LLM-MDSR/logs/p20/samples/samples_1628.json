@@ -1,0 +1,23 @@
+{
+  "sample_order": 1628,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener type transition with phase and time-dependent driving\n    theta = params[0] * omega * t + params[1]\n    # Transition probability modulated by a resonance curve\n    resonance_envelope = np.sinc((omega - params[2]) * t / np.pi)\n    # Core term: probability times squared cosine with offset\n    core = prob * (np.cos(theta) + params[3])**2\n    # Exponential decay in time (natural linewidth or detuning effect)\n    decay = np.exp(-params[4] * np.abs(t))\n    # Overall scaling and shift\n    return params[5] * core * resonance_envelope * decay + params[6]\n\n",
+  "score": -0.5773743117535456,
+  "mean_nmse": 0.3912087460228644,
+  "min_nmse": 0.19794498327286264,
+  "max_nmse": 0.5839752101266124,
+  "median_nmse": 0.36096798069768354,
+  "std_nmse": 0.1381100401666799,
+  "worst2_mean_nmse": 0.5773743117535456,
+  "nmse_per_test": {
+    "dataset_0": 0.5839752101266124,
+    "dataset_1": 0.5017083916761522,
+    "dataset_2": 0.41336159057466393,
+    "dataset_3": 0.19794498327286264,
+    "dataset_4": 0.3085743708207031,
+    "dataset_5": 0.5707734133804788,
+    "dataset_6": 0.28268117330465814,
+    "dataset_7": 0.27065083502678416
+  },
+  "sample_time": 1.6422740817070007,
+  "evaluate_time": 4.574132680892944
+}

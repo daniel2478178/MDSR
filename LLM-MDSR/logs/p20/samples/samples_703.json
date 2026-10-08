@@ -1,0 +1,23 @@
+{
+  "sample_order": 703,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Landau-Zener-like transition probability for sinusoidal driving\n    # target = A * prob / sqrt(1 + (prob/avg_prob)^2) * sin(omega*t) + B * cos(omega*t)\n    # Simplified with dataset-specific amplitude and phase parameters\n    avg_prob = params[0]\n    amplitude = params[1]\n    phase = params[2]\n    offset = params[3]\n    \n    # Normalized probability factor\n    p_norm = prob / (prob + avg_prob)\n    \n    # Oscillatory terms from driving\n    angle = omega * t + phase\n    \n    # Target is related to Rabi oscillation envelope times probability\n    y = amplitude * p_norm * np.sin(angle) + offset * np.cos(angle/2) * prob\n    \n    return y\n\n",
+  "score": -2.890289958492554,
+  "mean_nmse": 2.1480724572083725,
+  "min_nmse": 1.7887641651685515,
+  "max_nmse": 2.959607139981881,
+  "median_nmse": 1.9654746106559622,
+  "std_nmse": 0.436738267620677,
+  "worst2_mean_nmse": 2.890289958492554,
+  "nmse_per_test": {
+    "dataset_0": 2.8209727770032273,
+    "dataset_1": 2.018964229129131,
+    "dataset_2": 1.8446651291671126,
+    "dataset_3": 1.820656995905154,
+    "dataset_4": 1.7887641651685515,
+    "dataset_5": 2.959607139981881,
+    "dataset_6": 1.9278786528736525,
+    "dataset_7": 2.003070568438272
+  },
+  "sample_time": 2.8927189111709595,
+  "evaluate_time": 2.0368566513061523
+}

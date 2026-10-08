@@ -1,0 +1,23 @@
+{
+  "sample_order": 1796,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Physical form inspired by Rabi oscillations with detuning and decay\n    # target = A * prob * sin^2(Omega_eff * t/2) + B * cos(omega*t) + C\n    # where Omega_eff involves omega and prob, and params encode amplitude, phase, offset\n    p_safe = np.clip(prob, 0.0, 1.0)\n    # Effective Rabi frequency: params[0] * sqrt(prob) * omega + params[1] (detuning)\n    Omega_eff = params[0] * np.sqrt(p_safe + eps) * omega + params[1]\n    # Oscillation term: sin^2(Omega_eff * t) with phase and amplitude params[2]\n    osc = np.sin(Omega_eff * t + params[3])**2\n    # Additional envelope factor that may depend on omega and t, e.g., decay in time\n    envelope = np.exp(-params[4] * np.abs(t) * omega)\n    # Cross term from coherence? Use params[5] and params[6] for extra modulation\n    cross = params[5] * (omega * t) * np.cos(params[6] * omega * t)\n    # Overall scale and offset\n    scale = params[7]\n    offset = params[8]\n    # Ensure enough params used; fallback to simpler if fewer given (but MAX_NPARAMS=10)\n    # We use up to 9 params for flexibility, but structure is fixed\n    term = scale * (p_safe * osc * envelope) + cross + offset\n    # Add small baseline using params[9] if available, but keep simple\n    return term\n\n",
+  "score": -0.9959744673736883,
+  "mean_nmse": 0.9820689907730684,
+  "min_nmse": 0.9633603629066507,
+  "max_nmse": 0.9979601948958619,
+  "median_nmse": 0.9852070357185707,
+  "std_nmse": 0.012242302124823823,
+  "worst2_mean_nmse": 0.9959744673736883,
+  "nmse_per_test": {
+    "dataset_0": 0.9633603629066507,
+    "dataset_1": 0.9727238592083574,
+    "dataset_2": 0.9899088981284718,
+    "dataset_3": 0.9979601948958619,
+    "dataset_4": 0.9805051733086697,
+    "dataset_5": 0.9671165470196934,
+    "dataset_6": 0.9909881508653273,
+    "dataset_7": 0.9939887398515149
+  },
+  "sample_time": 2.1285623908042908,
+  "evaluate_time": 3.6707348823547363
+}

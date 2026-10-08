@@ -1,0 +1,23 @@
+{
+  "sample_order": 473,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical form: rate of change of probability under Rabi-like driving\n    # omega and t define the detuning/phase accumulation; prob provides the transition factor\n    # params: [0]=amplitude, [1]=phase/frequency coupling, [2]=decay, [3]=offset, [4]=power\n    eps = 1e-10\n    \n    # Resonant term: prob oscillates with omega*t, suppressed by decay in t\n    resonance = params[0] * prob * np.sin(omega * t + params[1])\n    \n    # Non-resonant root-term: weak dependence on t for small times\n    nonresonant = params[2] * prob * np.sqrt(np.maximum(np.abs(t), eps))\n    \n    # Decay envelope to model dissipation\n    decay_env = np.exp(-params[3] * np.abs(t))\n    \n    # Nonlinear response in prob (e.g., saturation)\n    prob_nonlinear = np.power(prob + eps, params[4])\n    \n    y = resonance + nonresonant + params[5] * decay_env * prob_nonlinear\n    \n    return y\n\n",
+  "score": -0.5919748046389827,
+  "mean_nmse": 0.46182662661303675,
+  "min_nmse": 0.3394614724654807,
+  "max_nmse": 0.6038326517000314,
+  "median_nmse": 0.44466739360812524,
+  "std_nmse": 0.09055750437057243,
+  "worst2_mean_nmse": 0.5919748046389827,
+  "nmse_per_test": {
+    "dataset_0": 0.6038326517000314,
+    "dataset_1": 0.5134570489677218,
+    "dataset_2": 0.4670559133950089,
+    "dataset_3": 0.3394614724654807,
+    "dataset_4": 0.4222788738212416,
+    "dataset_5": 0.5801169575779339,
+    "dataset_6": 0.39332805349021266,
+    "dataset_7": 0.3750820414866633
+  },
+  "sample_time": 1.9866822361946106,
+  "evaluate_time": 2.1977899074554443
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 584,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    # Core physical relation: Rabi-like oscillation with probability coupling\n    # target ≈ A * prob * sin²(θ/2) + B * prob + C\n    sin_half = np.sin(angle / 2.0)\n    term1 = params[0] * prob * sin_half * sin_half\n    term2 = params[1] * prob * t\n    term3 = params[2] * np.cos(angle) * np.sqrt(np.maximum(prob, eps))\n    term4 = params[3] * (1.0 - np.exp(-params[4] * np.abs(t) * np.abs(omega)))\n    y = term1 + term2 + term3 + term4 + params[5]\n    return y\n\n",
+  "score": -0.5644139923487879,
+  "mean_nmse": 0.4946223137216149,
+  "min_nmse": 0.4084138791621116,
+  "max_nmse": 0.5756928098181645,
+  "median_nmse": 0.4952796699862815,
+  "std_nmse": 0.0513295996208261,
+  "worst2_mean_nmse": 0.5644139923487879,
+  "nmse_per_test": {
+    "dataset_0": 0.5756928098181645,
+    "dataset_1": 0.45452946822773005,
+    "dataset_2": 0.4084138791621116,
+    "dataset_3": 0.4896600629457982,
+    "dataset_4": 0.45673180929898594,
+    "dataset_5": 0.5531351748794111,
+    "dataset_6": 0.5008992770267647,
+    "dataset_7": 0.5179160284139529
+  },
+  "sample_time": 2.216714560985565,
+  "evaluate_time": 3.1537280082702637
+}

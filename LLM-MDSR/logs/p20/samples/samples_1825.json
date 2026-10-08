@@ -1,0 +1,23 @@
+{
+  "sample_order": 1825,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physically motivated form: Rabi-like transition probability with detuning-dependent oscillations\n    # params: [amplitude, phase_offset, decay_rate, freq_scale, base_offset, omega_coupling]\n    # Use arctan-based transformation to link prob with t and omega in a nonlinear way\n    \n    # Ensure numerical stability\n    omega_safe = np.where(np.abs(omega) < 1e-12, 1e-12, omega)\n    t_safe = np.maximum(t, 0)\n    \n    # Generalized Rabi frequency: sqrt(omega^2 + coupling^2)\n    det = omega_safe - params[4]  # detuning relative to resonance\n    rabi_freq = np.sqrt(det**2 + (params[5] * prob)**2)\n    \n    # Oscillatory term with exponential decay from interaction time\n    # This resembles damped Rabi oscillations where prob modulates coupling strength\n    phase = rabi_freq * t_safe + params[1]\n    oscillatory = np.sin(phase)**2 * np.exp(-params[2] * t_safe)\n    \n    # Time-dependent amplitude modulation via omega\n    time_mod = np.sin(params[3] * omega_safe * t_safe) / omega_safe\n    \n    # Combine: probability-driven Rabi oscillation + driving frequency modulation\n    result = params[0] * (prob * oscillatory + (1 - prob) * time_mod) + params[6]\n    \n    return result\n\n",
+  "score": -0.852331405244927,
+  "mean_nmse": 0.5864237399473292,
+  "min_nmse": 0.32806965148987616,
+  "max_nmse": 0.8532741108687264,
+  "median_nmse": 0.5670296576809363,
+  "std_nmse": 0.22712817129457638,
+  "worst2_mean_nmse": 0.852331405244927,
+  "nmse_per_test": {
+    "dataset_0": 0.4594566493679612,
+    "dataset_1": 0.8532741108687264,
+    "dataset_2": 0.8366872082808327,
+    "dataset_3": 0.8513886996211276,
+    "dataset_4": 0.32806965148987616,
+    "dataset_5": 0.6746026659939113,
+    "dataset_6": 0.3293683363170273,
+    "dataset_7": 0.35854259763917085
+  },
+  "sample_time": 4.549226939678192,
+  "evaluate_time": 2.4020888805389404
+}

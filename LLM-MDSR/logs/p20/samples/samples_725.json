@@ -1,0 +1,23 @@
+{
+  "sample_order": 725,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Use hyperbolic tangent to saturate probability effects\n    # Physical form relates transition probability to Rabi-like oscillations\n    # with frequency modulated by omega and damped over time\n    \n    angle = omega * t\n    # Core term: probability-driven oscillation with frequency omega\n    osc = np.sin(angle) + params[0] * np.cos(angle)\n    \n    # Probability coupling with saturation\n    p_coupled = np.tanh(params[1] * prob)\n    \n    # Time-dependent decay envelope\n    decay = np.exp(-params[2] * np.abs(t))\n    \n    # Frequency rescaling factor\n    freq_factor = np.abs(omega) / (1.0 + params[3] * np.abs(omega))\n    \n    # Combine: target = amplitude * probability_coupling * oscillation * decay * frequency_factor\n    y = params[4] * p_coupled * osc * decay * freq_factor + params[5] * prob\n    \n    return y\n\n",
+  "score": -1.4631397661297574,
+  "mean_nmse": 1.3164279047261054,
+  "min_nmse": 0.896354724769281,
+  "max_nmse": 1.4698636763454174,
+  "median_nmse": 1.3246517668467486,
+  "std_nmse": 0.17293535830604637,
+  "worst2_mean_nmse": 1.4631397661297574,
+  "nmse_per_test": {
+    "dataset_0": 1.4564158559140972,
+    "dataset_1": 1.4698636763454174,
+    "dataset_2": 1.454247870390403,
+    "dataset_3": 0.896354724769281,
+    "dataset_4": 1.3018151915212244,
+    "dataset_5": 1.3162796544433517,
+    "dataset_6": 1.3330238792501454,
+    "dataset_7": 1.3034223851749227
+  },
+  "sample_time": 2.857597529888153,
+  "evaluate_time": 4.40819525718689
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 558,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-8\n    # Use atan2 to map omega*t to a bounded phase, preventing large oscillations\n    phase = np.arctan2(omega, eps) * t\n    # Simple physical model: transition probability driven Rabi-like oscillation\n    # target = amp1 * sqrt(prob*(1-prob)) * sin(phase) + amp2 * prob * cos(phase) + offset\n    term1 = params[0] * np.sqrt(np.abs(prob) + eps) * np.sin(phase)\n    term2 = params[0] * np.sqrt(np.maximum(1 - prob, eps)) * np.cos(phase)\n    term3 = params[1] * prob * np.sin(phase)\n    term4 = params[2] * np.cos(phase)\n    y = term1 + term2 + term3 + term4 + params[3]\n    return y\n\n",
+  "score": -0.8344543875730273,
+  "mean_nmse": 0.6965827055449897,
+  "min_nmse": 0.6164104672065988,
+  "max_nmse": 0.8432088630057835,
+  "median_nmse": 0.6603899651179457,
+  "std_nmse": 0.08558782402765563,
+  "worst2_mean_nmse": 0.8344543875730273,
+  "nmse_per_test": {
+    "dataset_0": 0.8432088630057835,
+    "dataset_1": 0.6825711507053561,
+    "dataset_2": 0.6382087795305353,
+    "dataset_3": 0.715059301136444,
+    "dataset_4": 0.6292740422760581,
+    "dataset_5": 0.825699912140271,
+    "dataset_6": 0.6222291283588708,
+    "dataset_7": 0.6164104672065988
+  },
+  "sample_time": 2.7904852628707886,
+  "evaluate_time": 1.9824912548065186
+}

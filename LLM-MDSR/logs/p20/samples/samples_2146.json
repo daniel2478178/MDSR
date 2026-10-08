@@ -1,0 +1,23 @@
+{
+  "sample_order": 2146,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"\n    Shared equation for Rabi oscillations with damping and detuning effects.\n    \n    Physical model based on quantum transition probability dynamics:\n    target = prob * A * exp(-gamma*t) * cos(w0*t + phi) + B * (1 - prob) * sin(omega*t) / (omega*t + delta) + C\n    \n    This captures the interplay between transition probability, interaction time, \n    and driving frequency in a damped oscillatory system.\n    \"\"\"\n    eps = 1e-12\n    \n    # Extract parameters with physical meaning\n    A = params[0]      # Amplitude of primary oscillation\n    gamma = params[1]  # Damping rate\n    w0 = params[2]     # Natural frequency\n    phi = params[3]    # Phase shift\n    B = params[4]      # Secondary coupling coefficient\n    C = params[5]      # Offset\n    delta = params[6]  # Detuning correction factor\n    \n    # Safe omega to avoid division by zero\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Damped oscillation from probability\n    damped_osc = A * prob * np.exp(-gamma * np.abs(t)) * np.cos(w0 * t + phi)\n    \n    # Frequency-dependent coupling term\n    freq_term = B * (1 - prob) * np.sin(omega_safe * t) / (omega_safe * t + delta)\n    \n    # Total expression\n    y = damped_osc + freq_term + C\n    \n    return y\n\n",
+  "score": -0.42505030672663036,
+  "mean_nmse": 0.3551001664291899,
+  "min_nmse": 0.3067176334229163,
+  "max_nmse": 0.4328983142121209,
+  "median_nmse": 0.33578397867817156,
+  "std_nmse": 0.04289792378635789,
+  "worst2_mean_nmse": 0.42505030672663036,
+  "nmse_per_test": {
+    "dataset_0": 0.4328983142121209,
+    "dataset_1": 0.3596856262121335,
+    "dataset_2": 0.3307509693466002,
+    "dataset_3": 0.3067176334229163,
+    "dataset_4": 0.325271260793095,
+    "dataset_5": 0.4172022992411398,
+    "dataset_6": 0.32745824019577086,
+    "dataset_7": 0.34081698800974297
+  },
+  "sample_time": 1.989621877670288,
+  "evaluate_time": 2.603757619857788
+}

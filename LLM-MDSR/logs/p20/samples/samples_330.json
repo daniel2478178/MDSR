@@ -1,0 +1,23 @@
+{
+  "sample_order": 330,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Avoid division by zero and other numerical issues\n    eps = 1e-10\n    t_abs = np.abs(t) + eps\n    omega_abs = np.abs(omega) + eps\n    \n    # Key physical quantity: the accumulated phase angle\n    angle = omega * t\n    \n    # The target likely scales with transition probability and involves oscillatory\n    # behavior in the phase angle. Use a compact physically-inspired form.\n    # params[0]: overall amplitude\n    # params[1]: phase offset or damping parameter\n    # params[2]: baseline offset\n    # params[3]: additional modulation parameter\n    \n    # Common pattern: target = A * prob * sin(angle + phi) * exp(-gamma * |t|) + offset\n    # But we need something that can adapt across datasets. \n    # Let's try a damped oscillation modulated by probability.\n    \n    # Exponential decay factor to avoid unbounded growth\n    decay = np.exp(-params[3] * t_abs) if len(params) > 3 else np.ones_like(t_abs)\n    \n    # Oscillatory term with frequency determined by omega and phase from t\n    sin_term = np.sin(angle + params[1])\n    \n    # Core: probability times oscillatory damped term plus offset\n    y = params[0] * prob * sin_term * decay + params[2]\n    \n    # Ensure output is finite\n    y = np.nan_to_num(y, nan=0.0, posinf=0.0, neginf=0.0)\n    \n    return y\n\n",
+  "score": -0.8954714082093524,
+  "mean_nmse": 0.8570823668864196,
+  "min_nmse": 0.8121432165694167,
+  "max_nmse": 0.8977528793463456,
+  "median_nmse": 0.8588316866756458,
+  "std_nmse": 0.030771158583616648,
+  "worst2_mean_nmse": 0.8954714082093524,
+  "nmse_per_test": {
+    "dataset_0": 0.8931899370723594,
+    "dataset_1": 0.833489972894632,
+    "dataset_2": 0.8121432165694167,
+    "dataset_3": 0.8786148866997697,
+    "dataset_4": 0.8238046691575421,
+    "dataset_5": 0.8977528793463456,
+    "dataset_6": 0.8436040260614152,
+    "dataset_7": 0.8740593472898764
+  },
+  "sample_time": 3.9865899682044983,
+  "evaluate_time": 2.073286771774292
+}

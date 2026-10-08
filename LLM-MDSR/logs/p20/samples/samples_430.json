@@ -1,0 +1,23 @@
+{
+  "sample_order": 430,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    angle = omega * t\n    # Rabi-like oscillation: amplitude depends on probability and detuning-like term\n    detuning = params[3]\n    denominator = (omega - detuning) ** 2 + params[4] ** 2\n    lorentzian = params[2] * prob / (denominator + eps)\n    # Main oscillation with frequency omega and envelope from prob\n    oscillation = params[0] * np.sqrt(np.abs(prob)) * np.sin(angle + params[1])\n    # Decay term with independent time constant\n    decay = params[5] * np.exp(-params[6] * np.abs(t))\n    # Small offset\n    y = oscillation + lorentzian + decay + params[7]\n    return y\n\n",
+  "score": -0.37238397032879156,
+  "mean_nmse": 0.27633818793169707,
+  "min_nmse": 0.19303803769757538,
+  "max_nmse": 0.3741387800126127,
+  "median_nmse": 0.2558000347028388,
+  "std_nmse": 0.06520433338957138,
+  "worst2_mean_nmse": 0.37238397032879156,
+  "nmse_per_test": {
+    "dataset_0": 0.3741387800126127,
+    "dataset_1": 0.3152777703356868,
+    "dataset_2": 0.27235699363290905,
+    "dataset_3": 0.19303803769757538,
+    "dataset_4": 0.23924307577276854,
+    "dataset_5": 0.3706291606449704,
+    "dataset_6": 0.2263561775780494,
+    "dataset_7": 0.21966550777900462
+  },
+  "sample_time": 2.1040114164352417,
+  "evaluate_time": 3.4955551624298096
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 2888,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Use Rabi-like formula: target ~ sqrt(prob*(1-prob)) * sin^2(Omega*t/2)\n    # with Omega = sqrt(params[0]^2 + (delta)^2), delta = omega - params[1]\n    delta = omega - params[1]\n    Omega = np.sqrt(params[0]**2 + delta**2)\n    osc = np.sin(Omega * t / 2.0)**2\n    # Combine probability dependence and oscillatory part\n    # probability already encodes sin^2 in typical Rabi, so multiply by (1-prob)^0.5 for symmetry? \n    # Better use exact known relation: prob = (Omega_R^2 / Omega^2) * sin^2(Omega*t/2)\n    # => sin^2(Omega*t/2) = prob * Omega^2 / Omega_R^2\n    Omega_R = params[0]\n    sin2 = prob * (Omega**2) / (Omega_R**2 + 1e-15)\n    # Target is often the detuning-dependent phase or frequency shift\n    # For a two-level system in rotating frame: target = delta (frequency shift) or Rabi frequency\n    # From data, likely target = omega_eff * sqrt(prob*(1-prob)) * something\n    # Simplest physical: target = params[0] * sqrt(prob*(1-prob)) * np.cos(params[1]*t + params[2]*omega)\n    # But try: target = params[0] * (2*prob - 1) * delta + params[1]*t\n    # Actually, from Ramsey interferometry: target = delta * (2*prob - 1)\n    term1 = (2.0 * prob - 1.0) * delta\n    term2 = params[2] * np.sin(params[3] * t)\n    term3 = params[4] * (1.0 - 2.0 * prob) * np.cos(params[5] * x)\n    return params[0] * term1 + params[1] * term2 + params[2] * term3 + params[3] * t + params[4]\n\n",
+  "score": -0.5829688145575116,
+  "mean_nmse": 0.4013260233824346,
+  "min_nmse": 0.23033824708661588,
+  "max_nmse": 0.584920737515456,
+  "median_nmse": 0.3799181575958327,
+  "std_nmse": 0.12702972937128174,
+  "worst2_mean_nmse": 0.5829688145575116,
+  "nmse_per_test": {
+    "dataset_0": 0.584920737515456,
+    "dataset_1": 0.4749407675722122,
+    "dataset_2": 0.41450062859296594,
+    "dataset_3": 0.23033824708661588,
+    "dataset_4": 0.34533568659869945,
+    "dataset_5": 0.581016891599567,
+    "dataset_6": 0.30086942372915015,
+    "dataset_7": 0.2786858043648103
+  },
+  "sample_time": 2.1865845322608948,
+  "evaluate_time": 5.513678550720215
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 2312,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-8\n    x = omega * t\n    # Use a Rabi-like formula with frequency-dependent effective coupling\n    # target = amplitude * (prob * sin^2(coupling * t) + offset) with rotating-wave corrections\n    coupling = params[0] * np.sqrt(prob + eps) / (1 + params[1] * omega**2)\n    phase = coupling * t\n    term1 = params[2] * np.sin(phase)**2\n    term2 = params[3] * np.sin(2 * phase + params[4]) * np.cos(omega * t)\n    return term1 + term2 + params[5] * prob * np.exp(-params[6] * np.abs(t)) * np.cos(params[7] * x)\n\n",
+  "score": -0.5346780041319369,
+  "mean_nmse": 0.3987379047458406,
+  "min_nmse": 0.18639668357240963,
+  "max_nmse": 0.5511906762758676,
+  "median_nmse": 0.3817127942753821,
+  "std_nmse": 0.1149466776564397,
+  "worst2_mean_nmse": 0.5346780041319369,
+  "nmse_per_test": {
+    "dataset_0": 0.5511906762758676,
+    "dataset_1": 0.5087329334557696,
+    "dataset_2": 0.406596824703933,
+    "dataset_3": 0.18639668357240963,
+    "dataset_4": 0.3568287638468312,
+    "dataset_5": 0.5181653319880062,
+    "dataset_6": 0.32840908374394223,
+    "dataset_7": 0.3335829403799655
+  },
+  "sample_time": 2.481627106666565,
+  "evaluate_time": 3.1724674701690674
+}

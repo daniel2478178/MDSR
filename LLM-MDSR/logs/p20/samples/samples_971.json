@@ -1,0 +1,23 @@
+{
+  "sample_order": 971,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Landau-Zener-like transition amplitude with Rabi oscillation\n    # target = A * prob^p * sin(omega*t)^q + B * prob^r * cos(omega*t)^s + offset\n    eps = 1e-10\n    angle = omega * t\n    # Avoid negative bases in power by taking absolute values, preserving sign via sine/cos\n    p_pow = np.power(np.abs(prob) + eps, params[0])\n    q_pow = np.power(np.abs(np.sin(angle)) + eps, params[1])\n    r_pow = np.power(np.abs(prob) + eps, params[2])\n    s_pow = np.power(np.abs(np.cos(angle)) + eps, params[3])\n    \n    # Amplitude terms with sign preservation\n    term1 = params[4] * p_pow * q_pow * np.sign(prob) * np.sign(np.sin(angle))\n    term2 = params[5] * r_pow * s_pow * np.sign(prob) * np.sign(np.cos(angle))\n    \n    # Damping factor with time\n    damp = np.exp(-params[6] * np.abs(t))\n    \n    y = (term1 + term2) * damp + params[7]\n    return y\n\n",
+  "score": -0.8274634207229148,
+  "mean_nmse": 0.7942016158575342,
+  "min_nmse": 0.7609202279059855,
+  "max_nmse": 0.8293269137365621,
+  "median_nmse": 0.7904537463842617,
+  "std_nmse": 0.022994375276024822,
+  "worst2_mean_nmse": 0.8274634207229148,
+  "nmse_per_test": {
+    "dataset_0": 0.8293269137365621,
+    "dataset_1": 0.7843955435698393,
+    "dataset_2": 0.7795265865643645,
+    "dataset_3": 0.7609202279059855,
+    "dataset_4": 0.804859982333687,
+    "dataset_5": 0.8255999277092675,
+    "dataset_6": 0.7965119491986841,
+    "dataset_7": 0.7724717958418836
+  },
+  "sample_time": 2.9447876811027527,
+  "evaluate_time": 5.121210098266602
+}

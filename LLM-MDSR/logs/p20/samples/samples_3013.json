@@ -1,0 +1,23 @@
+{
+  "sample_order": 3013,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Simplify: target = A * prob * sqrt(1 - prob^2) * (t^2 + omega^2)^(-1/2)\n    # but need to use only standard operators and params. Physical law for Rabi oscillations:\n    # target ~ prob * exp(-lambda*t) * sin(theta) where theta = omega * tau - delta\n    # A simple universal form: target = p0 * (1 - exp(-alpha * t)) * sin(omega * tau)\n    # However, to handle possible offsets and different scales:\n    # y = params[0] * prob * np.exp(-params[1] * t) * np.sin(params[2] * omega * t + params[3]) + params[4] * t\n    # But let's find a minimal shared structure, possibly a damped oscillation:\n\n    # Improved simpler expression matching expected physical behavior (transition amplitude / probability):\n    # Use only 4 parameters:\n    # y = params[0] * prob * np.sin(params[1] * omega * t) * np.exp(-params[2] * t) + params[3] * t\n    # but this might not capture frequency dependence. Another common law: y = amplitude * sin^2(omega*t/2) * prob\n    # Let's use: y = params[0] * prob * np.sin(params[1] * omega * t) * np.exp(-params[2] * t) + params[3] * np.cos(omega * t)\n    # But must be executable and not overly complicated. I'll use 4 parameters with a physically plausible form.\n    # Actually, for Rabi-like systems, the target may be sqrt(prob) * sin(omega * t) * exp(-gamma*t) + offset.\n    # Simpler: y = p0 * prob * sin(p1 * omega * t + p2) * exp(-p3 * t)\n    # But prob is 0..1, so target might be something like energy.\n    \n    # I'll choose a well-known form: y = A * prob * exp(-gamma*t) * sin(p * omega * t)\n    # Add a baseline term. But need to use params only.\n    # Let's define:\n    A = params[0]\n    gamma = params[1]\n    p = params[2]\n    offset = params[3]\n    # Predicted = A * prob * exp(-gamma * t) * sin(p * omega * t) + offset * (1 - prob)\n    # This is simple, but may not work. I'll go with a more flexible form using 5 parameters:\n    # y = params[0] * prob * np.sin(params[1] * omega * t) * np.exp(-params[2] * t) + params[3] * np.cos(params[4] * omega * t)\n    # but that uses 5. To stay under 4, try:\n    y = params[0] * prob * np.sin(params[1] * omega * t + params[2]) * np.exp(-params[3] * t)\n    # Add a small correction with (1-prob) to handle non-normalized cases? Probably not needed.\n    # Let's enhance with a base sine of omega? But keep it minimal.\n    # I propose: target = params[0] * prob * np.sin(params[1] * omega * t) * np.exp(-params[2] * t) + params[3] * np.cos(omega * t)\n    # But that has 4 params: params[0], params[1], params[2], params[3] - the omega in cos is not parameterized, but that's okay.\n    # However, the assignments might want a universal form. I'll go with:\n    # y = params[0] * prob * np.sin(params[1] * omega * t) * np.exp(-params[2] * t) + params[3] * t\n    # That's 4 params.\n    \n    x = omega * t\n    return params[0] * prob * np.sin(params[1] * x + params[2]) * np.exp(-params[3] * t)\n\n",
+  "score": -1.5427435753365222,
+  "mean_nmse": 1.1164157759771822,
+  "min_nmse": 0.7194140912218024,
+  "max_nmse": 1.5861209997023906,
+  "median_nmse": 1.0339313525657383,
+  "std_nmse": 0.2909866158393871,
+  "worst2_mean_nmse": 1.5427435753365222,
+  "nmse_per_test": {
+    "dataset_0": 1.5861209997023906,
+    "dataset_1": 1.2653975737290843,
+    "dataset_2": 1.1333004478910271,
+    "dataset_3": 0.7194140912218024,
+    "dataset_4": 0.9345622572404496,
+    "dataset_5": 1.499366150970654,
+    "dataset_6": 0.884406267517031,
+    "dataset_7": 0.9087584195450181
+  },
+  "sample_time": 3.4013147354125977,
+  "evaluate_time": 4.844577312469482
+}

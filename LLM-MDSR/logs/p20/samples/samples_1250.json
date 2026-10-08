@@ -1,0 +1,23 @@
+{
+  "sample_order": 1250,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Transition probability scaling with trigonometric response to coherent driving\n    # Physical model: target = amplitude * P * sin(omega*t) + offset\n    eps = 1e-10\n    angle = omega * t\n    \n    # Use probability-modulated oscillations with decay in interaction time\n    oscillation = np.sin(angle) * prob + params[1] * np.cos(angle) * prob\n    \n    # Include damping factor to capture finite interaction effects\n    damping = np.exp(-np.abs(t) * params[2])\n    \n    y = params[0] * oscillation * damping + params[3] * prob * np.sqrt(np.abs(t) + eps) + params[4]\n    \n    return y\n\n",
+  "score": -0.6042155746740575,
+  "mean_nmse": 0.560386743441964,
+  "min_nmse": 0.4691929444794282,
+  "max_nmse": 0.6228589414676536,
+  "median_nmse": 0.5696009764038552,
+  "std_nmse": 0.04127420443802516,
+  "worst2_mean_nmse": 0.6042155746740575,
+  "nmse_per_test": {
+    "dataset_0": 0.568620935686836,
+    "dataset_1": 0.5705810171208743,
+    "dataset_2": 0.5740806541014232,
+    "dataset_3": 0.4691929444794282,
+    "dataset_4": 0.5855722078804614,
+    "dataset_5": 0.5441893369765834,
+    "dataset_6": 0.5479979098224523,
+    "dataset_7": 0.6228589414676536
+  },
+  "sample_time": 1.8155514001846313,
+  "evaluate_time": 2.586399555206299
+}

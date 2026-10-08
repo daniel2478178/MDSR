@@ -1,0 +1,23 @@
+{
+  "sample_order": 2324,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    x = omega * t\n    \n    # Landau-Zener-like transition probability with time-dependent phase\n    # target = A * prob * sin^2(omega*t/2 + phi) + B * (1 - exp(-t/tau))\n    # Simplify to a damped oscillatory function of probability\n    \n    oscillation = params[0] * prob * np.sin(x + params[1])**2\n    damping = params[2] * np.exp(-params[3] * t) * prob\n    baseline = params[4] * (1 - prob) * np.cos(params[5] * t)\n    \n    return oscillation + damping + baseline + params[6]\n\n",
+  "score": -0.6565613462601017,
+  "mean_nmse": 0.5410641848270308,
+  "min_nmse": 0.46790140779586564,
+  "max_nmse": 0.7379211718299291,
+  "median_nmse": 0.5122614371015525,
+  "std_nmse": 0.08286966906163987,
+  "worst2_mean_nmse": 0.6565613462601017,
+  "nmse_per_test": {
+    "dataset_0": 0.7379211718299291,
+    "dataset_1": 0.4904799138048858,
+    "dataset_2": 0.46790140779586564,
+    "dataset_3": 0.4710902062539889,
+    "dataset_4": 0.5038795399876963,
+    "dataset_5": 0.5613963840381976,
+    "dataset_6": 0.5752015206902741,
+    "dataset_7": 0.5206433342154086
+  },
+  "sample_time": 1.9682098627090454,
+  "evaluate_time": 3.325089931488037
+}

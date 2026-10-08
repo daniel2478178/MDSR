@@ -1,0 +1,23 @@
+{
+  "sample_order": 1484,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    # Physical model: Rabi oscillation probability with damping\n    # target = A * sin^2(sqrt(omega^2 + Delta^2)*t/2) / (omega^2 + Delta^2) * something\n    \n    # Simplify to probability-driven oscillation with frequency and time scaling\n    # Core relationship: target ∝ prob * sin(ω*t) / (ω*t) with exponential modulation\n    \n    # Use params for coupling strength, damping rate, and frequency shift\n    # Common structure: Lorentzian-like resonance with time decay\n    \n    detuning = params[0] * omega + params[1]\n    resonance_factor = 1.0 / (1.0 + (detuning / (params[2] * omega_safe + eps))**2)\n    \n    # Time-dependent envelope: high prob → longer effective interaction\n    time_mod = np.exp(-t_safe * params[3] * (1.0 - prob))\n    \n    # Oscillatory part: prob drives transition probability amplitude\n    osc = np.sin(params[4] * omega_safe * t_safe * prob / (1.0 + params[5] * prob))\n    \n    # Frequency spectrum: sqrt(omega) often appears in coupling\n    y = params[6] * prob * resonance_factor * time_mod * osc / np.sqrt(omega_safe + eps) + params[7]\n    \n    return y\n\n",
+  "score": -0.8822863381411339,
+  "mean_nmse": 0.5709701961844241,
+  "min_nmse": 0.36340939585902093,
+  "max_nmse": 0.9971088201064128,
+  "median_nmse": 0.5085871002890456,
+  "std_nmse": 0.2017888571817071,
+  "worst2_mean_nmse": 0.8822863381411339,
+  "nmse_per_test": {
+    "dataset_0": 0.5907760456584906,
+    "dataset_1": 0.45342926908742576,
+    "dataset_2": 0.40817620263092086,
+    "dataset_3": 0.36340939585902093,
+    "dataset_4": 0.767463856175855,
+    "dataset_5": 0.5637449314906655,
+    "dataset_6": 0.4236530484666011,
+    "dataset_7": 0.9971088201064128
+  },
+  "sample_time": 2.8841848969459534,
+  "evaluate_time": 2.884005546569824
+}

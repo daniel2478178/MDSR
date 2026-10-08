@@ -1,0 +1,23 @@
+{
+  "sample_order": 346,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Escape from sin/cos oscillatory terms to a simpler Rabi-like structure\n    # target = A * (Omega_R/Omega_eff)^2 * sin^2(Omega_eff * t / 2)\n    # but we don't know which quantities correspond to Omega_R and Omega_eff.\n    # Use a physically motivated form: target proportional to prob * f(omega*t)\n    # More generic but stable: use algebraic combinations of prob and t, omega\n    p = prob\n    # p likely contains information about the effective coupling, so:\n    # target = amplitude * p * sin^2(omega*t/2) + offset\n    # This is common in driven two-level systems, where the transition probability\n    # itself encodes the driving amplitude.\n    # To allow flexibility, we use p^alpha * sin^2(beta * omega * t) with params.\n    alpha = params[0]\n    beta = params[1]\n    amp = params[2]\n    offset = params[3]\n    # Ensure p is positive for power operation\n    p_safe = np.maximum(p, 1e-10)\n    angle = omega * t\n    # Use sin^2 for a smooth, bounded oscillatory term\n    osc = np.sin(angle * beta) ** 2\n    y = amp * (p_safe ** alpha) * osc + offset\n    # Could also add a term for decay, but keep minimal\n    return y\n\n",
+  "score": -0.8738298471610906,
+  "mean_nmse": 0.8321743196209106,
+  "min_nmse": 0.7838539503752405,
+  "max_nmse": 0.8753487256151984,
+  "median_nmse": 0.8252462655520652,
+  "std_nmse": 0.028344114512210125,
+  "worst2_mean_nmse": 0.8738298471610906,
+  "nmse_per_test": {
+    "dataset_0": 0.8753487256151984,
+    "dataset_1": 0.8309135824763211,
+    "dataset_2": 0.8394157034434631,
+    "dataset_3": 0.7838539503752405,
+    "dataset_4": 0.8169852048422356,
+    "dataset_5": 0.8723109687069828,
+    "dataset_6": 0.8195789486278091,
+    "dataset_7": 0.8189874728800344
+  },
+  "sample_time": 2.695280134677887,
+  "evaluate_time": 2.3462679386138916
+}

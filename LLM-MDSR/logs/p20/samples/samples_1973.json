@@ -1,0 +1,23 @@
+{
+  "sample_order": 1973,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    p4 = params[4]\n    p5 = params[5]\n    p6 = params[6]\n    p7 = params[7]\n    \n    # Rabi-like oscillation: probability affects amplitude, frequency modulation\n    rabi = p0 * np.sqrt(np.maximum(prob, 1e-10)) * np.sin(p1 * t * np.sqrt(omega**2 + p2))\n    # envelope decay and phase shift\n    envelope = np.exp(-p3 * np.abs(t))\n    phase = np.cos(p4 * t * omega + p5 * prob)\n    # linear and offset terms\n    result = rabi * envelope * phase + p6 * omega * t + p7\n    \n    return result\n\n",
+  "score": -0.9969655003292244,
+  "mean_nmse": 0.8170719329630969,
+  "min_nmse": 0.5689729146396331,
+  "max_nmse": 0.9982666207476557,
+  "median_nmse": 0.7764169687007396,
+  "std_nmse": 0.14952705766928145,
+  "worst2_mean_nmse": 0.9969655003292244,
+  "nmse_per_test": {
+    "dataset_0": 0.7798637636725627,
+    "dataset_1": 0.7346102668080149,
+    "dataset_2": 0.995664379910793,
+    "dataset_3": 0.9982666207476557,
+    "dataset_4": 0.5689729146396331,
+    "dataset_5": 0.7729701737289165,
+    "dataset_6": 0.6997589649004978,
+    "dataset_7": 0.9864683792967017
+  },
+  "sample_time": 2.4002965688705444,
+  "evaluate_time": 2.94952654838562
+}

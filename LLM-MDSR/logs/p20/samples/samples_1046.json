@@ -1,0 +1,23 @@
+{
+  "sample_order": 1046,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    \"\"\"Improved shared physical law.\"\"\"\n    # Atomic transition probability Rabi oscillations: p = sin^2(Omega_R t/2)\n    # Target likely related to generalized Rabi frequency or detuning\n    # Use arcsin to invert the Rabi formula and extract frequency components\n    eps = 1e-10\n    \n    # Generalized Rabi frequency from probability\n    # p = sin^2(Omega_t/2) => Omega_t = 2*arcsin(sqrt(p))\n    theta = 2 * np.arcsin(np.sqrt(np.clip(prob, 0, 1)))\n    theta = np.abs(theta)\n    \n    # Driving frequency detuning relationship\n    # Standard: Omega_natural = sqrt(delta^2 + Omega_Rabi^2)\n    # Here prob captures the ratio of Rabi to driving frequency\n    freq_ratio = theta / (np.abs(t) + eps)\n    \n    # Physical scaling with params\n    # params[0]: amplitude scaling, params[1]: detuning offset\n    # params[2]: nonlinear flattening, params[3]: frequency normalization\n    driver_coupling = params[0] * freq_ratio * np.abs(omega) + params[1]\n    \n    # Add resonance enhancement and saturation effects\n    resonance = params[2] * np.abs(omega) * prob * np.cos(omega * t + params[3])\n    \n    # Master equation solution for damped Rabi oscillations\n    rabi_factor = np.sin(omega * t / 2.0) ** 2\n    damping = np.exp(-params[4] * np.abs(t))\n    \n    # Combines Rabi oscillation envelope with frequency mixing\n    y = driver_coupling + resonance + params[5] * prob * np.sqrt(np.abs(omega) + eps) * rabi_factor * damping\n    \n    # Final offset\n    y = y + params[6]\n    \n    return y\n\n",
+  "score": -0.4764664106634239,
+  "mean_nmse": 0.3143907202272956,
+  "min_nmse": 0.2165858413316385,
+  "max_nmse": 0.4788310373248979,
+  "median_nmse": 0.2633667692464264,
+  "std_nmse": 0.10202168128539389,
+  "worst2_mean_nmse": 0.4764664106634239,
+  "nmse_per_test": {
+    "dataset_0": 0.4788310373248979,
+    "dataset_1": 0.3533131221275457,
+    "dataset_2": 0.2862746557184601,
+    "dataset_3": 0.2165858413316385,
+    "dataset_4": 0.24045888277439262,
+    "dataset_5": 0.4741017840019498,
+    "dataset_6": 0.22723852602652972,
+    "dataset_7": 0.2383219125129503
+  },
+  "sample_time": 3.3232162594795227,
+  "evaluate_time": 2.658848762512207
+}

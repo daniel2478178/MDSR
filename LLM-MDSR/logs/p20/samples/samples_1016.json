@@ -1,0 +1,23 @@
+{
+  "sample_order": 1016,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Use a physically motivated form: transition probability modifies a resonant response\n    # target = A * prob * sin(omega*t) + B * (1 - 2*prob) * cos(omega*t) + C\n    # Simplify to a damped Rabi-like oscillation with amplitude scaling by probability\n    eps = 1e-12\n    # Protect against zero/negative values\n    p_safe = np.clip(prob, eps, 1.0 - eps)\n    # Common angle variable\n    angle = omega * t\n    # Physical model: Landau-Zener-like transition probability relation\n    # target is related to sqrt(prob*(1-prob)) times an oscillatory term plus offset\n    # Use params: [0]=amplitude main, [1]=amplitude second, [2]=phase shift, [3]=offset\n    # params should have at least 4 elements; if more available, use them as extra but not needed\n    sine_term = np.sin(angle + params[2])\n    cosine_term = np.cos(angle + params[2])\n    # Core relationship: \n    # target = A * sqrt(p*(1-p)) * sine_term + B * (2p-1) * cosine_term + C\n    # This is inspired by quantum two-level system under driving, with p=transition prob\n    sqrt_term = np.sqrt(p_safe * (1.0 - p_safe) + eps)\n    y = params[0] * sqrt_term * sine_term + params[1] * (2.0 * p_safe - 1.0) * cosine_term + params[3]\n    # Ensure output is finite\n    y = np.nan_to_num(y, nan=0.0, posinf=0.0, neginf=0.0)\n    return y\n\n",
+  "score": -0.9967174277480968,
+  "mean_nmse": 0.9831340126918439,
+  "min_nmse": 0.9584068957508663,
+  "max_nmse": 0.9967774430844926,
+  "median_nmse": 0.9910572894405938,
+  "std_nmse": 0.015197631809434294,
+  "worst2_mean_nmse": 0.9967174277480968,
+  "nmse_per_test": {
+    "dataset_0": 0.9615858196550509,
+    "dataset_1": 0.9731440604942121,
+    "dataset_2": 0.990058396704177,
+    "dataset_3": 0.9966574124117011,
+    "dataset_4": 0.9920561821770105,
+    "dataset_5": 0.9584068957508663,
+    "dataset_6": 0.9963858912572403,
+    "dataset_7": 0.9967774430844926
+  },
+  "sample_time": 2.517554223537445,
+  "evaluate_time": 2.1176624298095703
+}

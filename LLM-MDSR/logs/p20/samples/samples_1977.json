@@ -1,0 +1,23 @@
+{
+  "sample_order": 1977,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    p4 = params[4]\n    \n    # Physically inspired: Bloch-like decay with detuning\n    # target = exp(-decay*t) * (A * sin(pi * prob) + B * cos(omega*t))\n    # where A and B depend on omega via Lorentzian factor\n    detune = omega * t\n    envelope = np.exp(-p0 * t)\n    prob_term = np.sin(np.pi * prob) \n    rabi_factor = p1 / (1.0 + (p2 * (omega - p3))**2)\n    \n    y = envelope * (rabi_factor * prob_term * np.sin(detune) + p4 * np.cos(detune))\n    return y\n\n",
+  "score": -6.536487243266221,
+  "mean_nmse": 5.887888546205673,
+  "min_nmse": 5.437238043743232,
+  "max_nmse": 6.678670895755269,
+  "median_nmse": 5.753810294657463,
+  "std_nmse": 0.39730899075960674,
+  "worst2_mean_nmse": 6.536487243266221,
+  "nmse_per_test": {
+    "dataset_0": 6.394303590777171,
+    "dataset_1": 5.743130229445212,
+    "dataset_2": 5.670352676624803,
+    "dataset_3": 5.764490359869715,
+    "dataset_4": 5.437238043743232,
+    "dataset_5": 6.678670895755269,
+    "dataset_6": 5.58633171382115,
+    "dataset_7": 5.828590859608834
+  },
+  "sample_time": 2.3976277112960815,
+  "evaluate_time": 2.4206948280334473
+}

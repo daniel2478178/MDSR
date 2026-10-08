@@ -1,0 +1,23 @@
+{
+  "sample_order": 2134,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model inspired by Rabi oscillations with decay and detuning\n    # target = prob * exp(-decay*t) * amplitude_modulated_signal + offset\n    eps = 1e-10\n    # Use a safe frequency transform\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    \n    # Rabi-like factor: transition probability times an oscillatory function\n    # The detuning effect is captured through a complex frequency combination\n    detuned_freq = omega_safe * np.sqrt(1 + params[0] * prob)\n    \n    # Main oscillation with two competing terms (sine and cosine) to capture phase shifts\n    main_term = prob * (params[1] * np.sin(detuned_freq * t) + params[2] * np.cos(detuned_freq * t))\n    \n    # Damping envelope that is physical (exponential decay in time)\n    damping = np.exp(-params[3] * np.abs(t))\n    \n    # Additional resonance-like structure: amplitude proportional to prob*(1-prob) \n    # to capture non-linear coupling between levels\n    resonant = params[4] * prob * (1 - prob) * np.sin(2 * detuned_freq * t + params[5])\n    \n    # Combine terms: for small t, the oscillation dominates; for large t, damping sets in\n    return main_term * damping + resonant * damping + params[6]\n\n",
+  "score": -2.0810812449911564,
+  "mean_nmse": 1.0803723729872692,
+  "min_nmse": 0.7117090282816029,
+  "max_nmse": 3.2747408212506333,
+  "median_nmse": 0.7597394665111725,
+  "std_nmse": 0.8311749974421542,
+  "worst2_mean_nmse": 2.0810812449911564,
+  "nmse_per_test": {
+    "dataset_0": 0.8033430919652718,
+    "dataset_1": 0.7117090282816029,
+    "dataset_2": 0.7119794230310316,
+    "dataset_3": 0.7343060176155886,
+    "dataset_4": 0.7768867166664948,
+    "dataset_5": 0.8874216687316798,
+    "dataset_6": 0.7425922163558504,
+    "dataset_7": 3.2747408212506333
+  },
+  "sample_time": 2.123471200466156,
+  "evaluate_time": 2.515516996383667
+}

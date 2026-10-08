@@ -1,0 +1,23 @@
+{
+  "sample_order": 1322,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Rabi oscillation with Lorenztian detuning and exponential decay\n    theta = omega * t\n    sinc_factor = np.sin(theta) / np.maximum(theta, eps)\n    rabi = params[0] * np.sqrt(prob) * np.abs(sinc_factor)\n    damping = np.exp(-params[1] * np.abs(t))\n    detuning_curve = params[2] / (1.0 + (params[3] * (omega - params[4]))**2)\n    y = rabi * damping * detuning_curve * prob + params[5] * t\n    return y\n\n",
+  "score": -0.8858919145742541,
+  "mean_nmse": 0.6598512298808903,
+  "min_nmse": 0.5060133919022628,
+  "max_nmse": 0.8861714451734143,
+  "median_nmse": 0.6033802593662284,
+  "std_nmse": 0.14388120936571977,
+  "worst2_mean_nmse": 0.8858919145742541,
+  "nmse_per_test": {
+    "dataset_0": 0.8861714451734143,
+    "dataset_1": 0.7099232496588505,
+    "dataset_2": 0.5636539681849608,
+    "dataset_3": 0.643106550547496,
+    "dataset_4": 0.5060133919022628,
+    "dataset_5": 0.8856123839750938,
+    "dataset_6": 0.5392040583664411,
+    "dataset_7": 0.5451247912386031
+  },
+  "sample_time": 2.8132612109184265,
+  "evaluate_time": 3.287377119064331
+}

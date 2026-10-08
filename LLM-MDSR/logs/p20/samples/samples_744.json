@@ -1,0 +1,23 @@
+{
+  "sample_order": 744,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Use physically motivated form: target scales with transition probability\n    # and oscillatory terms from the driving field.\n    eps = 1e-10\n    angle = omega * t\n    \n    # Separation ansatz: prob * angular-spectrum term + small offset\n    # params[0]: amplitude coefficient\n    # params[1]: frequency scale correction\n    # params[2]: phase offset\n    # params[3]: decay/growth rate\n    # params[4]: DC offset\n    \n    # Use theta = angle with adjusted frequency\n    theta = angle * params[1] + params[2]\n    \n    # Combine prob as a multiplicative envelope with power-law tendency\n    spectrum = np.abs(np.sin(theta)) + eps\n    y = params[0] * prob * np.power(spectrum, params[3])\n    y += params[4]\n    \n    # Ensure no negative values for physically meaningful output\n    return np.maximum(y, 0.0)\n\n",
+  "score": -0.762567939409631,
+  "mean_nmse": 0.7013285852549258,
+  "min_nmse": 0.5783499852534343,
+  "max_nmse": 0.7786089686701649,
+  "median_nmse": 0.7171647446435838,
+  "std_nmse": 0.05921760645254177,
+  "worst2_mean_nmse": 0.762567939409631,
+  "nmse_per_test": {
+    "dataset_0": 0.7786089686701649,
+    "dataset_1": 0.7465269101490969,
+    "dataset_2": 0.7288711322178126,
+    "dataset_3": 0.5783499852534343,
+    "dataset_4": 0.705458357069355,
+    "dataset_5": 0.7413391847386506,
+    "dataset_6": 0.6673039804114479,
+    "dataset_7": 0.6641701635294444
+  },
+  "sample_time": 3.1817110180854797,
+  "evaluate_time": 5.876975774765015
+}

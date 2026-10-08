@@ -1,0 +1,23 @@
+{
+  "sample_order": 1968,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Simple shared physical structure: target proportional to prob * (1 - cos(omega*t))^2\n    # with an exponential decay over time, and a linear term in omega.\n    # Only 4 parameters: p0 scales the main term, p1 controls decay rate,\n    # p2 scales the omega dependence, p3 is a constant offset.\n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    \n    # Main physical relation: transition probability times oscillatory factor\n    # Use (1 - cos) which is positive and arises in two-level Rabi oscillations\n    oscillatory = (1.0 - np.cos(omega * t)) ** 2\n    decay = np.exp(-p1 * t)\n    main_term = p0 * prob * oscillatory * decay\n    \n    # Omega-dependent correction that is zero when omega=0\n    omega_correction = p2 * omega * t\n    \n    # Final combination\n    y = main_term + omega_correction + p3\n    \n    return y\n\n",
+  "score": -0.8361165835553177,
+  "mean_nmse": 0.8232577701124628,
+  "min_nmse": 0.8102147506323606,
+  "max_nmse": 0.8363856561796833,
+  "median_nmse": 0.8206758383080703,
+  "std_nmse": 0.009417370866198819,
+  "worst2_mean_nmse": 0.8361165835553177,
+  "nmse_per_test": {
+    "dataset_0": 0.8358475109309521,
+    "dataset_1": 0.8201819522352485,
+    "dataset_2": 0.8118831075214017,
+    "dataset_3": 0.8211697243808921,
+    "dataset_4": 0.8102147506323606,
+    "dataset_5": 0.8305685395428336,
+    "dataset_6": 0.8198109194763302,
+    "dataset_7": 0.8363856561796833
+  },
+  "sample_time": 2.2191295623779297,
+  "evaluate_time": 2.2184553146362305
+}

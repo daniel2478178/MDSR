@@ -1,0 +1,23 @@
+{
+  "sample_order": 1339,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.maximum(np.abs(omega), eps)\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Landau-Zener type transition probability with Rabi oscillation\n    # target = A * prob^alpha * sin^2(sqrt((omega*beta)^2 + (delta)^2) * t/2) / (sqrt(...))^2\n    # Simplified with detuning-like dependence\n    \n    delta = params[4] * (prob - 0.5)\n    rabi = np.sqrt((omega * params[0])**2 + delta**2 + eps)\n    \n    # Oscillatory time-dependent term\n    osc = np.sin(rabi * t / 2.0)**2 / (rabi**2 + eps)\n    \n    # Probability power-law coupling\n    prob_term = np.power(np.maximum(prob, eps), params[2])\n    \n    # Exponential decay envelope with prob-dependent rate\n    decay_rate = params[3] * (1.0 + params[5] * prob)\n    env = np.exp(-t_safe * decay_rate)\n    \n    # Base amplitude and offset\n    y = params[0] * omega * prob_term * osc * env + params[1]\n    \n    return y\n\n",
+  "score": -1.0000019083345042,
+  "mean_nmse": 1.0000005143171466,
+  "min_nmse": 1.0000000014745427,
+  "max_nmse": 1.0000023605422979,
+  "median_nmse": 1.0000000678827736,
+  "std_nmse": 8.371410251040449e-07,
+  "worst2_mean_nmse": 1.0000019083345042,
+  "nmse_per_test": {
+    "dataset_0": 1.0000023605422979,
+    "dataset_1": 1.000000014813341,
+    "dataset_2": 1.000000138862045,
+    "dataset_3": 1.0000014561267108,
+    "dataset_4": 1.000000041576042,
+    "dataset_5": 1.000000094189505,
+    "dataset_6": 1.0000000014745427,
+    "dataset_7": 1.0000000069526875
+  },
+  "sample_time": 3.4278611540794373,
+  "evaluate_time": 2.0578606128692627
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 518,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Based on Landau-Zener / Rabi-like transition physics:\n    # target = A * prob * sin(pi * sqrt(1 + (omega/Delta)^2)) / something\n    # Simplify to use physically motivated parameters:\n    # params[0] = amplitude scaling\n    # params[1] = characteristic frequency scale\n    # params[2] = phase offset\n    # params[3] = decay rate / timescale\n    \n    # Key insight: for transitions with driving, target often scales as\n    # prob * sin(omega*t) * exp(-decay*t) or similar\n    \n    # Use a Borrmann-like / Rabi formula structure:\n    # y = A * prob * sin(0.5 * omega * t) * exp(-lambda * t) + B\n    \n    # Let's try a physically motivated form with decay and detuning effects:\n    A = params[0]\n    B = params[1]\n    gamma = params[2]  # decay rate\n    phi0 = params[3]   # phase\n    \n    # Rabi frequency for two-level system:\n    # Omega_R = sqrt(omega^2 + Delta^2), but we have prob ~ sin^2(Omega_R * t / 2)\n    # So omega*t appears in arcsin(sqrt(prob)) form\n    \n    # Transform prob to angle: \n    # prob = sin^2(angle)  =>  angle = arcsin(sqrt(prob))\n    angle = np.arcsin(np.sqrt(np.clip(prob, 0.0, 1.0)))\n    \n    # target related to the time derivative of the phase or transition amplitude\n    # Try: target = A * sin(angle + phi0) * exp(-gamma*t) * cos(omega*t) + B\n    # or simpler: target = A * sin(omega*t) * prob * exp(-gamma*t) + B\n    \n    # Let's use a damped driven oscillator response:\n    y = A * np.sin(omega * t + phi0) * prob * np.exp(-gamma * np.abs(t)) + B\n    \n    # Constrain to not have NaNs for any inputs\n    y = np.nan_to_num(y, nan=0.0, posinf=1e100, neginf=-1e100)\n    return y\n\n",
+  "score": -0.8954714082093507,
+  "mean_nmse": 0.857082366934728,
+  "min_nmse": 0.8121432165694101,
+  "max_nmse": 0.8977528793463182,
+  "median_nmse": 0.8588316866756494,
+  "std_nmse": 0.030771158531378854,
+  "worst2_mean_nmse": 0.8954714082093507,
+  "nmse_per_test": {
+    "dataset_0": 0.8931899370723833,
+    "dataset_1": 0.8334899728946678,
+    "dataset_2": 0.8121432165694101,
+    "dataset_3": 0.8786148866997783,
+    "dataset_4": 0.8238046695439674,
+    "dataset_5": 0.8977528793463182,
+    "dataset_6": 0.8436040260613987,
+    "dataset_7": 0.8740593472899
+  },
+  "sample_time": 6.26038920879364,
+  "evaluate_time": 2.1464316844940186
+}

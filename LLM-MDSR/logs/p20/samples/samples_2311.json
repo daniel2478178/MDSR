@@ -1,0 +1,23 @@
+{
+  "sample_order": 2311,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: target = A * prob * sin(omega*t) + B * t * (1 - prob) + C\n    # Simplified Rabi-like oscillation with amplitude modulation\n    \n    x = omega * t\n    \n    # Core oscillation: amplitude scaled by prob, frequency modulated\n    term1 = params[0] * prob * np.sin(x + params[1])\n    \n    # Time-dependent decay/modulation term\n    term2 = params[2] * t * np.cos(params[3] * x) * (1 - prob)\n    \n    # Constant offset\n    term3 = params[4]\n    \n    return term1 + term2 + term3\n\n",
+  "score": -0.8075075381346716,
+  "mean_nmse": 0.6946070348004154,
+  "min_nmse": 0.504980614708985,
+  "max_nmse": 0.8439326443680093,
+  "median_nmse": 0.6945049175080249,
+  "std_nmse": 0.0970647973906663,
+  "worst2_mean_nmse": 0.8075075381346716,
+  "nmse_per_test": {
+    "dataset_0": 0.8439326443680093,
+    "dataset_1": 0.7629192047664054,
+    "dataset_2": 0.6727294280472188,
+    "dataset_3": 0.504980614708985,
+    "dataset_4": 0.7162804069688309,
+    "dataset_5": 0.7710824319013339,
+    "dataset_6": 0.6528449937319691,
+    "dataset_7": 0.6320865539105707
+  },
+  "sample_time": 3.000197410583496,
+  "evaluate_time": 2.0997488498687744
+}

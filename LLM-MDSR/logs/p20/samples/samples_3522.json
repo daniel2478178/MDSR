@@ -1,0 +1,23 @@
+{
+  "sample_order": 3522,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Target = decay-modulated Rabi-like oscillation amplitude times probability factors\n    # Recommend formula: A * (1 - 2*prob) * sin(omega*t + phase) * exp(-gamma*t) + background\n    # Captures coherent population transfer with damping, parameterized per dataset\n    \n    x = omega * t\n    \n    # params: [0] overall amplitude\n    #         [1] damping rate gamma\n    #         [2] phase shift\n    #         [3] frequency detuning factor for x\n    #         [4] background/temperature factor\n    \n    osc = np.sin(x * params[3] + params[2])\n    damping = np.exp(-params[1] * t)\n    \n    population_factor = 1.0 - 2.0 * prob\n    \n    result = params[0] * population_factor * osc * damping\n    result = result + params[4] * (1.0 - prob)\n    \n    # Physical positivity constraint / saturation\n    # Do not exceed 1.0 in absolute value strongly, or scale with remaining params (if more)\n    \n    return result\n\n",
+  "score": -5.133535998924979,
+  "mean_nmse": 2.8110752346205157,
+  "min_nmse": 0.9879206905670631,
+  "max_nmse": 5.7753120835234535,
+  "median_nmse": 2.3085619999302702,
+  "std_nmse": 1.514251565846025,
+  "worst2_mean_nmse": 5.133535998924979,
+  "nmse_per_test": {
+    "dataset_0": 5.7753120835234535,
+    "dataset_1": 3.2773398700476464,
+    "dataset_2": 2.188797083742357,
+    "dataset_3": 0.9879206905670631,
+    "dataset_4": 2.4283269161181833,
+    "dataset_5": 4.491759914326505,
+    "dataset_6": 1.8295469000229518,
+    "dataset_7": 1.5095984186159648
+  },
+  "sample_time": 1.8245952725410461,
+  "evaluate_time": 4.173027515411377
+}

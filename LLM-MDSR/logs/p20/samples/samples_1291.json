@@ -1,0 +1,23 @@
+{
+  "sample_order": 1291,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Ramsey-like interferometry signal: probability-derived contrast with detuning oscillations\n    # p0 and p1 combine prob with sin^2 to form generalized interference pattern\n    x = omega * t\n    \n    # Frequency detuning response with Lorentzian-like envelope\n    detuning = (prob - 0.5) * np.sin(params[0] * x) / (1.0 + params[1] * x**2)\n    \n    # Time decay envelope (exponential damping)\n    decay = params[2] * np.exp(-params[3] * np.abs(t))\n    \n    # Probability-dependent baseline with frequency-modulated correction\n    baseline = params[4] * prob + params[5] * np.sin(params[6] * omega) * (1.0 - prob)\n    \n    # Oscillatory term: Rabi frequency scaling with interaction time\n    osc = params[7] * np.cos(params[8] * x) * prob\n    \n    return detuning + decay + baseline + osc + params[9]\n\n",
+  "score": -0.3819979844191387,
+  "mean_nmse": 0.28918832492640456,
+  "min_nmse": 0.21816577716109548,
+  "max_nmse": 0.38883450896454247,
+  "median_nmse": 0.26308010038271606,
+  "std_nmse": 0.060666894766798075,
+  "worst2_mean_nmse": 0.3819979844191387,
+  "nmse_per_test": {
+    "dataset_0": 0.38883450896454247,
+    "dataset_1": 0.321197483441514,
+    "dataset_2": 0.2730822922332202,
+    "dataset_3": 0.21816577716109548,
+    "dataset_4": 0.2530779085322119,
+    "dataset_5": 0.37516145987373495,
+    "dataset_6": 0.24624758445232817,
+    "dataset_7": 0.237739584752589
+  },
+  "sample_time": 2.939199149608612,
+  "evaluate_time": 4.742944955825806
+}

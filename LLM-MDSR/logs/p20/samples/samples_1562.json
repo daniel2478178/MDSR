@@ -1,0 +1,23 @@
+{
+  "sample_order": 1562,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    \n    # Guard against invalid inputs\n    p_safe = np.clip(prob, 0.0, 1.0)\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.abs(omega)\n    \n    # Physical model: transition probability follows a generalized Rabi-like formula\n    # with possible nonlinear corrections and time-frequency coupling.\n    \n    # Effective combined variable: prob modulated by time and frequency factors\n    # Standard Rabi formula has p~sin^2(Ω t/2), here we generalize the frequency and time dependence.\n    \n    # Main term: prob as nonlinear function of sin^2(omega*t/2) with exponents\n    sin_half = np.sin(omega_safe * t_safe / 2.0)\n    sin_sq = sin_half**2 + eps\n    \n    # Map prob to a correlated variable\n    # Use a transformation that combines prob with the Rabi oscillation\n    ratio = p_safe / sin_sq\n    \n    # Physical target often scales with sqrt(prob) or involves arctan of detuning\n    # Assume target is related to generalized Rabi frequency: sqrt(prob)/(time) with correction\n    \n    # Core: target proportional to sqrt(p) times some frequency function, with decay\n    sqrt_p = np.sqrt(p_safe + eps)\n    \n    # Combine time decay and frequency scaling using params\n    # params[0]: overall amplitude\n    # params[1]: time decay rate\n    # params[2]: frequency exponent\n    # params[3]: probability exponent\n    # params[4]: frequency offset/shift\n    # params[5]: baseline\n    \n    # Exponential decay in time (common for damped systems)\n    decay = np.exp(-params[1] * t_safe)\n    \n    # Frequency-dependent factor with power law\n    omega_power = np.power(omega_safe + eps, params[2])\n    \n    # Probability nonlinear transformation\n    prob_term = np.power(p_safe + eps, params[3])\n    \n    # Coupled product: time decay × frequency term × probability term\n    main_term = decay * omega_power * prob_term\n    \n    # Additional sinusoidal modulation in time (for oscillatory behavior)\n    modulation = 1.0 + params[4] * np.sin(omega_safe * t_safe + params[5])\n    \n    y = params[0] * main_term * modulation + params[6]\n    \n    return y\n\n",
+  "score": -0.9987089817077339,
+  "mean_nmse": 0.9649369429819885,
+  "min_nmse": 0.8907456003940575,
+  "max_nmse": 0.9990824903809795,
+  "median_nmse": 0.9857559169538832,
+  "std_nmse": 0.04004751656443493,
+  "worst2_mean_nmse": 0.9987089817077339,
+  "nmse_per_test": {
+    "dataset_0": 0.8907456003940575,
+    "dataset_1": 0.9537255958301033,
+    "dataset_2": 0.983420292027804,
+    "dataset_3": 0.9983354730344883,
+    "dataset_4": 0.9880915418799623,
+    "dataset_5": 0.9096969534550918,
+    "dataset_6": 0.9990824903809795,
+    "dataset_7": 0.9963975968534207
+  },
+  "sample_time": 4.033045291900635,
+  "evaluate_time": 4.058018207550049
+}

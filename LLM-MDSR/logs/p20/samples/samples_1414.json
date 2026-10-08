@@ -1,0 +1,23 @@
+{
+  "sample_order": 1414,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physics-inspired model: Rabi-like transition with time-dependent phase and frequency detuning\n    # Core structure: prob * (sin^2(integral of effective Rabi frequency)) style envelope\n    # with additional scaling factors for dataset-specific parameters\n    \n    eps = 1e-10\n    # Safe handling of small values\n    t_safe = np.maximum(np.abs(t), eps)\n    \n    # Parameter interpretation (max 4 params preferred, but allowing flexibility)\n    # params[0]: amplitude scale\n    # params[1]: frequency offset/phase parameter\n    # params[2]: exponent for probability scaling\n    # params[3]: time decay rate\n    \n    p0 = params[0]\n    p1 = params[1]\n    p2 = params[2]\n    p3 = params[3]\n    \n    # Primary term: probability modulated by Rabi-like oscillation\n    # sin^2(omega*t/2) is standard for resonant driving\n    # probability enters nonlinearly with exponent\n    prob_term = p0 * np.power(np.maximum(prob, eps), p2)\n    \n    # Time-dependent Rabi-like oscillation factor\n    # sin^2(0.5 * omega * t) is the transition probability for resonant case\n    # Adding phase parameter for detuning effects\n    rabi_factor = np.sin(0.5 * omega * t + p1) ** 2\n    \n    # Exponential decay envelope due to decoherence/damping\n    decay_envelope = np.exp(-p3 * t_safe)\n    \n    # Final target: product of probability-driven amplitude and oscillations with decay\n    y = prob_term * rabi_factor * decay_envelope\n    \n    # Add small baseline offset if needed (kept minimal)\n    if len(params) > 4:\n        y = y + params[4]\n    \n    return y\n\n",
+  "score": -0.663325689589519,
+  "mean_nmse": 0.587444399276497,
+  "min_nmse": 0.5228769130080002,
+  "max_nmse": 0.6715700766608015,
+  "median_nmse": 0.5775011151415372,
+  "std_nmse": 0.05214340325254969,
+  "worst2_mean_nmse": 0.663325689589519,
+  "nmse_per_test": {
+    "dataset_0": 0.6715700766608015,
+    "dataset_1": 0.6109210468748121,
+    "dataset_2": 0.5966372372150728,
+    "dataset_3": 0.5548656421826418,
+    "dataset_4": 0.5292379826844102,
+    "dataset_5": 0.6550813025182365,
+    "dataset_6": 0.5228769130080002,
+    "dataset_7": 0.5583649930680016
+  },
+  "sample_time": 2.79693341255188,
+  "evaluate_time": 2.5517618656158447
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 747,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical form: many quantum/atomic systems follow a Rabi-like model\n    # where the transition probability is sin^2(Omega*t/2) with Omega depending on\n    # detuning and coupling. We invert the relation to find a target quantity.\n    # Here we use a physically inspired form: target relates to prob via\n    # arcsin/sqrt transformations, suggesting an energy or coupling measurement.\n    eps = 1e-10\n    \n    # Detuning parameter: params[0] represents frequency offset scale\n    detuning = omega - params[0]\n    \n    # Generalized Rabi frequency\n    omega_eff = np.sqrt(detuning**2 + params[1]**2)\n    \n    # For a two-level system under resonant driving, the transition probability\n    # follows P = sin^2(params[2]*t) (when resonant, Omega_eff = coupling).\n    # The target quantity is often the coupling strength or detuning.\n    # We model target as amplitude times prob times a functional form\n    # that captures the likely Rabi oscillations.\n    \n    # Let's use: target = params[3] * np.arcsin(np.sqrt(prob)) / t\n    # plus corrections depending on detuning\n    \n    angle_term = np.arcsin(np.sqrt(np.clip(prob, 0, 1)))  # inverse Rabi formula\n    \n    # Physical relation: For resonant case, P=sin^2(Ωt/2) => Ω = 2*arcsin(sqrt(P))/t\n    # The target likely is Ω (Rabi frequency) or related.\n    y = params[3] * angle_term / (t + eps)\n    \n    # Add detuning dependent term using omega and t\n    y = y + params[4] * detuning * np.sin(params[5]*t) + params[6] * (prob - 0.5)\n    \n    return y\n\n",
+  "score": -0.6044572033715638,
+  "mean_nmse": 0.5384007469195686,
+  "min_nmse": 0.48944932620334414,
+  "max_nmse": 0.6085664617020686,
+  "median_nmse": 0.5241549076392318,
+  "std_nmse": 0.041724342309817225,
+  "worst2_mean_nmse": 0.6044572033715638,
+  "nmse_per_test": {
+    "dataset_0": 0.6085664617020686,
+    "dataset_1": 0.5492341226043285,
+    "dataset_2": 0.5301722932800009,
+    "dataset_3": 0.48944932620334414,
+    "dataset_4": 0.5181375219984625,
+    "dataset_5": 0.6003479450410589,
+    "dataset_6": 0.5094858035426963,
+    "dataset_7": 0.5018125009845886
+  },
+  "sample_time": 3.1817110180854797,
+  "evaluate_time": 3.6931777000427246
+}

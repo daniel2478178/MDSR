@@ -1,0 +1,23 @@
+{
+  "sample_order": 690,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Common physical structure: linear combination of oscillatory terms\n    # weighted by probability, with frequency and time dependence.\n    # params[0]: amplitude of sine with prob\n    # params[1]: amplitude of cosine with prob\n    # params[2]: damping rate coefficient for exponential decay in t\n    # params[3]: amplitude of exponential decay term\n    # params[4]: amplitude of term proportional to omega*prob (linear frequency response)\n    # params[5]: offset\n    # params[6]: nonlinear coupling: sine of omega * sqrt(t) times prob\n    \n    # Protect against division by zero or negative arguments\n    eps = 1e-10\n    t_safe = np.maximum(np.abs(t), eps)\n    omega_safe = np.maximum(np.abs(omega), eps)\n    \n    angle = omega * t\n    term1 = params[0] * np.sin(angle) * prob\n    term2 = params[1] * np.cos(angle) * prob\n    term3 = params[2] * np.exp(-np.abs(t) * params[3])\n    term4 = params[4] * omega_safe * prob\n    term5 = params[5] * np.sin(omega_safe * np.sqrt(t_safe)) * prob\n    \n    y = term1 + term2 + term3 + term4 + term5 + params[6]\n    \n    return y\n\n",
+  "score": -0.4287136877810974,
+  "mean_nmse": 0.3369335590469544,
+  "min_nmse": 0.23290972545938057,
+  "max_nmse": 0.4318387270260377,
+  "median_nmse": 0.3369318260835478,
+  "std_nmse": 0.07387417584003171,
+  "worst2_mean_nmse": 0.4287136877810974,
+  "nmse_per_test": {
+    "dataset_0": 0.4255886485361572,
+    "dataset_1": 0.34805124670844273,
+    "dataset_2": 0.40559875861546113,
+    "dataset_3": 0.23290972545938057,
+    "dataset_4": 0.3258124054586529,
+    "dataset_5": 0.4318387270260377,
+    "dataset_6": 0.2665719579275414,
+    "dataset_7": 0.25909700264396124
+  },
+  "sample_time": 3.169847846031189,
+  "evaluate_time": 3.4552268981933594
+}

@@ -1,0 +1,23 @@
+{
+  "sample_order": 5423,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    x = omega * t\n    # Rabi-like oscillation with decay: target ~ sqrt(prob*(1-prob)) * amplitude\n    # amplitude = A * sin(omega_eff * t) * exp(-gamma * t)\n    # with possible detuning via omega\n    omega_eff = params[0] * omega + params[1]\n    gamma = params[2]\n    amp = params[3]\n    bias = params[4]\n    \n    # The physical target likely is the population difference (1 - 2*prob) \n    # or similar, but we use prob directly with Rabi frequency terms\n    y = amp * np.sqrt(np.maximum(prob * (1 - prob), 1e-10)) * np.sin(omega_eff * t) * np.exp(-gamma * t) + bias * (1 - 2*prob)\n    return y\n\n",
+  "score": -4.135666955674171,
+  "mean_nmse": 2.5286454604889603,
+  "min_nmse": 1.3511510678536665,
+  "max_nmse": 4.1436502738757675,
+  "median_nmse": 2.158784505591541,
+  "std_nmse": 1.0194456124793394,
+  "worst2_mean_nmse": 4.135666955674171,
+  "nmse_per_test": {
+    "dataset_0": 4.127683637472576,
+    "dataset_1": 2.86266764341951,
+    "dataset_2": 2.306442317579132,
+    "dataset_3": 1.3511510678536665,
+    "dataset_4": 2.0111266936039494,
+    "dataset_5": 4.1436502738757675,
+    "dataset_6": 1.757342571539217,
+    "dataset_7": 1.6690994785678634
+  },
+  "sample_time": 3.0065683126449585,
+  "evaluate_time": 2.2657651901245117
+}

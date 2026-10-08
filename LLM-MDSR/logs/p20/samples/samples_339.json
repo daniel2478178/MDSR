@@ -1,0 +1,23 @@
+{
+  "sample_order": 339,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    # Robust arcsin for probabilities clipped to valid domain\n    prob_clipped = np.clip(prob, -1 + eps, 1 - eps)\n    phase = np.arcsin(prob_clipped)\n    \n    # Compute the rotation angle\n    angle = omega * t + params[0] * phase\n    \n    # Physical relationship: target scales with sin of total accumulated angle\n    y = params[1] * np.sin(angle) + params[2] * np.cos(angle)\n    \n    # Add a decay term in time (in case of dissipation)\n    y = y * np.exp(-params[3] * np.abs(t))\n    \n    # Baseline offset\n    y = y + params[4]\n    \n    return y\n\n",
+  "score": -0.9995521796316893,
+  "mean_nmse": 0.990727001309518,
+  "min_nmse": 0.9643599747038025,
+  "max_nmse": 0.9997907611633106,
+  "median_nmse": 0.9988824069406813,
+  "std_nmse": 0.013957114683381466,
+  "worst2_mean_nmse": 0.9995521796316893,
+  "nmse_per_test": {
+    "dataset_0": 0.9987935221379343,
+    "dataset_1": 0.9643599747038025,
+    "dataset_2": 0.9997907611633106,
+    "dataset_3": 0.9989712917434284,
+    "dataset_4": 0.9990727874898331,
+    "dataset_5": 0.9690170039250426,
+    "dataset_6": 0.9993135981000681,
+    "dataset_7": 0.9964970712127237
+  },
+  "sample_time": 4.149220943450928,
+  "evaluate_time": 2.5646164417266846
+}

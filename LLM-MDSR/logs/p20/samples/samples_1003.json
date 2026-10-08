@@ -1,0 +1,23 @@
+{
+  "sample_order": 1003,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.maximum(np.abs(omega), eps)\n    angle = omega * t\n    \n    # Physical form: target = amplitude * probability * sin(angle)^2 / t^power\n    # with possible decay in time\n    y = params[0] * prob * np.sin(angle) ** 2 / (np.maximum(np.abs(t), eps))\n    y = y + params[1] * prob * np.cos(angle) ** 2 / (np.maximum(np.abs(t), eps))\n    y = y * np.exp(-np.abs(t) * params[2]) + params[3] * prob + params[4] * np.sin(angle) / np.sqrt(omega_safe)\n    \n    return y\n\n",
+  "score": -1.1125528025472526,
+  "mean_nmse": 1.0260341991530022,
+  "min_nmse": 0.8526280329263789,
+  "max_nmse": 1.1251450748664322,
+  "median_nmse": 1.029981885103566,
+  "std_nmse": 0.07757949858425904,
+  "worst2_mean_nmse": 1.1125528025472526,
+  "nmse_per_test": {
+    "dataset_0": 1.1251450748664322,
+    "dataset_1": 1.0606169887102828,
+    "dataset_2": 1.0999605302280728,
+    "dataset_3": 0.8526280329263789,
+    "dataset_4": 1.0267772805849713,
+    "dataset_5": 1.0331864896221608,
+    "dataset_6": 0.9868606440003647,
+    "dataset_7": 1.023098552285354
+  },
+  "sample_time": 3.0525718331336975,
+  "evaluate_time": 2.3039400577545166
+}

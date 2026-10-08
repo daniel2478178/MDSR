@@ -1,0 +1,23 @@
+{
+  "sample_order": 2023,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    omega_safe = np.where(np.abs(omega) < eps, eps, omega)\n    x = omega_safe * t\n    \n    # Rabi oscillation formula: population transfer oscillates as sin^2(Omega_R*t/2)\n    # Here prob represents the maximum probability, and we model time evolution\n    # Physical target often relates to transition amplitude or related quantity.\n    # Use prob as the asymptotic value, and let the oscillatory term reflect\n    # the Rabi frequency dependence.\n    \n    # Ground-state probability in Rabi model varies as: \n    # P_g(t) = 1 - prob * sin^2(omega_R*t/2) for resonant case, \n    # but with detuning and damping, more complex.\n    \n    # Simple damped Rabi model for target:\n    # target ~ prob * (1 - exp(-decay*t) * cos(omega*t)) / omega  or similar.\n    \n    # Candidate: target = prob * (a0 + a1*sin(omega*t + phi)*exp(-gamma*t))\n    # Amplitude modulated by probability, with time decay.\n    # Let params: [A, phi, gamma, C] for offset and scale.\n    \n    A = params[0]\n    phi = params[1]\n    gamma = params[2]\n    C = params[3]\n    \n    oscillation = np.sin(x + phi) * np.exp(-gamma * np.abs(t))\n    \n    # Ensure prob is bounded, but use it as scaling factor\n    p_clip = np.clip(prob, eps, 1 - eps)\n    \n    # The target could be transition rate or amplitude, related to prob.\n    # A common form: target = prob * (A * sin(omega t + phi) + C) / omega, but let's try.\n    # For physical systems like Landau-Zener or Rabi, often target = prob * (1 - cos(omega_R t))/omega_R^2.\n    # We'll generalize.\n    \n    # Let's try: target = prob * (A * sin(x) + C) * exp(-gamma*t) + D\n    D = params[4] if len(params) > 4 else 0.0\n    \n    result = p_clip * (A * np.sin(x + phi) + C) * np.exp(-gamma * np.abs(t)) + D\n    \n    # Adjust zero-length arrays\n    return result\n\n",
+  "score": -0.9996198889529937,
+  "mean_nmse": 0.9840945715327994,
+  "min_nmse": 0.943586560162232,
+  "max_nmse": 0.9999939746503493,
+  "median_nmse": 0.996513301472441,
+  "std_nmse": 0.020360972782536742,
+  "worst2_mean_nmse": 0.9996198889529937,
+  "nmse_per_test": {
+    "dataset_0": 0.943586560162232,
+    "dataset_1": 0.9788806197250484,
+    "dataset_2": 0.9999939746503493,
+    "dataset_3": 0.9982122517993282,
+    "dataset_4": 0.9990142667469538,
+    "dataset_5": 0.9590087447772923,
+    "dataset_6": 0.9992458032556379,
+    "dataset_7": 0.9948143511455537
+  },
+  "sample_time": 2.8562018275260925,
+  "evaluate_time": 2.7189977169036865
+}

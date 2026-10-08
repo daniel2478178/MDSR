@@ -1,0 +1,14 @@
+{
+  "sample_order": 458,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Rotational angle: omega * t\n    angle = omega * t\n    \n    # Physical law: exponential decay in time coupled with rotation amplitude\n    # and probability modulation. The target is typically a rate or amplitude.\n    # Use exponential damping with a frequency-proportional scaling.\n    # params[0] = amplitude, params[1] = decay rate, params[2] = frequency exponent, \n    # params[3] = offset\n    # Core structure: amplitude * exp(-decay * t) * sin(omega * t) * prob + offset\n    y = params[0] * np.exp(-params[1] * t_safe) * np.sin(angle + params[2]) * prob + params[3]\n    \n    # Ensure positive output to avoid non-physical cases\n    y = np.maximum(y, 0)\n    \n    return y\n\n",
+  "score": null,
+  "mean_nmse": null,
+  "min_nmse": null,
+  "max_nmse": null,
+  "median_nmse": null,
+  "std_nmse": null,
+  "worst2_mean_nmse": null,
+  "nmse_per_test": null,
+  "sample_time": 3.0040019154548645,
+  "evaluate_time": 1.9737892150878906
+}

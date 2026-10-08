@@ -1,0 +1,23 @@
+{
+  "sample_order": 1227,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    eps = 1e-10\n    t_abs = np.abs(t) + eps\n    omega_abs = np.abs(omega) + eps\n    \n    # Rabi oscillation: prob = sin^2(Ω_eff * t/2)\n    # Ω_eff depends on detuning and omega\n    # target likely energy or transition amplitude related quantity\n    # Use arcsin to recover effective Rabi frequency from prob\n    # Added damping and offset params\n    \n    # Recover the argument of sin^2: arcsin(sqrt(prob)) gives Ω_eff * t/2 modulo pi\n    arg = np.clip(prob, 0, 1)\n    sqrt_p = np.sqrt(arg)\n    arcsin_term = np.arcsin(sqrt_p) + eps\n    \n    # Effective Rabi frequency = 2*arcsin(sqrt(prob)) / t (with branch selection)\n    # Use continuous version with sin to avoid discontinuities\n    \n    omega_eff = 2.0 * arcsin_term / t_abs\n    \n    # Physical target: likely related to energy scale or transition amplitude\n    # Combine omega_eff and driving frequency with detuning-like scaling\n    delta = omega - omega_eff\n    \n    # Lorentzian resonance shape\n    resonance = 1.0 / (1.0 + params[0] * delta**2)\n    \n    # Exponential decay in time\n    decay = np.exp(-params[1] * t_abs)\n    \n    # Linear and nonlinear combinations\n    y = params[2] * omega_eff * resonance * decay + params[3] * np.sin(omega * t) * prob + params[4]\n    \n    return y\n\n",
+  "score": -0.8921823341328132,
+  "mean_nmse": 0.7271645196939336,
+  "min_nmse": 0.5903892829197419,
+  "max_nmse": 0.9421063561616398,
+  "median_nmse": 0.6759027640659573,
+  "std_nmse": 0.11452843653029471,
+  "worst2_mean_nmse": 0.8921823341328132,
+  "nmse_per_test": {
+    "dataset_0": 0.644700703969381,
+    "dataset_1": 0.5903892829197419,
+    "dataset_2": 0.6385214230695272,
+    "dataset_3": 0.9421063561616398,
+    "dataset_4": 0.6901734693016246,
+    "dataset_5": 0.66163205883029,
+    "dataset_6": 0.807534551195278,
+    "dataset_7": 0.8422583121039865
+  },
+  "sample_time": 2.5961514711380005,
+  "evaluate_time": 2.206597328186035
+}

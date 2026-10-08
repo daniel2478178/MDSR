@@ -1,0 +1,23 @@
+{
+  "sample_order": 2074,
+  "function": "def equation(prob: np.ndarray, t: np.ndarray, omega: np.ndarray, params: np.ndarray) -> np.ndarray:\n    \"\"\"\n    Shared equation:\n\n        target = f(prob, t, omega, params)\n\n    Keep ONE common symbolic structure for every dataset.\n\n    Only the numerical values of params may differ between datasets.\n\n    Args:\n        prob:\n            Transition probability.\n\n        t:\n            Interaction time.\n\n        omega:\n            Driving angular frequency.\n\n        params:\n            Dataset-specific numerical parameters.\n\n    Returns:\n        Predicted target quantity.\n\n    IMPORTANT:\n        Replace the equation body with a candidate mathematical law.\n\n        The function MUST contain executable NumPy-compatible code\n        and MUST explicitly return the prediction.\n    \"\"\"\n    # Physical model: Landau-Zener-like transition probability with Rabi oscillations\n    # target = prob * (A * sin^2(Ω_eff * t) / Ω_eff^2) + C\n    \n    # Using effective Rabi frequency with detuning-like term\n    omega_safe = np.where(np.abs(omega) < 1e-10, 1e-10, omega)\n    \n    # Define generalized Rabi frequency (Ω_eff = sqrt(Ω^2 + Δ^2), Δ from params)\n    delta = params[0]\n    omega_eff = np.sqrt(omega**2 + delta**2)\n    \n    # Main oscillatory term with amplitude and phase corrections\n    # Target appears to scale with probability and oscillate with time\n    rabi_term = params[1] * np.sin(omega_eff * t + params[2])**2\n    \n    # Ensure result grows with prob and includes energy/frequency scaling\n    # Combining physical scaling factors\n    energy_factor = params[3] * omega * t\n    \n    # Final expression: target = (prob * energy_factor + Rabi oscillation) * normalized\n    result = (prob * energy_factor * rabi_term + params[4] * prob) / (1.0 + params[5] * np.abs(t) * omega)\n    \n    return result\n\n",
+  "score": -1.9650382923316527,
+  "mean_nmse": 1.7141771796043128,
+  "min_nmse": 1.1961628269245381,
+  "max_nmse": 1.9919792752052834,
+  "median_nmse": 1.8082232757945835,
+  "std_nmse": 0.2485388316513828,
+  "worst2_mean_nmse": 1.9650382923316527,
+  "nmse_per_test": {
+    "dataset_0": 1.9919792752052834,
+    "dataset_1": 1.860767002572697,
+    "dataset_2": 1.938097309458022,
+    "dataset_3": 1.1961628269245381,
+    "dataset_4": 1.7556795490164703,
+    "dataset_5": 1.8645407879804312,
+    "dataset_6": 1.5731496988808942,
+    "dataset_7": 1.5330409867961663
+  },
+  "sample_time": 2.0782176852226257,
+  "evaluate_time": 2.1582233905792236
+}

@@ -1,23 +1,34 @@
 # MDSR
 
-MDSR is the top-level repository for two related symbolic-regression projects.
-It pins each project as a Git submodule so that experiments remain reproducible
-while the implementations can evolve independently.
+MDSR brings together symbolic-regression implementations for discovering one
+equation structure across several related datasets, with numerical parameters
+fitted separately for each dataset. It includes PySR-based discovery,
+LLM-based discovery, and the original multi-stage selection experiments.
 
-The supported entry point is **MDSR-PySR**, a staged pipeline for discovering
-and evaluating one symbolic formula across several related physics datasets.
+The root `setup.sh` and `run.sh` scripts serve **MDSR-PySR**. **LLM-MDSR** has
+its own Python runner and environment. The two original implementations are
+pinned as Git submodules; `LLM-MDSR/` is a regular directory.
 
 ## Components
 
 | Component | Status | Purpose |
 | --- | --- | --- |
 | [`MDSR-PySR`](MDSR-PySR/) | Supported | Modular data preparation, PySR discovery, shared-formula evaluation, robustness analysis, and reporting. |
+| [`LLM-MDSR`](LLM-MDSR/README.md) | Experimental | LLM-generated equation functions, multi-dataset fitting, checkpoint recovery, and noise/distribution-shift analysis. |
 | [`Multi-stage-Selection-Symbolic-Regression`](Multi-stage-Selection-Symbolic-Regression/) | Legacy/reference | Original MSSR experiments and datasets. Its current script contains Windows-specific paths and is not launched by the root runner. |
+
+**LLM-MDSR is adapted from
+[LLM-SR](https://github.com/deep-symbolic-mathematics/LLM-SR)**, the official
+implementation of
+[LLM-SR: Scientific Equation Discovery via Programming with Large Language Models](https://arxiv.org/abs/2404.18400).
+Its contribution here is shared-formula discovery and evaluation across related
+physics datasets. See the [LLM-MDSR README](LLM-MDSR/README.md) for setup,
+implementation details, and the upstream citation.
 
 Some component documentation uses **MSSR** for the multi-stage selection method;
 the umbrella repository and primary implementation are named **MDSR**.
 
-## Quick start
+## PySR quick start
 
 Clone the repository together with its pinned submodules:
 
@@ -50,7 +61,26 @@ For an existing clone whose component directories are empty, run:
 git submodule update --init --recursive
 ```
 
-## Pipeline commands
+## LLM-MDSR quick start
+
+Follow the [LLM-MDSR setup guide](LLM-MDSR/README.md) to create its Conda
+environment, prepare the datasets and prompts, and set `API_KEY` for the
+configured API provider. Then run from `LLM-MDSR/`:
+
+```bash
+python main.py --api_model YOUR_MODEL --num_processes 1
+```
+
+The current runner processes `P01`–`P59`, using eight datasets per problem and
+a default budget of 12 generated samples. Its defaults resolve from the
+repository location and use the existing
+`synthetic_data/PhysicsMDRS_Synthetic_Dataset/` layout, including `train_data/`.
+Shared defaults live in `LLM-MDSR/paths.py`; no machine-specific absolute paths
+are required. Training CSVs and prompts are included in the repository and
+available when cloning. Root `setup.sh` does not create the LLM environment,
+and root `run.sh` does not launch this component.
+
+## PySR pipeline commands
 
 `run.sh` forwards every option to the primary pipeline. With no arguments it
 shows the pipeline help.
@@ -88,7 +118,7 @@ Examples:
 PySR discovery is the expensive stage and uses CPU processes. Start with the
 conservative profile above before increasing process counts on a larger server.
 
-## Environment options
+## PySR environment options
 
 Conda is recommended because PySR manages a Julia/SymbolicRegression backend:
 
@@ -108,7 +138,7 @@ python -m pip install -r MDSR-PySR/requirements.txt
 Install `MDSR-PySR/requirements-pysr.txt` instead when discovery is required.
 You may also set `PYTHON_BIN=/path/to/python` when invoking `run.sh`.
 
-## Data and outputs
+## PySR data and outputs
 
 Default inputs, generated data, and results live inside `MDSR-PySR/`:
 
@@ -126,7 +156,11 @@ be regenerated. See the
 [`MDSR-PySR` documentation](MDSR-PySR/README.md) for the workbook schema,
 stage-level interfaces, output details, and resume behavior.
 
-## Verification
+LLM-MDSR writes checkpoints, sample records, and TensorBoard events beneath its
+configured dataset root. Its [README](LLM-MDSR/README.md) describes the input
+layout, output paths, resume behavior, and analysis commands.
+
+## PySR verification
 
 Run the lightweight checks from the repository root:
 
@@ -146,13 +180,15 @@ The GitHub Actions workflow runs the same unit and dry-run checks on Python
 ```text
 .
 ├── MDSR-PySR/                              supported pipeline (submodule)
+├── LLM-MDSR/                               experimental LLM-based implementation
 ├── Multi-stage-Selection-Symbolic-Regression/ legacy implementation (submodule)
+├── synthetic_data/                         included synthetic benchmark data and prompts
 ├── .github/workflows/ci.yml                 lightweight automated checks
 ├── run.sh                                   root pipeline launcher
 └── setup.sh                                 submodule and Conda setup
 ```
 
-The root repository records exact submodule commits. Changes inside a component
-must first be committed and pushed in that component's repository; then commit
-the updated submodule pointer here. This prevents an umbrella commit from
-silently depending on uncommitted child changes.
+The root repository records exact commits for its two Git submodules. Changes
+inside those submodules must first be committed and pushed in their own
+repositories; then commit the updated submodule pointer here. Files in regular
+directories such as `LLM-MDSR/` are tracked directly by the root repository.

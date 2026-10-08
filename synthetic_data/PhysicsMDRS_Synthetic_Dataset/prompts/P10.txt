@@ -1,0 +1,231 @@
+"""
+Task: discover one shared physical law from multiple datasets.
+
+All datasets describe the same underlying physical process.
+
+Input:
+    Pwr: independent variable
+    omega: independent variable
+Output:
+    Ef: target physical quantity
+
+Find ONE mathematical expression
+
+    Ef = f(Pwr, omega, params)
+
+that can describe every dataset.
+
+SHARED-STRUCTURE REQUIREMENT:
+
+All datasets MUST use exactly the same symbolic equation structure.
+
+For dataset k:
+
+    Ef_k = f(
+        Pwr,
+        omega,
+        params_k
+    )
+
+where the mathematical form of f is identical for every dataset,
+but params_k may have different numerical values.
+
+Therefore:
+
+    SAME:
+        mathematical operators
+        functional form
+        arrangement of variables
+        parameter positions
+        interpretation of parameters
+
+    MAY DIFFER:
+        numerical values of params
+
+Do NOT:
+    - create different formulas for different datasets
+    - use dataset IDs
+    - use conditional branches for individual datasets
+    - hard-code numerical values for particular datasets
+    - fit each dataset with a different symbolic structure
+    - replace the physical relation with unnecessarily complicated
+      high-order polynomial approximations
+
+The equation may contain physically meaningful nonlinear relationships
+between Pwr and omega.
+
+Possible dataset-dependent physical quantities may be represented using
+params[i]. These parameters are optimized independently for each dataset.
+
+These are free numerical parameters, not additional independent variables.
+
+Use params[i] for dataset-specific numerical parameters.
+
+The evolved equation MUST:
+    - use Pwr and omega as independent variables
+    - use params[i] for adjustable dataset-specific parameters
+    - return a valid NumPy-compatible prediction
+    - contain executable code
+    - contain an explicit return statement
+    - not return None
+
+Prefer the simplest physically meaningful shared equation that explains
+all datasets.
+"""
+
+import numpy as np
+from scipy.optimize import minimize
+
+
+MAX_NPARAMS = 10
+INVALID_LOSS = 1.0e100
+VARIANCE_EPS = 1.0e-15
+
+
+@evaluate.run
+def evaluate(data: dict) -> float:
+    """
+    Evaluate one shared equation structure on one dataset.
+
+    The symbolic equation is shared across all datasets.
+    Numerical params are optimized independently for this dataset.
+    """
+
+    inputs = np.asarray(
+        data["inputs"],
+        dtype=float,
+    )
+
+    outputs = np.asarray(
+        data["outputs"],
+        dtype=float,
+    ).reshape(-1)
+
+    Pwr = inputs[:, 0]
+    omega = inputs[:, 1]
+    output_variance = np.var(outputs)
+
+    def objective(params):
+
+        try:
+            with np.errstate(all="ignore"):
+
+                prediction = equation(
+                    Pwr,
+                    omega,
+                    params,
+                )
+
+            if prediction is None:
+                return INVALID_LOSS
+
+            prediction = np.asarray(
+                prediction,
+                dtype=float,
+            )
+
+            prediction = np.broadcast_to(
+                prediction,
+                outputs.shape,
+            )
+
+            if not np.all(np.isfinite(prediction)):
+                return INVALID_LOSS
+
+            residual = prediction - outputs
+
+            mse = np.mean(
+                residual ** 2
+            )
+
+            if not np.isfinite(mse):
+                return INVALID_LOSS
+
+            # If the target is almost constant, NMSE is unstable.
+            if output_variance <= VARIANCE_EPS:
+                return float(mse)
+
+            # Normalize by target variance so datasets with different
+            # numerical scales contribute comparably.
+            nmse = mse / output_variance
+
+            if not np.isfinite(nmse):
+                return INVALID_LOSS
+
+            return float(nmse)
+
+        except Exception:
+            return INVALID_LOSS
+
+    # evaluate() is called separately for each dataset.
+    # Therefore every dataset gets its own optimized parameter values,
+    # while equation() keeps exactly the same symbolic structure.
+    initial_params = np.ones(
+        MAX_NPARAMS,
+        dtype=float,
+    )
+
+    try:
+        result = minimize(
+            objective,
+            initial_params,
+            method="BFGS",
+        )
+
+        final_loss = float(result.fun)
+
+    except Exception:
+        return None
+
+    if (
+        not np.isfinite(final_loss)
+        or final_loss >= INVALID_LOSS
+    ):
+        return None
+
+    # LLM-SR maximizes the returned score.
+    return -final_loss
+
+
+@equation.evolve
+def equation(
+    Pwr: np.ndarray,
+    omega: np.ndarray,
+    params: np.ndarray,
+) -> np.ndarray:
+    """
+    Shared equation:
+
+        Ef = f(Pwr, omega, params)
+
+    Keep ONE common symbolic structure for every dataset.
+
+    Only the numerical values of params may differ between datasets.
+
+    Args:
+        Pwr:
+            Independent variable.
+
+        omega:
+            Independent variable.
+
+        params:
+            Dataset-specific numerical parameters.
+
+    Returns:
+        Predicted target quantity.
+
+    IMPORTANT:
+        Replace the equation body with a candidate mathematical law.
+
+        The function MUST contain executable NumPy-compatible code
+        and MUST explicitly return the prediction.
+    """
+
+    y = (
+        params[0] * Pwr
+        + params[1] * omega
+        + params[2]
+    )
+
+    return y

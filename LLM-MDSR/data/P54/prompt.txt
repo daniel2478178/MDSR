@@ -1,0 +1,184 @@
+"""
+Task: discover a shared physical law from multiple datasets.
+
+All datasets describe the same simple harmonic oscillator law.
+
+Input:
+    t: time
+
+Output:
+    x: displacement
+
+Find ONE mathematical expression x = f(t, params) that can describe
+every dataset.
+
+SHARED-STRUCTURE REQUIREMENT:
+
+All datasets MUST use exactly the same symbolic equation structure.
+
+For dataset k:
+
+    x_k(t) = f(t, params_k)
+
+where the mathematical form of f is identical for every dataset,
+but params_k may have different numerical values.
+
+Therefore:
+
+    SAME:
+        mathematical operators
+        functional form
+        parameter positions
+        interpretation of parameters
+
+    MAY DIFFER:
+        numerical values of params
+
+Do NOT:
+    - create different formulas for different datasets
+    - use dataset IDs
+    - use conditional branches for individual datasets
+    - hard-code numerical values for particular datasets
+    - approximate periodic motion using unnecessarily complicated
+      high-order polynomials
+
+The physical behavior is periodic oscillation consistent with a
+simple harmonic oscillator.
+
+Possible dataset-dependent physical quantities can include oscillation
+scale, frequency, phase, and equilibrium position. These are hints
+about possible parameter roles, not a required equation template.
+
+Use params[i] for dataset-specific numerical parameters.
+
+The evolved equation MUST:
+    - use t as the independent variable
+    - Never use undefined variables such as omega.
+    - return a valid NumPy-compatible prediction
+    - contain executable code
+    - contain an explicit return statement
+    - not return None
+
+Prefer the simplest physically meaningful shared equation.
+"""
+
+import numpy as np
+from scipy.optimize import minimize
+
+
+MAX_NPARAMS = 10
+INVALID_LOSS = 1.0e100
+VARIANCE_EPS = 1.0e-15
+
+
+@evaluate.run
+def evaluate(data: dict) -> float:
+
+    inputs = np.asarray(
+        data["inputs"],
+        dtype=float,
+    )
+
+    outputs = np.asarray(
+        data["outputs"],
+        dtype=float,
+    ).reshape(-1)
+
+    # Only one independent variable.
+    t = inputs[:, 0]
+
+    output_variance = np.var(outputs)
+
+    def objective(params):
+
+        try:
+            with np.errstate(all="ignore"):
+
+                prediction = equation(
+                    t,
+                    params,
+                )
+
+            # Explicitly reject None.
+            if prediction is None:
+                return INVALID_LOSS
+
+            prediction = np.asarray(
+                prediction,
+                dtype=float,
+            )
+
+            prediction = np.broadcast_to(
+                prediction,
+                outputs.shape,
+            )
+
+            if not np.all(np.isfinite(prediction)):
+                return INVALID_LOSS
+
+            residual = prediction - outputs
+
+            mse = np.mean(
+                residual ** 2
+            )
+
+            if not np.isfinite(mse):
+                return INVALID_LOSS
+
+            if output_variance <= VARIANCE_EPS:
+                return float(mse)
+
+            nmse = mse / output_variance
+
+            if not np.isfinite(nmse):
+                return INVALID_LOSS
+
+            return float(nmse)
+
+        except Exception:
+            return INVALID_LOSS
+
+    initial_params = np.ones(
+        MAX_NPARAMS,
+        dtype=float,
+    )
+
+    try:
+
+        result = minimize(
+            objective,
+            initial_params,
+            method="BFGS",
+        )
+
+        final_loss = float(result.fun)
+
+    except Exception:
+        return None
+
+    if (
+        not np.isfinite(final_loss)
+        or final_loss >= INVALID_LOSS
+    ):
+        return None
+
+    return -final_loss
+
+
+@equation.evolve
+def equation(
+    t: np.ndarray,
+    params: np.ndarray,
+) -> np.ndarray:
+    """
+    Shared equation x = f(t, params).
+
+    Keep one common symbolic structure for every dataset.
+    Only params values differ between datasets.
+
+    MUST return a valid NumPy-compatible prediction.
+    """
+
+    y = params[0] * t + params[1]
+
+    return y

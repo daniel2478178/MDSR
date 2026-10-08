@@ -5,7 +5,7 @@ equation structure across several related datasets, with numerical parameters
 fitted separately for each dataset. It includes PySR-based discovery,
 LLM-based discovery, and the original multi-stage selection experiments.
 
-The root `setup.sh` and `run.sh` scripts serve **MDSR-PySR**. **LLM-MDSR** has
+The root `setup.sh` and `run.sh` scripts serve **MSSR**. **LLM-MDSR** has
 its own Python runner and environment. The two original implementations are
 pinned as Git submodules; `LLM-MDSR/` is a regular directory.
 
@@ -13,7 +13,7 @@ pinned as Git submodules; `LLM-MDSR/` is a regular directory.
 
 | Component | Status | Purpose |
 | --- | --- | --- |
-| [`MDSR-PySR`](MDSR-PySR/) | Supported | Modular data preparation, PySR discovery, shared-formula evaluation, robustness analysis, and reporting. |
+| [`MSSR`](MSSR/) | Supported | Modular data preparation, PySR discovery, shared-formula evaluation, robustness analysis, and reporting. |
 | [`LLM-MDSR`](LLM-MDSR/README.md) | Experimental | LLM-generated equation functions, multi-dataset fitting, checkpoint recovery, and noise/distribution-shift analysis. |
 | [`Multi-stage-Selection-Symbolic-Regression`](Multi-stage-Selection-Symbolic-Regression/) | Legacy/reference | Original MSSR experiments and datasets. Its current script contains Windows-specific paths and is not launched by the root runner. |
 
@@ -25,8 +25,8 @@ Its contribution here is shared-formula discovery and evaluation across related
 physics datasets. See the [LLM-MDSR README](LLM-MDSR/README.md) for setup,
 implementation details, and the upstream citation.
 
-Some component documentation uses **MSSR** for the multi-stage selection method;
-the umbrella repository and primary implementation are named **MDSR**.
+**MSSR** refers to the multi-stage selection method and its PySR implementation.
+The umbrella repository remains **MDSR**.
 
 ## PySR quick start
 
@@ -52,7 +52,7 @@ Run the core workflow:
 ```
 
 `setup.sh` initializes the submodules and creates or updates the Conda
-environment declared in `MDSR-PySR/environment.yml`. Use
+environment declared in `MSSR/environment.yml`. Use
 `./setup.sh --skip-env` when only the submodules need to be initialized.
 
 For an existing clone whose component directories are empty, run:
@@ -123,7 +123,7 @@ conservative profile above before increasing process counts on a larger server.
 Conda is recommended because PySR manages a Julia/SymbolicRegression backend:
 
 ```bash
-conda env create -f MDSR-PySR/environment.yml
+conda env create -f MSSR/environment.yml
 conda activate mdsr-pysr
 ```
 
@@ -132,18 +132,18 @@ For analysis, data preparation, plotting, and tests without PySR:
 ```bash
 python3.11 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r MDSR-PySR/requirements.txt
+python -m pip install -r MSSR/requirements.txt
 ```
 
-Install `MDSR-PySR/requirements-pysr.txt` instead when discovery is required.
+Install `MSSR/requirements-pysr.txt` instead when discovery is required.
 You may also set `PYTHON_BIN=/path/to/python` when invoking `run.sh`.
 
 ## PySR data and outputs
 
-Default inputs, generated data, and results live inside `MDSR-PySR/`:
+Default inputs, generated data, and results live inside `MSSR/`:
 
 ```text
-MDSR-PySR/
+MSSR/
 ├── physicsMDSR_Range.xlsx       benchmark metadata
 ├── physicsMDSR_Range_CSV/       generated base datasets
 ├── generated/                   robustness datasets
@@ -153,7 +153,7 @@ MDSR-PySR/
 Most paths can be replaced with command-line options. Existing base data and
 robustness datasets are reused by default; pass `--force` only when they should
 be regenerated. See the
-[`MDSR-PySR` documentation](MDSR-PySR/README.md) for the workbook schema,
+[`MSSR` documentation](MSSR/README.md) for the workbook schema,
 stage-level interfaces, output details, and resume behavior.
 
 LLM-MDSR writes checkpoints, sample records, and TensorBoard events beneath its
@@ -167,7 +167,7 @@ Run the lightweight checks from the repository root:
 ```bash
 ./run.sh all --mode xonly --dry-run
 (
-  cd MDSR-PySR
+  cd MSSR
   python -m unittest discover -v
 )
 ```
@@ -179,7 +179,7 @@ The GitHub Actions workflow runs the same unit and dry-run checks on Python
 
 ```text
 .
-├── MDSR-PySR/                              supported pipeline (submodule)
+├── MSSR/                                   supported pipeline (submodule)
 ├── LLM-MDSR/                               experimental LLM-based implementation
 ├── Multi-stage-Selection-Symbolic-Regression/ legacy implementation (submodule)
 ├── synthetic_data/                         included synthetic benchmark data and prompts

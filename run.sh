@@ -2,10 +2,10 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PIPELINE="$PROJECT_ROOT/MDSR-PySR/pipeline.sh"
+PIPELINE="$PROJECT_ROOT/MSSR/pipeline.sh"
 
 if [[ ! -f "$PIPELINE" ]]; then
-    printf 'error: MDSR-PySR is not initialized. Run ./setup.sh first.\n' >&2
+    printf 'error: MSSR is not initialized. Run ./setup.sh first.\n' >&2
     exit 2
 fi
 

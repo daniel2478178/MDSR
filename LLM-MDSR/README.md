@@ -73,7 +73,7 @@ MDSR/
 ├── LLM-MDSR/
 │   ├── main.py
 │   └── paths.py
-├── MDSR-PySR/
+├── MSSR/
 │   └── physicsMDSR_Range.xlsx
 └── synthetic_data/
     ├── PhysicsMDRS_Synthetic_Dataset/
@@ -107,8 +107,8 @@ To regenerate training CSVs, use the PySR benchmark workbook
 after initializing that submodule. Run this from `LLM-MDSR/`:
 
 ```bash
-python ../MDSR-PySR/scripts/data/generate_physics_mdsr_csv_openpyxl.py \
-  ../MDSR-PySR/physicsMDSR_Range.xlsx \
+python ../MSSR/scripts/data/generate_physics_mdsr_csv_openpyxl.py \
+  ../MSSR/physicsMDSR_Range.xlsx \
   ../synthetic_data/PhysicsMDRS_Synthetic_Dataset/physicsMDSR_Range_CSV/train_data \
   --formula-column GenerationFormula --samples 5000 --groups 16
 ```
@@ -117,7 +117,7 @@ To generate prompts from the benchmark workbook:
 
 ```bash
 python generate_prompts.py \
-  ../MDSR-PySR/physicsMDSR_Range.xlsx \
+  ../MSSR/physicsMDSR_Range.xlsx \
   data/p20/prompt.txt \
   --sheet "Sampling design" \
   --output-dir ../synthetic_data/PhysicsMDRS_Synthetic_Dataset/prompts

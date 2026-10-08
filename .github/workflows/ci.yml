@@ -28,19 +28,19 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-          cache-dependency-path: MDSR-PySR/requirements.txt
+          cache-dependency-path: MSSR/requirements.txt
 
       - name: Install lightweight dependencies
-        working-directory: MDSR-PySR
+        working-directory: MSSR
         run: python -m pip install -r requirements.txt
 
       - name: Validate shell entry points
         run: |
-          bash -n setup.sh run.sh MDSR-PySR/pipeline.sh
+          bash -n setup.sh run.sh MSSR/pipeline.sh
           ./setup.sh --help
 
       - name: Run unit tests
-        working-directory: MDSR-PySR
+        working-directory: MSSR
         run: python -m unittest discover -v
 
       - name: Validate pipeline wiring

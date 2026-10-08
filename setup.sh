@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ENV_FILE="$PROJECT_ROOT/MDSR-PySR/environment.yml"
+ENV_FILE="$PROJECT_ROOT/MSSR/environment.yml"
 ENV_NAME="mdsr-pysr"
 SKIP_ENV=0
 

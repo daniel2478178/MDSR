@@ -179,13 +179,13 @@ The GitHub Actions workflow runs the same unit and dry-run checks on Python
 
 ```text
 .
-├── MSSR/                                   supported pipeline (submodule)
-├── LLM-MDSR/                               experimental LLM-based implementation
-├── Multi-stage-Selection-Symbolic-Regression/ legacy implementation (submodule)
-├── synthetic_data/                         included synthetic benchmark data and prompts
-├── .github/workflows/ci.yml                 lightweight automated checks
-├── run.sh                                   root pipeline launcher
-└── setup.sh                                 submodule and Conda setup
+├── MSSR/                                  
+├── LLM-MDSR/                              
+├── Multi-stage-Selection-Symbolic-Regression/ 
+├── synthetic_data/                        
+├── .github/workflows/ci.yml               
+├── run.sh                                  
+└── setup.sh                                
 ```
 
 The root repository records exact commits for its two Git submodules. Changes
